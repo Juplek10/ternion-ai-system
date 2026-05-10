@@ -37,3 +37,6 @@ vector/memory.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code local settings (may contain tokens)
+.claude/settings.local.json

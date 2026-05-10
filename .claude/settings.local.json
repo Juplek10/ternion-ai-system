@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(p.get\\('name'\\), p.get\\('script'\\), p.get\\('instances'\\)\\) for p in d]\")",
-      "Bash(node -e ' *)"
-    ]
-  }
-}

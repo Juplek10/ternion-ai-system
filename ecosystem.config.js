@@ -46,14 +46,6 @@ module.exports = {
       kill_timeout: 3000
     },
     {
-      name: "civilization-runtime",
-      script: "/root/ai-system/persistent-runtime.js",
-      instances: 1,
-      exec_mode: "fork",
-      restart_delay: 3000,
-      kill_timeout: 3000
-    },
-    {
       name: "drive-watcher",
       script: "/root/ai-system/core/integrations/drive-watcher.js",
       instances: 1,
