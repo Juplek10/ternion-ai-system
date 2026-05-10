@@ -44,38 +44,6 @@ const {
   "./core/session"
 );
 
-const {
-
-  runAutonomousLoop
-
-} = require(
-  "./core/autonomous-runtime-loop"
-);
-
-const {
-
-  governCivilization
-
-} = require(
-  "./core/civilization-governor-engine"
-);
-
-const {
-
-  superviseEcosystem
-
-} = require(
-  "./core/ecosystem-supervisor"
-);
-
-const {
-
-  performAutonomousAction
-
-} = require(
-  "./core/autonomous-action-engine"
-);
-
 const TELEGRAM_TOKEN =
   "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
 
@@ -86,7 +54,8 @@ const AUTHORIZED_USERS = [
 
 const bot =
   new Telegraf(
-    TELEGRAM_TOKEN
+    TELEGRAM_TOKEN,
+    { handlerTimeout: 180000 }
   );
 
 function isAuthorized(
@@ -118,16 +87,7 @@ bot.start(async (ctx) => {
   }
 
   await ctx.reply(
-
-    "Civilization Runtime Online.\n\n" +
-
-    "Commands:\n" +
-
-    "- status ecosystem\n" +
-    "- govern civilization\n" +
-    "- supervise ecosystem\n" +
-    "- create debugging module\n" +
-    "- runtime engineering\n"
+    "Ternion-AI Online.\n\nKirim pesan apapun untuk mulai ngobrol."
   );
 });
 
@@ -314,168 +274,6 @@ bot.on(
     );
 
     try {
-
-      /*
-      STATUS ECOSYSTEM
-      */
-
-      if(
-        text ===
-        "status ecosystem"
-      ) {
-
-        const ecosystem = {
-
-          runtimeOverload: false,
-
-          debuggingFailures: false,
-
-          researchStagnation: false,
-
-          federationInstability: false,
-
-          infrastructureOverload: false,
-
-          evolutionNeeded: true,
-
-          experimentationNeeded: true,
-
-          weakDebugging: false,
-
-          infrastructureAnalysisNeeded: true,
-
-          highDebuggingSuccess: true
-        };
-
-        const runtime =
-
-          runAutonomousLoop(
-            ecosystem
-          );
-
-        return ctx.reply(
-
-          JSON.stringify(
-            runtime,
-            null,
-            2
-          )
-        );
-      }
-
-      /*
-      GOVERNANCE
-      */
-
-      if(
-        text ===
-        "govern civilization"
-      ) {
-
-        const governance =
-
-          governCivilization({
-
-            infrastructureOverload:
-              true,
-
-            highDebuggingSuccess:
-              true,
-
-            researchStagnation:
-              false,
-
-            federationInstability:
-              false
-          });
-
-        return ctx.reply(
-
-          JSON.stringify(
-            governance,
-            null,
-            2
-          )
-        );
-      }
-
-      /*
-      SUPERVISION
-      */
-
-      if(
-        text ===
-        "supervise ecosystem"
-      ) {
-
-        const supervision =
-
-          superviseEcosystem({
-
-            runtimeOverload:
-              true,
-
-            debuggingFailures:
-              true,
-
-            researchStagnation:
-              false,
-
-            federationInstability:
-              false
-          });
-
-        return ctx.reply(
-
-          JSON.stringify(
-            supervision,
-            null,
-            2
-          )
-        );
-      }
-
-      /*
-      DEBUGGING MODULE
-      */
-
-      if(
-        text ===
-        "create debugging module"
-      ) {
-
-        const result =
-
-          performAutonomousAction({
-
-            type:
-              "Create Debugging Module"
-          });
-
-        return ctx.reply(
-
-          JSON.stringify(
-            result,
-            null,
-            2
-          )
-        );
-      }
-
-      /*
-      INFRASTRUCTURE
-      */
-
-      if(text === "runtime engineering") {
-
-        const result = performAutonomousAction({
-          type: "Run Infrastructure Scan"
-        });
-
-        return ctx.reply(
-          JSON.stringify(result, null, 2).substring(0, 4096)
-        );
-      }
 
       /*
       DELETE LAST FILE

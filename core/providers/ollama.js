@@ -4,7 +4,7 @@ const axios = require("axios");
 const fs = require("fs");
 
 const systemPrompt = fs.readFileSync(
-  "/root/ai-system/prompts/construction-system.txt",
+  "/root/ai-system/prompts/ternion-soul.txt",
   "utf8"
 );
 
