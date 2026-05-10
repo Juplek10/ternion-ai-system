@@ -12,5 +12,47 @@
     },
     "ollama": true,
     "soul": true
+  },
+  {
+    "time": "2026-05-10T20:36:40.118Z",
+    "ram": {
+      "pct": 16,
+      "used": "1.4",
+      "total": "8.3"
+    },
+    "pm2": {
+      "online": 8,
+      "total": 8
+    },
+    "ollama": true,
+    "soul": true
+  },
+  {
+    "time": "2026-05-10T20:41:40.119Z",
+    "ram": {
+      "pct": 16,
+      "used": "1.4",
+      "total": "8.3"
+    },
+    "pm2": {
+      "online": 8,
+      "total": 8
+    },
+    "ollama": true,
+    "soul": true
+  },
+  {
+    "time": "2026-05-10T20:46:40.119Z",
+    "ram": {
+      "pct": 17,
+      "used": "1.4",
+      "total": "8.3"
+    },
+    "pm2": {
+      "online": 8,
+      "total": 8
+    },
+    "ollama": true,
+    "soul": true
   }
 ]
