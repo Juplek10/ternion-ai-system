@@ -1,26 +1,12 @@
 require("dotenv").config();
 
 const axios = require("axios");
-const fs = require("fs");
-
-const systemPrompt = fs.readFileSync(
-  "/root/ai-system/prompts/ternion-soul.txt",
-  "utf8"
-);
+const { getSoul } = require("../identity/soul-guardian");
 
 async function askOllama(prompt) {
+  const systemPrompt = getSoul();
 
-  const fullPrompt = `
-SYSTEM:
-
-${systemPrompt}
-
-USER:
-
-${prompt}
-
-ASSISTANT:
-`;
+  const fullPrompt = `SYSTEM:\n\n${systemPrompt}\n\nUSER:\n\n${prompt}\n\nASSISTANT:\n`;
 
   const response = await axios.post(
     `${process.env.OLLAMA_BASE_URL}/api/generate`,

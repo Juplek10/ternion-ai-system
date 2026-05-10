@@ -9,9 +9,7 @@ module.exports = {
       kill_timeout: 5000,
       max_restarts: 10,
       min_uptime: "10s",
-      env: {
-        NODE_ENV: "production"
-      }
+      env: { NODE_ENV: "production" }
     },
     {
       name: "worker",
@@ -26,8 +24,9 @@ module.exports = {
       script: "/root/ai-system/heartbeat.js",
       instances: 1,
       exec_mode: "fork",
-      restart_delay: 3000,
-      kill_timeout: 3000
+      restart_delay: 5000,
+      kill_timeout: 3000,
+      max_restarts: 5
     },
     {
       name: "background-worker",
@@ -53,6 +52,24 @@ module.exports = {
       restart_delay: 5000,
       kill_timeout: 3000,
       max_restarts: 5
+    },
+    {
+      name: "dream-engine",
+      script: "/root/ai-system/core/dreaming/dream-engine.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 10000,
+      kill_timeout: 5000,
+      max_restarts: 3
+    },
+    {
+      name: "backup-scheduler",
+      script: "/root/ai-system/backup-scheduler.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 10000,
+      kill_timeout: 5000,
+      max_restarts: 3
     }
   ]
 };
