@@ -466,103 +466,57 @@ bot.on(
       INFRASTRUCTURE
       */
 
-      if(
-        text ===
-        "runtime engineering"
-      )
-/*
-DELETE LAST FILE
-*/
+      if(text === "runtime engineering") {
 
-if(
-
-  text.includes(
-    "hapus file"
-  )
-
-) {
-
-  const lastFile =
-
-    getLastFile();
-
-  if(!lastFile) {
-
-    return ctx.reply(
-      "No file memory found."
-    );
-  }
-
-  return ctx.reply(
-
-    `Approval required.\n\nDelete:\n${lastFile.fileName}\n\nReply:\nAPPROVE DELETE`
-  );
-}
-
-/*
-APPROVE DELETE
-*/
-
-if(
-
-  text ===
-  "approve delete"
-
-) {
-
-  const lastFile =
-
-    getLastFile();
-
-  if(!lastFile) {
-
-    return ctx.reply(
-      "No file memory found."
-    );
-  }
-
-  try {
-
-    fsExtra.unlinkSync(
-      lastFile.path
-    );
-
-    removeFileMemory(
-      lastFile.path
-    );
-
-    return ctx.reply(
-
-      `Deleted:\n${lastFile.fileName}`
-    );
-
-  } catch(error) {
-
-    console.log(error);
-
-    return ctx.reply(
-      "Delete failed."
-    );
-  }
-}
- {
-
-        const result =
-
-          performAutonomousAction({
-
-            type:
-              "Run Infrastructure Scan"
-          });
+        const result = performAutonomousAction({
+          type: "Run Infrastructure Scan"
+        });
 
         return ctx.reply(
-
-          JSON.stringify(
-            result,
-            null,
-            2
-          )
+          JSON.stringify(result, null, 2).substring(0, 4096)
         );
+      }
+
+      /*
+      DELETE LAST FILE
+      */
+
+      if(text.includes("hapus file")) {
+
+        const lastFile = getLastFile();
+
+        if(!lastFile) {
+          return ctx.reply("No file memory found.");
+        }
+
+        return ctx.reply(
+          `Approval required.\n\nDelete:\n${lastFile.fileName}\n\nReply:\nAPPROVE DELETE`
+        );
+      }
+
+      /*
+      APPROVE DELETE
+      */
+
+      if(text === "approve delete") {
+
+        const lastFile = getLastFile();
+
+        if(!lastFile) {
+          return ctx.reply("No file memory found.");
+        }
+
+        try {
+
+          fsExtra.unlinkSync(lastFile.path);
+          removeFileMemory(lastFile.path);
+          return ctx.reply(`Deleted:\n${lastFile.fileName}`);
+
+        } catch(error) {
+
+          console.log(error);
+          return ctx.reply("Delete failed.");
+        }
       }
 
       /*

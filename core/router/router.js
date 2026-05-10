@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const askOllama = require("../providers/ollama");
 
-process.env.DEFAULT_LOCAL_MODEL = "ternion-ai";
+process.env.DEFAULT_LOCAL_MODEL = "qwen2.5:3b";
 
 async function routeTask(type, prompt) {
 

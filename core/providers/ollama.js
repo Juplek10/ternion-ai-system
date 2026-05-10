@@ -28,7 +28,8 @@ ASSISTANT:
       model: process.env.DEFAULT_LOCAL_MODEL,
       prompt: fullPrompt,
       stream: false
-    }
+    },
+    { timeout: 120000 }
   );
 
   return response.data.response;
