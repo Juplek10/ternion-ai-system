@@ -27,7 +27,11 @@ ASSISTANT:
     {
       model: process.env.DEFAULT_LOCAL_MODEL,
       prompt: fullPrompt,
-      stream: false
+      stream: false,
+      options: {
+        num_ctx: 2048,
+        num_predict: 500
+      }
     },
     { timeout: 120000 }
   );
