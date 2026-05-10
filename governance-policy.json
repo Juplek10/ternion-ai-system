@@ -1,0 +1,13 @@
+{
+  "restrictedActions": [
+    "delete-system-files",
+    "format-disk",
+    "shutdown-server"
+  ],
+  "approvalRequired": [
+    "major-refactor",
+    "external-api-write",
+    "restart-all-services"
+  ],
+  "maxRiskLevel": 7
+}

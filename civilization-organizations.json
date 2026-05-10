@@ -1,0 +1,36 @@
+{
+  "organizations": [
+    {
+      "name": "Engineering Organization",
+      "focus": [
+        "architecture",
+        "optimization",
+        "feature development"
+      ]
+    },
+    {
+      "name": "Operations Organization",
+      "focus": [
+        "runtime monitoring",
+        "recovery",
+        "infrastructure"
+      ]
+    },
+    {
+      "name": "Governance Organization",
+      "focus": [
+        "risk control",
+        "compliance",
+        "approval management"
+      ]
+    },
+    {
+      "name": "Research Organization",
+      "focus": [
+        "meta-reasoning",
+        "cognitive evolution",
+        "strategic intelligence"
+      ]
+    }
+  ]
+}

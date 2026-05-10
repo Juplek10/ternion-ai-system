@@ -1,0 +1,19 @@
+{
+  "alliances": [
+    {
+      "from": "Engineering Organization",
+      "to": "Research Organization",
+      "objective": "Accelerate cognitive optimization"
+    },
+    {
+      "from": "Governance Organization",
+      "to": "Security Organization",
+      "objective": "Strengthen civilization protection"
+    },
+    {
+      "from": "Operations Organization",
+      "to": "Engineering Organization",
+      "objective": "Improve infrastructure scalability"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "terms": [
+    {
+      "content": "AHSP adalah Analisa Harga Satuan Pekerjaan",
+      "createdAt": "2026-05-09T16:00:37.910Z"
+    }
+  ],
+  "vendors": [
+    {
+      "content": "PT Beton Maju spesialis struktur beton",
+      "createdAt": "2026-05-09T16:00:37.911Z"
+    },
+    {
+      "content": "Vendor beton PT Beton Maju berpengalaman proyek gudang.",
+      "createdAt": "2026-05-09T16:11:29.061Z"
+    },
+    {
+      "content": "Vendor beton PT Beton Maju berpengalaman proyek gudang.",
+      "createdAt": "2026-05-09T16:40:21.621Z"
+    },
+    {
+      "content": "Vendor beton PT Beton Maju berpengalaman proyek gudang.",
+      "createdAt": "2026-05-09T16:41:21.659Z"
+    },
+    {
+      "content": "Vendor beton PT Beton Maju berpengalaman proyek gudang.",
+      "createdAt": "2026-05-09T16:42:21.674Z"
+    }
+  ],
+  "ahsp": [
+    {
+      "content": "AHSP struktur beton mengikuti standar PUPR.",
+      "createdAt": "2026-05-09T16:11:29.061Z"
+    },
+    {
+      "content": "AHSP struktur beton mengikuti standar PUPR.",
+      "createdAt": "2026-05-09T16:40:21.622Z"
+    },
+    {
+      "content": "AHSP struktur beton mengikuti standar PUPR.",
+      "createdAt": "2026-05-09T16:41:21.660Z"
+    },
+    {
+      "content": "AHSP struktur beton mengikuti standar PUPR.",
+      "createdAt": "2026-05-09T16:42:21.674Z"
+    }
+  ],
+  "risks": [
+    {
+      "content": "Harga baja fluktuatif",
+      "createdAt": "2026-05-09T16:00:37.911Z"
+    },
+    {
+      "content": "Risiko kenaikan harga baja cukup tinggi.",
+      "createdAt": "2026-05-09T16:11:29.061Z"
+    },
+    {
+      "content": "Risiko kenaikan harga baja cukup tinggi.",
+      "createdAt": "2026-05-09T16:40:21.621Z"
+    },
+    {
+      "content": "Risiko kenaikan harga baja cukup tinggi.",
+      "createdAt": "2026-05-09T16:41:21.660Z"
+    },
+    {
+      "content": "Risiko kenaikan harga baja cukup tinggi.",
+      "createdAt": "2026-05-09T16:42:21.674Z"
+    }
+  ],
+  "workflows": []
+}

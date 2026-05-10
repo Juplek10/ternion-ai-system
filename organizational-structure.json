@@ -1,0 +1,27 @@
+{
+  "executive": {
+    "name": "Executive Strategic Leader",
+    "authorityLevel": 10,
+    "manages": [
+      "Strategic Expert",
+      "Governance Expert"
+    ]
+  },
+  "leaders": [
+    {
+      "name": "Strategic Expert",
+      "authorityLevel": 8,
+      "manages": [
+        "Risk Expert",
+        "Quantitative Expert"
+      ]
+    },
+    {
+      "name": "Governance Expert",
+      "authorityLevel": 9,
+      "manages": [
+        "Architecture Expert"
+      ]
+    }
+  ]
+}

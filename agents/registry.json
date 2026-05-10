@@ -1,0 +1,97 @@
+[
+  {
+    "id": 1778315149644,
+    "createdAt": "2026-05-09T08:25:49.644Z",
+    "name": "Estimator Agent",
+    "type": "estimation",
+    "skills": [
+      "RAB",
+      "BOQ",
+      "quantity takeoff"
+    ]
+  },
+  {
+    "id": 1778315149646,
+    "createdAt": "2026-05-09T08:25:49.646Z",
+    "name": "OCR Agent",
+    "type": "document",
+    "skills": [
+      "OCR",
+      "PDF analysis",
+      "DED analysis"
+    ]
+  },
+  {
+    "id": 1778315149646,
+    "createdAt": "2026-05-09T08:25:49.646Z",
+    "name": "Vendor Agent",
+    "type": "business",
+    "skills": [
+      "vendor analysis",
+      "supplier research"
+    ]
+  },
+  {
+    "id": 1778322695129,
+    "createdAt": "2026-05-09T10:31:35.129Z",
+    "name": "vendor-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778323384950,
+    "createdAt": "2026-05-09T10:43:04.950Z",
+    "name": "pdf-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778328662167,
+    "createdAt": "2026-05-09T12:11:02.167Z",
+    "name": "pdf-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778328662170,
+    "createdAt": "2026-05-09T12:11:02.170Z",
+    "name": "rab-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778328830389,
+    "createdAt": "2026-05-09T12:13:50.389Z",
+    "name": "vendor-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778328830392,
+    "createdAt": "2026-05-09T12:13:50.392Z",
+    "name": "pdf-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  },
+  {
+    "id": 1778328830394,
+    "createdAt": "2026-05-09T12:13:50.394Z",
+    "name": "rab-agent",
+    "type": "generated-agent",
+    "skills": [
+      "custom-task"
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1778321327645,
+    "createdAt": "2026-05-09T10:08:47.645Z",
+    "name": "Google Drive",
+    "type": "storage",
+    "description": "Create folders and manage files"
+  },
+  {
+    "id": 1778321327646,
+    "createdAt": "2026-05-09T10:08:47.646Z",
+    "name": "Google Sheets",
+    "type": "spreadsheet",
+    "description": "Create and edit spreadsheets"
+  },
+  {
+    "id": 1778321327646,
+    "createdAt": "2026-05-09T10:08:47.646Z",
+    "name": "Telegram",
+    "type": "communication",
+    "description": "Send messages to Telegram"
+  },
+  {
+    "id": 1778321327646,
+    "createdAt": "2026-05-09T10:08:47.646Z",
+    "name": "Gmail",
+    "type": "email",
+    "description": "Send and read emails"
+  }
+]

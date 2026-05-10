@@ -1,0 +1,29 @@
+{
+  "organizations": [
+    {
+      "name": "Security Organization",
+      "focus": [
+        "threat detection",
+        "security governance",
+        "intrusion prevention"
+      ],
+      "alliance": [
+        "Governance Organization",
+        "Operations Organization"
+      ],
+      "createdAt": "2026-05-09T18:34:18.900Z"
+    },
+    {
+      "name": "Advanced Research Organization",
+      "focus": [
+        "recursive cognition",
+        "experimental intelligence",
+        "advanced reasoning"
+      ],
+      "alliance": [
+        "Research Organization"
+      ],
+      "createdAt": "2026-05-09T18:34:18.904Z"
+    }
+  ]
+}

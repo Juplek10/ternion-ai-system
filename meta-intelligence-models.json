@@ -1,0 +1,22 @@
+{
+  "models": [
+    {
+      "name": "Strategic Cognition",
+      "adaptability": 8,
+      "stability": 9,
+      "innovation": 7
+    },
+    {
+      "name": "Distributed Cognition",
+      "adaptability": 9,
+      "stability": 8,
+      "innovation": 9
+    },
+    {
+      "name": "Centralized Cognition",
+      "adaptability": 5,
+      "stability": 7,
+      "innovation": 4
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "civilizations": [
+    {
+      "name": "Centralized Civilization",
+      "stability": 6,
+      "innovation": 5,
+      "adaptability": 4
+    },
+    {
+      "name": "Balanced Civilization",
+      "stability": 9,
+      "innovation": 8,
+      "adaptability": 9
+    },
+    {
+      "name": "Research Heavy Civilization",
+      "stability": 4,
+      "innovation": 10,
+      "adaptability": 6
+    }
+  ]
+}

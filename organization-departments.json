@@ -1,0 +1,28 @@
+{
+  "departments": [
+    {
+      "name": "Engineering Department",
+      "divisions": [
+        "Architecture Division",
+        "Optimization Division",
+        "Feature Development Division"
+      ]
+    },
+    {
+      "name": "Operations Department",
+      "divisions": [
+        "Runtime Monitoring Division",
+        "Recovery Division",
+        "Infrastructure Division"
+      ]
+    },
+    {
+      "name": "Governance Department",
+      "divisions": [
+        "Risk Control Division",
+        "Approval Management Division",
+        "Compliance Division"
+      ]
+    }
+  ]
+}

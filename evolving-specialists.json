@@ -1,0 +1,54 @@
+{
+  "specialists": [
+    {
+      "name": "Cost Optimization Expert",
+      "capabilities": [
+        "cost-analysis",
+        "budget-optimization",
+        "resource-efficiency"
+      ],
+      "collaborators": [
+        "Strategic Expert",
+        "Quantitative Expert"
+      ],
+      "createdAt": "2026-05-09T18:08:24.785Z"
+    },
+    {
+      "name": "Performance Expert",
+      "capabilities": [
+        "runtime-analysis",
+        "performance-optimization",
+        "latency-reduction"
+      ],
+      "collaborators": [
+        "Architecture Expert"
+      ],
+      "createdAt": "2026-05-09T18:08:24.790Z"
+    },
+    {
+      "name": "Cost Optimization Expert",
+      "capabilities": [
+        "cost-analysis",
+        "budget-optimization",
+        "resource-efficiency"
+      ],
+      "collaborators": [
+        "Strategic Expert",
+        "Quantitative Expert"
+      ],
+      "createdAt": "2026-05-09T18:09:15.595Z"
+    },
+    {
+      "name": "Performance Expert",
+      "capabilities": [
+        "runtime-analysis",
+        "performance-optimization",
+        "latency-reduction"
+      ],
+      "collaborators": [
+        "Architecture Expert"
+      ],
+      "createdAt": "2026-05-09T18:09:15.600Z"
+    }
+  ]
+}

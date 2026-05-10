@@ -1,0 +1,25 @@
+{
+  "policies": [
+    {
+      "organization": "Research Organization",
+      "requiresApproval": true,
+      "restrictedActions": [
+        "experimental cognition deployment"
+      ]
+    },
+    {
+      "organization": "Security Organization",
+      "requiresApproval": false,
+      "restrictedActions": [
+        "override governance authority"
+      ]
+    },
+    {
+      "organization": "Operations Organization",
+      "requiresApproval": true,
+      "restrictedActions": [
+        "disable monitoring systems"
+      ]
+    }
+  ]
+}

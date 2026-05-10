@@ -1,0 +1,39 @@
+# Environment & Secrets
+.env
+.env.*
+
+# Google OAuth Tokens
+tokens/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PM2 Logs (di server, bukan di repo)
+logs/
+
+# Queue state (runtime data)
+queue/tasks.json
+
+# Session data (runtime data)
+sessions/
+
+# Memory runtime (terlalu besar & berubah terus)
+memory/memory.json
+memory/file-memory.json
+vector/memory.json
+
+# Backup archives
+*.tar.gz
+*.zip
+
+# Editor artifacts
+*.save
+*.bak
+*.jsnano
+
+# OS
+.DS_Store
+Thumbs.db

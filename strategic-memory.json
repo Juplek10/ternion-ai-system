@@ -1,0 +1,17 @@
+{
+  "roadmap": [
+    {
+      "goal": "Improve autonomous planning",
+      "priority": "medium",
+      "createdAt": "2026-05-09T17:50:09.562Z"
+    }
+  ],
+  "completed": [
+    {
+      "goal": "Expand vendor intelligence",
+      "completedAt": "2026-05-09T17:50:09.562Z"
+    }
+  ],
+  "priorities": [],
+  "longTermGoals": []
+}

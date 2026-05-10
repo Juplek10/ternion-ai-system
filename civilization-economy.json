@@ -1,0 +1,28 @@
+{
+  "organizations": [
+    {
+      "name": "Engineering Organization",
+      "budget": 100,
+      "efficiency": 8,
+      "impact": 9
+    },
+    {
+      "name": "Research Organization",
+      "budget": 120,
+      "efficiency": 9,
+      "impact": 10
+    },
+    {
+      "name": "Operations Organization",
+      "budget": 90,
+      "efficiency": 7,
+      "impact": 8
+    },
+    {
+      "name": "Governance Organization",
+      "budget": 80,
+      "efficiency": 10,
+      "impact": 9
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "id": 1778327234069,
+      "createdAt": "2026-05-09T11:47:14.069Z",
+      "type": "project",
+      "name": "RAB Gudang"
+    },
+    {
+      "id": 1778327234070,
+      "createdAt": "2026-05-09T11:47:14.070Z",
+      "type": "vendor",
+      "name": "PT Beton Maju"
+    }
+  ],
+  "edges": [
+    {
+      "from": "RAB Gudang",
+      "to": "PT Beton Maju",
+      "relation": "uses-vendor"
+    }
+  ]
+}
