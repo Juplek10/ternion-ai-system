@@ -30,10 +30,10 @@ ASSISTANT:
       stream: false,
       options: {
         num_ctx: 2048,
-        num_predict: 500
+        num_predict: 250
       }
     },
-    { timeout: 120000 }
+    { timeout: 150000 }
   );
 
   return response.data.response;

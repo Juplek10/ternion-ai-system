@@ -50,6 +50,13 @@ const bot =
     { handlerTimeout: 180000 }
   );
 
+bot.handleError = async (err, ctx) => {
+  console.log("BOT ERROR (handled):", err.message);
+  try {
+    await ctx.reply("Maaf, AI sedang sibuk. Kirim ulang pesan kamu.");
+  } catch(e) {}
+};
+
 function isAuthorized(
   chatId
 ) {
