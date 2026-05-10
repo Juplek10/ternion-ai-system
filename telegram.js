@@ -23,14 +23,6 @@ const {
 } = require(
   "./core/file-memory"
 );
-const {
-
-  addTask
-
-} = require(
-  "./core/queue"
-);
-
 const routeTask = require(
   "./core/router/router"
 );
@@ -327,8 +319,8 @@ bot.on(
       // Bangun prompt dengan history percakapan
       const session = await loadSession(chatId);
       const history = session.history
-        .slice(-10)
-        .map(m => `${m.role === "assistant" ? "ASSISTANT" : "USER"}: ${m.content}`)
+        .slice(-4)
+        .map(m => `${m.role === "assistant" ? "ASSISTANT" : "USER"}: ${m.content.substring(0, 300)}`)
         .join("\n");
 
       const fullPrompt = history
@@ -352,7 +344,7 @@ bot.on(
       );
 
       return ctx.reply(
-        "Civilization runtime error."
+        "Maaf, AI sedang sibuk. Coba lagi dalam beberapa detik."
       );
     }
   }
@@ -361,7 +353,7 @@ bot.on(
 bot.launch({ dropPendingUpdates: true });
 
 console.log(
-  "TELEGRAM CIVILIZATION ONLINE"
+  "TERNION-AI TELEGRAM ONLINE"
 );
 
 /*
