@@ -112,9 +112,10 @@ module.exports = {
       script: "/root/ai-system/whatsapp-gateway.js",
       instances: 1,
       exec_mode: "fork",
-      restart_delay: 10000,
-      kill_timeout: 10000,
-      max_restarts: 5,
+      restart_delay: 15000,
+      kill_timeout: 15000,
+      max_restarts: 999,
+      min_uptime: "30s",
       env: { NODE_ENV: "production" }
     }
   ]

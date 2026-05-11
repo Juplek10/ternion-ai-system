@@ -14,6 +14,24 @@ const BRIAN_CHAT_ID = 6935073123;
 const UPLOADS_DIR = "/root/ai-system/workspace/uploads";
 const SESSION_DIR = "/root/ai-system/.wwebjs_auth";
 
+// ─── Nomor pribadi owner untuk notifikasi & konfirmasi ───
+const OWNER_WA = "6282266130808@c.us";
+
+// ─── Antrian pesan menunggu konfirmasi owner ─────────────
+// Map<id, { msg, sender, senderName, body, proposedReply, timer }>
+const pendingApprovals = new Map();
+const APPROVAL_TIMEOUT_MS = 10 * 60 * 1000; // 10 menit
+
+// ─── Generate ID pendek (4 karakter) ─────────────────────
+function genId() {
+  return Math.random().toString(36).substring(2, 6).toUpperCase();
+}
+
+// ─── Format waktu lokal ──────────────────────────────────
+function timeNow() {
+  return new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Makassar" });
+}
+
 // ─── Kirim pesan teks ke Telegram Brian ──────────────────
 async function notifyTelegram(text) {
   try {
@@ -48,8 +66,17 @@ async function sendQRToTelegram(qrString) {
     console.log("[WA] QR dikirim ke Telegram Brian");
   } catch (err) {
     console.error("[WA] Gagal kirim QR ke Telegram:", err.message);
-    // Fallback: tampilkan di terminal
     qrcodeTerminal.generate(qrString, { small: true });
+  }
+}
+
+// ─── Kirim notifikasi ke nomor pribadi owner ─────────────
+async function notifyOwner(text) {
+  try {
+    await client.sendMessage(OWNER_WA, text);
+    console.log("[WA] Notifikasi terkirim ke owner");
+  } catch (err) {
+    console.error("[WA] Gagal notif ke owner:", err.message);
   }
 }
 
@@ -69,9 +96,10 @@ const client = new Client({
       "--disable-gpu"
     ]
   },
+  webVersion: "2.3000.1015901785-alpha",
   webVersionCache: {
     type: "remote",
-    remotePath: "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1023346-alpha/index.html"
+    remotePath: "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1015901785-alpha/index.html"
   }
 });
 
@@ -85,12 +113,24 @@ client.on("qr", async (qr) => {
 // ─── Event: Ready ────────────────────────────────────────
 client.on("ready", async () => {
   console.log("[WA] WhatsApp terhubung!");
-  await notifyTelegram("✅ <b>WhatsApp terhubung ke TERNION-AI!</b>\n\nSekarang kamu bisa chat dengan AI via WhatsApp. Semua command tersedia:\n/ahs /rab /draft /harga /cari\n/konstruksi /trading /procurement\n/analisa /rangkum /terjemah");
+  try {
+    const chats = await client.getChats();
+    console.log(`[WA] Koneksi OK — ${chats.length} chat ditemukan`);
+  } catch (err) {
+    console.error("[WA] getChats gagal:", err.message);
+  }
+  await notifyTelegram("✅ <b>WhatsApp terhubung ke TERNION-AI!</b>\n\nSistem aktif 24/7. Pesan dari kontak baru akan dikonfirmasi ke owner sebelum dibalas.");
+  await notifyOwner("✅ *TERNION-AI WhatsApp Aktif*\n\nSistem siap menerima pesan. Setiap pesan dari kontak lain akan dikirim ke sini untuk dikonfirmasi sebelum dibalas.");
 });
 
 // ─── Event: Authenticated ────────────────────────────────
 client.on("authenticated", () => {
   console.log("[WA] Authenticated - session tersimpan");
+});
+
+// ─── Event: State change ─────────────────────────────────
+client.on("change_state", (state) => {
+  console.log("[WA] State:", state);
 });
 
 // ─── Event: Auth failure ─────────────────────────────────
@@ -103,7 +143,24 @@ client.on("auth_failure", async (msg) => {
 client.on("disconnected", async (reason) => {
   console.error("[WA] Disconnected:", reason);
   await notifyTelegram(`⚠️ WhatsApp terputus: ${reason}\n\nSedang reconnect...`);
+  // PM2 akan auto-restart, tidak perlu manual reconnect
 });
+
+// ─── Cek apakah pertanyaan identitas ─────────────────────
+function isIdentityQuestion(body) {
+  const lower = body.toLowerCase();
+  return (
+    lower.includes("siapa anda") ||
+    lower.includes("siapa kamu") ||
+    lower.includes("kamu siapa") ||
+    lower.includes("anda siapa") ||
+    lower.includes("who are you") ||
+    lower.includes("who r u") ||
+    lower.includes("lo siapa") ||
+    lower.includes("kamu ini siapa") ||
+    lower.includes("ini siapa")
+  );
+}
 
 // ─── Route command sama seperti Telegram ─────────────────
 async function routeCommand(cmd, query, msg) {
@@ -184,16 +241,15 @@ async function routeCommand(cmd, query, msg) {
       return await translate(lang, content);
     }
     if (cmdLower === "/help") {
-      return "📋 *Command TERNION-AI via WhatsApp:*\n\n*Tools:*\n/ahs - Analisa Harga Satuan\n/rab - Rencana Anggaran Biaya\n/draft - Buat dokumen\n/harga - Cek harga komoditas\n/cari - Web search\n\n*Agents:*\n/konstruksi - Teknis konstruksi\n/trading - Komoditas & ekspor\n/procurement - Tender & pengadaan\n/strategi - Analisa bisnis\n/admin - Dokumen administrasi\n\n*Skills:*\n/analisa - Analisa data\n/rangkum - Rangkum teks\n/terjemah - Terjemahkan\n\nAtau kirim pesan biasa untuk chat dengan AI!";
+      return "📋 *Command TERNION-AI via WhatsApp:*\n\n*Tools:*\n/ahs - Analisa Harga Satuan\n/rab - Rencana Anggaran Biaya\n/draft - Buat dokumen\n/harga - Cek harga komoditas\n/cari - Web search\n\n*Agents:*\n/konstruksi - Teknis konstruksi\n/trading - Komoditas & ekspor\n/procurement - Tender & pengadaan\n/strategi - Analisa bisnis\n/admin - Dokumen administrasi\n\n*Skills:*\n/analisa - Analisa data\n/rangkum - Rangkum teks\n/terjemah - Terjemahkan\n\nAtau kirim pesan biasa untuk chat!";
     }
 
-    // Dynamic skills
     const skillCmd = cmdLower.replace("/", "");
     const { runDynamicSkill } = require("../evolution/skill-builder");
     const skillResult = await runDynamicSkill(skillCmd, query);
     if (skillResult !== null) return skillResult;
 
-    return null; // tidak dikenali sebagai command
+    return null;
   } catch (err) {
     console.error(`[WA] Error routing command ${cmd}:`, err.message);
     return `❌ Error: ${err.message}`;
@@ -212,26 +268,92 @@ async function uploadToDrive(localPath, filename) {
   }
 }
 
-// ─── Handler pesan masuk ─────────────────────────────────
-client.on("message", async (msg) => {
-  // Abaikan pesan dari status / broadcast
-  if (msg.from === "status@broadcast") return;
-  if (msg.isStatus) return;
+// ─── Helper: react fire-and-forget ───────────────────────
+function react(msg, emoji) {
+  msg.react(emoji).catch(() => {});
+}
 
+// ─── Handler pesan dari OWNER (konfirmasi / arahan) ──────
+async function handleOwnerMessage(msg) {
+  const body = (msg.body || "").trim();
+  console.log(`[WA] Pesan dari Owner: ${body.substring(0, 80)}`);
+
+  // Cek pola: KIRIM #ID atau SKIP #ID atau [teks] #ID
+  const idMatch = body.match(/#([A-Z0-9]{4})\s*$/i);
+
+  if (idMatch) {
+    const id = idMatch[1].toUpperCase();
+    const pending = pendingApprovals.get(id);
+
+    if (!pending) {
+      await notifyOwner(`⚠️ Tidak ada pesan dengan ID *#${id}* (mungkin sudah expired atau tidak valid).`);
+      return;
+    }
+
+    // Bersihkan timer timeout
+    clearTimeout(pending.timer);
+    pendingApprovals.delete(id);
+
+    const cmdPart = body.replace(/#[A-Z0-9]{4}\s*$/i, "").trim().toUpperCase();
+
+    if (cmdPart === "SKIP") {
+      // Owner pilih tidak balas
+      console.log(`[WA] Owner SKIP pesan #${id}`);
+      await notifyOwner(`🚫 Pesan *#${id}* dari ${pending.senderName} diabaikan.`);
+      react(pending.msg, "🚫");
+      return;
+    }
+
+    // Tentukan teks yang akan dikirim
+    const replyText = (cmdPart === "" || cmdPart === "KIRIM")
+      ? pending.proposedReply           // kirim balasan AI
+      : body.replace(/#[A-Z0-9]{4}\s*$/i, "").trim(); // kirim teks custom owner
+
+    try {
+      await pending.msg.reply(replyText);
+      react(pending.msg, "✅");
+      console.log(`[WA] Balasan #${id} terkirim ke ${pending.sender}`);
+      await notifyOwner(`✅ Balasan *#${id}* terkirim ke *${pending.senderName}*:\n\n"${replyText.substring(0, 200)}"`);
+
+      // Simpan ke memory
+      try {
+        const { saveConversation } = require("../memory/long-term-memory");
+        await saveConversation(`[WhatsApp dari ${pending.senderName}] ${pending.body}`, replyText).catch(() => {});
+      } catch {}
+    } catch (err) {
+      console.error("[WA] Gagal kirim balasan:", err.message);
+      await notifyOwner(`❌ Gagal kirim balasan #${id}: ${err.message}`);
+    }
+    return;
+  }
+
+  // Tidak ada #ID → ini arahan/instruksi umum dari owner, konfirmasi terima
+  console.log(`[WA] Arahan dari owner: ${body}`);
+  await notifyOwner(`✅ Arahan diterima: "${body.substring(0, 100)}"\n\nAkan diterapkan pada balasan selanjutnya.`);
+
+  // Simpan arahan sebagai context tambahan untuk AI
+  try {
+    const { saveConversation } = require("../memory/long-term-memory");
+    await saveConversation(`[Arahan Owner via WA] ${body}`, "Arahan dicatat.").catch(() => {});
+  } catch {}
+}
+
+// ─── Handler pesan masuk dari kontak lain ────────────────
+async function handleIncomingMessage(msg) {
   const sender = msg.from;
+  const body = msg.body || "";
   const contact = await msg.getContact().catch(() => null);
   const senderName = contact?.pushname || contact?.name || sender.replace("@c.us", "");
-  const body = msg.body || "";
 
-  console.log(`[WA] Pesan dari ${senderName} (${sender}): ${body.substring(0, 80)}`);
+  console.log(`[WA] Pesan masuk dari ${senderName} (${sender}): ${body.substring(0, 80)}`);
 
   // ── Handler file/media ────────────────────────────────
   if (msg.hasMedia) {
+    react(msg, "⏳");
     try {
-      await msg.react("⏳");
       const media = await msg.downloadMedia();
       if (!media) {
-        await msg.reply("❌ Gagal mengunduh file.");
+        await notifyOwner(`📎 *File diterima dari ${senderName}* tapi gagal diunduh.`);
         return;
       }
       await fs.ensureDir(UPLOADS_DIR);
@@ -241,57 +363,150 @@ client.on("message", async (msg) => {
       await fs.writeFile(localPath, Buffer.from(media.data, "base64"));
 
       const uploaded = await uploadToDrive(localPath, filename);
-      const driveStatus = uploaded ? "✅ Tersimpan di Google Drive (UPLOADS/)" : "⚠️ Disimpan lokal (Drive gagal)";
+      const driveStatus = uploaded ? "✅ Tersimpan di Google Drive" : "⚠️ Disimpan lokal saja";
 
-      await msg.reply(`📁 *File diterima!*\n\n📌 Nama: ${filename}\n💾 Lokal: workspace/uploads/\n☁️ ${driveStatus}`);
-      await msg.react("✅");
+      await notifyOwner(`📎 *File dari ${senderName}*\nNama: ${filename}\n${driveStatus}`);
+      react(msg, "✅");
     } catch (err) {
       console.error("[WA] Error handle media:", err.message);
-      await msg.reply("❌ Gagal memproses file: " + err.message).catch(() => {});
+      await notifyOwner(`❌ Error handle file dari ${senderName}: ${err.message}`);
     }
     return;
   }
 
-  // ── Handler teks ──────────────────────────────────────
   if (!body.trim()) return;
 
-  try {
-    // Cek apakah command
-    if (body.startsWith("/")) {
-      const parts = body.trim().split(/\s+/);
-      const cmd = parts[0].toLowerCase();
-      const query = parts.slice(1).join(" ");
+  react(msg, "⏳");
 
-      await msg.react("⏳");
-      const result = await routeCommand(cmd, query, msg);
-      if (result !== null) {
-        await msg.reply(result);
-        await msg.react("✅");
-        return;
+  // ── Pertanyaan identitas: jawab langsung ─────────────
+  if (isIdentityQuestion(body)) {
+    const identityReply = "Saya admin Ternion Group. Ada yang bisa saya bantu?";
+    const id = genId();
+
+    // Tetap notif ke owner
+    await notifyOwner(
+      `📨 *Pesan Masuk #${id}*\n` +
+      `Dari: *${senderName}* (${sender.replace("@c.us", "")})\n` +
+      `Waktu: ${timeNow()}\n\n` +
+      `💬 "${body}"\n\n` +
+      `🤖 Rencana balasan (identitas):\n"${identityReply}"\n\n` +
+      `━━━━━━━━━━━━\n` +
+      `• *KIRIM #${id}* — Kirim balasan ini\n` +
+      `• *SKIP #${id}* — Abaikan\n` +
+      `• *[teks] #${id}* — Kirim teks custom\n` +
+      `⏰ Expired dalam 10 menit`
+    );
+
+    const timer = setTimeout(async () => {
+      if (pendingApprovals.has(id)) {
+        pendingApprovals.delete(id);
+        console.log(`[WA] Pesan #${id} expired tanpa konfirmasi`);
+        await notifyOwner(`⏰ Pesan *#${id}* dari ${senderName} expired tanpa respons.`);
+        react(msg, "❌");
       }
+    }, APPROVAL_TIMEOUT_MS);
+
+    pendingApprovals.set(id, { msg, sender, senderName, body, proposedReply: identityReply, timer });
+    return;
+  }
+
+  // ── Command khusus (/ahs, /rab, dst) ─────────────────
+  if (body.startsWith("/")) {
+    const parts = body.trim().split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+    const query = parts.slice(1).join(" ");
+
+    const result = await routeCommand(cmd, query, msg).catch(() => null);
+    if (result !== null) {
+      const id = genId();
+      await notifyOwner(
+        `📨 *Pesan Masuk #${id}* (Command)\n` +
+        `Dari: *${senderName}* (${sender.replace("@c.us", "")})\n` +
+        `Waktu: ${timeNow()}\n\n` +
+        `💬 "${body}"\n\n` +
+        `🤖 Rencana balasan:\n"${(result || "").substring(0, 300)}"\n\n` +
+        `━━━━━━━━━━━━\n` +
+        `• *KIRIM #${id}* — Kirim balasan ini\n` +
+        `• *SKIP #${id}* — Abaikan\n` +
+        `• *[teks] #${id}* — Kirim teks custom\n` +
+        `⏰ Expired dalam 10 menit`
+      );
+
+      const timer = setTimeout(async () => {
+        if (pendingApprovals.has(id)) {
+          pendingApprovals.delete(id);
+          await notifyOwner(`⏰ Pesan *#${id}* dari ${senderName} expired.`);
+          react(msg, "❌");
+        }
+      }, APPROVAL_TIMEOUT_MS);
+
+      pendingApprovals.set(id, { msg, sender, senderName, body, proposedReply: result, timer });
+      return;
     }
+  }
 
-    // Chat biasa — route ke Claude dengan context WhatsApp
-    await msg.react("⏳");
-    const prompt = `[Pesan dari WhatsApp]\nPengirim: ${senderName} (${sender})\n\n${body}`;
-    const reply = await askClaude(prompt, {
-      systemContext: "Pesan ini diterima via WhatsApp. Balas ringkas dan natural."
+  // ── Chat biasa → generate AI reply → minta konfirmasi ─
+  try {
+    const prompt = `[Pesan WhatsApp dari ${senderName}]\n\n${body}`;
+    const aiReply = await askClaude(prompt, {
+      systemContext: "Kamu adalah admin Ternion Group. Balas ringkas, profesional, dan natural. Jangan sebut nama AI atau bot."
     });
-    await msg.reply(reply);
-    await msg.react("✅");
 
-    // Simpan ke memory
-    try {
-      const { saveConversation } = require("../memory/long-term-memory");
-      await saveConversation(`[WhatsApp dari ${senderName}] ${body}`, reply).catch(() => {});
-    } catch {}
+    const id = genId();
+
+    await notifyOwner(
+      `📨 *Pesan Masuk #${id}*\n` +
+      `Dari: *${senderName}* (${sender.replace("@c.us", "")})\n` +
+      `Waktu: ${timeNow()}\n\n` +
+      `💬 "${body}"\n\n` +
+      `🤖 Rencana balasan:\n"${aiReply.substring(0, 500)}"\n\n` +
+      `━━━━━━━━━━━━\n` +
+      `• *KIRIM #${id}* — Kirim balasan ini\n` +
+      `• *SKIP #${id}* — Abaikan\n` +
+      `• *[teks] #${id}* — Kirim teks custom\n` +
+      `⏰ Expired dalam 10 menit`
+    );
+
+    const timer = setTimeout(async () => {
+      if (pendingApprovals.has(id)) {
+        pendingApprovals.delete(id);
+        console.log(`[WA] Pesan #${id} expired`);
+        await notifyOwner(`⏰ Pesan *#${id}* dari *${senderName}* expired tanpa respons.`);
+        react(msg, "❌");
+      }
+    }, APPROVAL_TIMEOUT_MS);
+
+    pendingApprovals.set(id, { msg, sender, senderName, body, proposedReply: aiReply, timer });
+    console.log(`[WA] Pesan #${id} dari ${senderName} menunggu konfirmasi owner`);
 
   } catch (err) {
-    console.error("[WA] Error handle pesan:", err.message);
-    await msg.reply("Maaf, coba kirim ulang.").catch(() => {});
-    await msg.react("❌").catch(() => {});
+    console.error("[WA] Error generate reply:", err.message);
+    react(msg, "❌");
+    await notifyOwner(`❌ Gagal generate balasan untuk pesan dari ${senderName}: ${err.message}`);
   }
-});
+}
+
+// ─── Handler utama semua pesan ────────────────────────────
+async function handleMessage(msg) {
+  if (msg.from === "status@broadcast") return;
+  if (msg.isStatus) return;
+  console.log(`[WA] Event: from=${msg.from} fromMe=${msg.fromMe} type=${msg.type} body="${(msg.body||"").substring(0,50)}"`);
+  if (msg.fromMe) return;
+
+  const sender = msg.from;
+
+  // Pesan dari owner → proses sebagai konfirmasi/arahan
+  if (sender === OWNER_WA) {
+    await handleOwnerMessage(msg);
+    return;
+  }
+
+  // Pesan dari kontak lain → proses & minta konfirmasi
+  await handleIncomingMessage(msg);
+}
+
+client.on("message", handleMessage);
+client.on("message_create", handleMessage);
 
 // ─── Start client ─────────────────────────────────────────
 async function start() {
