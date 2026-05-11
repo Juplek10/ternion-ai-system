@@ -30,7 +30,7 @@ Buat analisa dengan format:
 
 💬 Kesimpulan: [1-2 kalimat bottom line untuk Brian]`;
 
-  return await askOllama(prompt);
+  return await askOllama(prompt, "ternion-ai");
 }
 
 module.exports = { analyze };

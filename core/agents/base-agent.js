@@ -4,7 +4,7 @@ const axios = require("axios");
 const { getSoul } = require("../identity/soul-guardian");
 const { searchMemory } = require("../memory/long-term-memory");
 
-async function runAgent(agentSystemPrompt, userQuery) {
+async function runAgent(agentSystemPrompt, userQuery, model = "ternion-ai") {
   // Cari konteks relevan dari memory
   const memResults = await searchMemory(userQuery).catch(() => []);
   const memContext = memResults.length > 0
@@ -18,7 +18,7 @@ async function runAgent(agentSystemPrompt, userQuery) {
   const response = await axios.post(
     `${process.env.OLLAMA_BASE_URL}/api/generate`,
     {
-      model: process.env.DEFAULT_LOCAL_MODEL,
+      model: model,
       prompt: fullPrompt,
       stream: false,
       options: { num_ctx: 2048, num_predict: 400 }

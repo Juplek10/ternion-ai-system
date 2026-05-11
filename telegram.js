@@ -49,6 +49,13 @@ function isAuthorized(chatId) {
   return AUTHORIZED_USERS.includes(chatId);
 }
 
+// ─── Classifier: tentukan task weight sebelum routing ──
+function classifyCommand(text) {
+  const heavyCommands = ["/ahs", "/rab", "/konstruksi", "/strategi", "/analisa", "/trading", "/procurement"];
+  if (heavyCommands.some(cmd => text.startsWith(cmd))) return "heavy";
+  return "light";
+}
+
 // ─── Helper: kirim pesan panjang ───────────────────────
 async function sendLong(ctx, text) {
   const chunks = [];
@@ -426,7 +433,8 @@ bot.on("text", async (ctx) => {
       ? `${history}${memContext}\nUSER: ${originalText}`
       : `${memContext}${originalText}`;
 
-    const aiReply = await routeTask("light", fullPrompt);
+    const taskType = classifyCommand(text);
+    const aiReply = await routeTask(taskType, fullPrompt);
     conversationCountToday++;
 
     await addMessage(chatId, "user", originalText);

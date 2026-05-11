@@ -34,7 +34,7 @@ HARGA SATUAN TOTAL: Rp [angka]
 
 Catatan: [referensi harga atau asumsi yang digunakan]`;
 
-  const result = await askOllama(prompt);
+  const result = await askOllama(prompt, "ternion-ai");
   return result;
 }
 

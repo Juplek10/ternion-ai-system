@@ -35,7 +35,7 @@ TOTAL RAB: Rp [angka]
 
 Terbilang: [teks angka]`;
 
-  const result = await askOllama(prompt);
+  const result = await askOllama(prompt, "ternion-ai");
   return result;
 }
 
