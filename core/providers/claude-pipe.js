@@ -9,50 +9,45 @@ const execFileAsync = promisify(execFile);
 
 const SOUL_PATH = "/root/ai-system/prompts/ternion-soul.txt";
 const MEMORY_PATH = "/root/ai-system/memory/long-term.json";
+const MEMORY_DIR = "/root/ai-system/memory";
 
 function loadSoul() {
   try {
     return fs.readFileSync(SOUL_PATH, "utf8").trim();
   } catch {
-    return "Kamu adalah Ternion-AI, asisten cerdas Brian Kinayom dari TERNION GROUP, Kupang NTT.";
+    return "Kamu adalah Ternion-AI, asisten cerdas Brian Kinayom (dipanggil Bry), Founder & Nexus Lead TERNION GROUP, Kupang NTT. Bisnis: procurement, konstruksi, trading, ekspor-impor, kafe. Tim: VECTOR (ops), SCRIPTA (admin). Pasar: NTT, Timor Leste, Jakarta.";
   }
 }
 
 function loadRecentMemory() {
   const lines = [];
 
-  // 1. Baca dari personal.json (data tetap Brian)
+  // 1. Personal data Brian (data tetap)
   try {
-    const PERSONAL_PATH = path.join(path.dirname(MEMORY_PATH), "personal.json");
-    const personal = JSON.parse(fs.readFileSync(PERSONAL_PATH, "utf8"));
-    const entries = (personal.entries || []).slice(-5);
-    for (const e of entries) {
+    const personal = JSON.parse(fs.readFileSync(path.join(MEMORY_DIR, "personal.json"), "utf8"));
+    for (const e of (personal.entries || []).slice(-5)) {
       lines.push(`[personal] ${e.content || e}`);
     }
   } catch {}
 
-  // 2. Baca dari domain files — 3 entri terakhir per domain
-  const DOMAIN_FILES = ["bisnis", "proyek", "kontak", "keputusan", "percakapan"];
-  const memDir = path.dirname(MEMORY_PATH);
-  for (const domain of DOMAIN_FILES) {
+  // 2. Domain files — 3 entri terbaru per domain
+  const DOMAINS = ["bisnis", "proyek", "kontak", "keputusan", "percakapan"];
+  for (const domain of DOMAINS) {
     try {
-      const domainPath = path.join(memDir, `${domain}.json`);
-      const data = JSON.parse(fs.readFileSync(domainPath, "utf8"));
-      const entries = (data.entries || []).slice(-3);
-      for (const e of entries) {
+      const data = JSON.parse(fs.readFileSync(path.join(MEMORY_DIR, `${domain}.json`), "utf8"));
+      for (const e of (data.entries || []).slice(-3)) {
         if (domain === "percakapan") {
-          if (e.user) lines.push(`[percakapan] User: ${e.user.substring(0, 150)}`);
+          if (e.user) lines.push(`[percakapan] User pernah berkata: ${e.user.substring(0, 120)}`);
         } else {
-          lines.push(`[${domain}] ${(e.content || "").substring(0, 150)}`);
+          lines.push(`[${domain}] ${(e.content || "").substring(0, 120)}`);
         }
       }
     } catch {}
   }
 
-  // 3. Baca dari long-term.json sebagai fallback
+  // 3. Long-term facts sebagai fallback
   try {
-    const raw = fs.readFileSync(MEMORY_PATH, "utf8");
-    const mem = JSON.parse(raw);
+    const mem = JSON.parse(fs.readFileSync(MEMORY_PATH, "utf8"));
     const allFacts = [];
     for (const [cat, items] of Object.entries(mem.facts || {})) {
       for (const item of items) {
@@ -60,33 +55,45 @@ function loadRecentMemory() {
       }
     }
     allFacts.sort((a, b) => (b.added_at > a.added_at ? 1 : -1));
-    const topFacts = allFacts.slice(0, 5).map(f => `[${f.cat}] ${f.content}`);
-    lines.push(...topFacts);
+    for (const f of allFacts.slice(0, 5)) {
+      lines.push(`[${f.cat}] ${f.content}`);
+    }
   } catch {}
 
   return [...new Set(lines)].slice(0, 20).join("\n");
 }
 
-async function askClaude(prompt) {
+/**
+ * askClaude(prompt, options)
+ * options.systemContext — string: konteks peran spesifik (untuk tools/agents)
+ * options.timeout       — number: ms timeout (default 90000)
+ */
+async function askClaude(prompt, options = {}) {
   const soul = loadSoul();
   const recentMemory = loadRecentMemory();
+  const systemContext = options.systemContext || "";
+  const timeout = options.timeout || 90000;
 
-  const memContext = recentMemory
-    ? `\n\nKONTEKS MEMORY TERBARU:\n${recentMemory}`
+  const memSection = recentMemory
+    ? `\n\n=== KONTEKS MEMORY BRIAN ===\n${recentMemory}\n=== AKHIR MEMORY ===`
     : "";
 
-  const fullPrompt = `${soul}${memContext}\n\n---\n\n${prompt}`;
+  const roleSection = systemContext
+    ? `\n\n=== PERAN KHUSUS ===\n${systemContext}\n=== AKHIR PERAN ===`
+    : "";
+
+  const fullPrompt = `${soul}${memSection}${roleSection}\n\n---\n\n${prompt}`;
 
   try {
     const { stdout } = await execFileAsync(
       "claude",
       ["-p", fullPrompt, "--output-format", "text"],
-      { timeout: 60000, maxBuffer: 1024 * 1024 * 5 }
+      { timeout, maxBuffer: 1024 * 1024 * 8 }
     );
     return stdout.trim();
   } catch (err) {
-    console.error("[CLAUDE-PIPE] Error:", err.message);
-    throw err;
+    console.error("[CLAUDE-PIPE] Error:", err.message?.substring(0, 200));
+    return "Maaf Bry, coba kirim ulang pesan kamu.";
   }
 }
 

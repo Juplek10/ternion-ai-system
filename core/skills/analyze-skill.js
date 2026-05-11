@@ -1,36 +1,36 @@
-require("dotenv").config();
-const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
+
+const SYSTEM_CONTEXT = `Kamu adalah ANALIS STRATEGIS untuk Brian Kinayom dari TERNION GROUP, Kupang NTT.
+Berikan analisa yang tajam, praktis, dan langsung actionable. Fokus pada konteks NTT yang nyata.`;
 
 async function analyze(data) {
-  const prompt = `Kamu adalah analis strategis untuk Brian Kinayom dari TERNION GROUP, Kupang NTT.
+  const prompt = `Analisa data/situasi berikut secara tajam dan praktis:
 
-Analisa data/situasi berikut secara tajam dan praktis:
-
-${data.substring(0, 2000)}
+${data.substring(0, 3000)}
 
 Buat analisa dengan format:
-📊 ANALISA SITUASI
+ANALISA SITUASI
 
-🔍 Fakta Utama:
+Fakta Utama:
 • [poin 1]
 • [poin 2]
 
-⚡ Peluang:
+Peluang:
 • [peluang 1]
 • [peluang 2]
 
-⚠️ Risiko:
+Risiko:
 • [risiko 1]
 • [risiko 2]
 
-🎯 Rekomendasi Tindakan:
+Rekomendasi Tindakan:
 1. [langkah 1 — konkret dan bisa dilakukan sekarang]
 2. [langkah 2]
 3. [langkah 3]
 
-💬 Kesimpulan: [1-2 kalimat bottom line untuk Brian]`;
+Kesimpulan: [1-2 kalimat bottom line untuk Brian]`;
 
-  return await askOllama(prompt, "ternion-ai");
+  return await askClaude(prompt, { systemContext: SYSTEM_CONTEXT });
 }
 
 module.exports = { analyze };

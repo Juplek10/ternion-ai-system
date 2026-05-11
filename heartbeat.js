@@ -59,18 +59,14 @@ async function getPm2Status() {
   }
 }
 
-// ─── Cek Ollama ─────────────────────────────────────────
+// ─── Cek Claude CLI ──────────────────────────────────────
 async function checkOllama() {
   try {
-    const res = await axios.get(
-      `${process.env.OLLAMA_BASE_URL}/api/tags`,
-      { timeout: 8000 }
-    );
-    const models = res.data.models || [];
-    const loaded = models.find(m => m.name.includes("ternion-ai"));
-    return { ok: true, model: loaded ? "ternion-ai ✅" : "model lain" };
+    const { execSync } = require("child_process");
+    execSync("claude --version", { timeout: 5000 });
+    return { ok: true, model: "Claude ✅ (primary)" };
   } catch (err) {
-    return { ok: false, model: "tidak terhubung ❌" };
+    return { ok: false, model: "Claude CLI tidak ditemukan ❌" };
   }
 }
 
@@ -130,7 +126,7 @@ async function runHeartbeat() {
 
   console.log(`RAM: ${ram.usedGB}GB / ${ram.totalGB}GB (${ram.pct}%)`);
   console.log(`PM2: ${pm2.online}/${pm2.total} online`);
-  console.log(`Ollama: ${ollama.model}`);
+  console.log(`Claude: ${ollama.model}`);
   console.log(`Soul: ${soulOk ? "loaded" : "ERROR"}`);
   console.log("════════════════════════════════");
 
@@ -165,7 +161,7 @@ async function sendHourlyReport(ram, pm2, ollama, soulOk, timeStr) {
 `🫀 <b>TERNION-AI HEARTBEAT</b>
 ─────────────────────
 ⏰ ${timeStr}
-🧠 Model: ${ollama.model}
+🤖 AI: ${ollama.model}
 💾 RAM: ${ram.usedGB} GB / ${ram.totalGB} GB (${ram.pct}%) ${ramIcon}
 ⚡ Proses: ${pm2.online}/${pm2.total} online ${pm2Icon}
 📁 Drive: ${driveStatus.ok ? "terhubung ✅" : "tidak terhubung ❌"}

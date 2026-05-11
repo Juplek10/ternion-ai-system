@@ -1,32 +1,18 @@
 require("dotenv").config();
 
-const axios = require("axios");
-const { getSoul } = require("../identity/soul-guardian");
+const askClaude = require("../providers/claude-pipe");
 const { searchMemory } = require("../memory/long-term-memory");
 
-async function runAgent(agentSystemPrompt, userQuery, model = "ternion-ai") {
+async function runAgent(agentSystemPrompt, userQuery) {
   // Cari konteks relevan dari memory
   const memResults = await searchMemory(userQuery).catch(() => []);
   const memContext = memResults.length > 0
-    ? `\nKONTEKS DARI MEMORY:\n${memResults.map(r => `- [${r.category}] ${r.text}`).join("\n")}\n`
+    ? `\nKONTEKS DARI MEMORY BRIAN:\n${memResults.map(r => `- [${r.category}] ${r.text}`).join("\n")}`
     : "";
 
-  const baseSoul = getSoul();
+  const prompt = `${memContext}\n\nPERTANYAAN BRIAN:\n${userQuery}`;
 
-  const fullPrompt = `SISTEM:\n${baseSoul}\n\nPERAN KHUSUS:\n${agentSystemPrompt}${memContext}\n\nUSER:\n${userQuery}\n\nASSISTANT:\n`;
-
-  const response = await axios.post(
-    `${process.env.OLLAMA_BASE_URL}/api/generate`,
-    {
-      model: model,
-      prompt: fullPrompt,
-      stream: false,
-      options: { num_ctx: 2048, num_predict: 400 }
-    },
-    { timeout: 180000 }
-  );
-
-  return response.data.response;
+  return await askClaude(prompt, { systemContext: agentSystemPrompt });
 }
 
 module.exports = { runAgent };

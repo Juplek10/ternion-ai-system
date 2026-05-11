@@ -1,5 +1,8 @@
-require("dotenv").config();
-const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
+
+const SYSTEM_CONTEXT = `Kamu adalah SPESIALIS DOKUMEN BISNIS & ADMINISTRASI PROFESIONAL Indonesia.
+Keahlian: surat resmi, kontrak, proposal, notulen, berita acara, laporan — semua sesuai standar Indonesia.
+Selalu buat dokumen lengkap dan siap pakai dengan kop surat TERNION GROUP.`;
 
 const JENIS_DOKUMEN = [
   "surat penawaran",
@@ -14,34 +17,27 @@ const JENIS_DOKUMEN = [
 
 async function runDraft(request) {
   const lowerReq = request.toLowerCase();
-
   let jenis = "surat resmi";
   for (const j of JENIS_DOKUMEN) {
-    if (lowerReq.includes(j)) {
-      jenis = j;
-      break;
-    }
+    if (lowerReq.includes(j)) { jenis = j; break; }
   }
 
   const today = new Date().toLocaleDateString("id-ID", {
     day: "numeric", month: "long", year: "numeric"
   });
 
-  const prompt = `Kamu adalah spesialis dokumen bisnis dan administrasi profesional Indonesia.
-
-Brian meminta: "${request}"
+  const prompt = `Brian meminta draft dokumen: "${request}"
 
 Buat draft "${jenis}" yang:
-- Lengkap dan siap pakai
-- Menggunakan kop surat TERNION GROUP (Kupang, NTT)
+- Lengkap dan siap pakai (dari kop sampai tanda tangan)
+- Kop surat: TERNION GROUP | Jl. [alamat Kupang] | Kupang, NTT | Telp/WA: [nomor]
 - Format profesional sesuai standar Indonesia
 - Tanggal: ${today}
-- Tanda tangan: Brian Kinayom, Direktur TERNION GROUP
+- Tanda tangan: Brian Kinayom | Direktur TERNION GROUP
 
-Tulis dokumen lengkap dari kop sampai tanda tangan:`;
+Tulis dokumen lengkap sekarang:`;
 
-  const result = await askOllama(prompt);
-  return result;
+  return await askClaude(prompt, { systemContext: SYSTEM_CONTEXT });
 }
 
 module.exports = { runDraft, JENIS_DOKUMEN };

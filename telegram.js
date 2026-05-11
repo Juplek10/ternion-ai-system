@@ -159,13 +159,13 @@ bot.command("status", async (ctx) => {
     ram.totalGB = (total / 1e9).toFixed(1);
   } catch (e) {}
 
-  let ollamaStatus = "❌ tidak terhubung";
+  let claudeStatus = "✅ Claude (primary)";
   try {
-    const res = await axios.get(`${process.env.OLLAMA_BASE_URL}/api/tags`, { timeout: 5000 });
-    const models = res.data.models || [];
-    const found = models.find(m => m.name.includes("ternion"));
-    ollamaStatus = found ? "✅ ternion-ai" : "✅ online";
-  } catch (e) {}
+    const { execSync } = require("child_process");
+    execSync("claude --version", { timeout: 5000, stdio: "pipe" });
+  } catch (e) {
+    claudeStatus = "❌ Claude CLI tidak tersedia";
+  }
 
   const soul = getSoul();
   const soulStatus = soul && soul.length > 100 ? "✅ loaded" : "❌ error";
@@ -175,11 +175,12 @@ bot.command("status", async (ctx) => {
 `⚙️ <b>STATUS TERNION-AI</b>
 ─────────────────────
 ⏰ ${timeStr} WITA
-🧠 Model: ${ollamaStatus}
+🤖 AI: ${claudeStatus}
 💾 RAM: ${ram.usedGB} / ${ram.totalGB} GB (${ram.pct}%)
 💬 Percakapan hari ini: ${conversationCountToday}
 🔋 Soul: ${soulStatus}
-📡 Bot: ✅ online`;
+📡 Bot: ✅ online
+🧠 Mode: Claude-only architecture`;
 
   await ctx.replyWithHTML(msg);
 });

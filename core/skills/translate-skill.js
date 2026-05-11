@@ -1,5 +1,4 @@
-require("dotenv").config();
-const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
 
 const SUPPORTED_LANGUAGES = {
   "indonesia": "Bahasa Indonesia",
@@ -21,11 +20,11 @@ Pertahankan makna asli, tone, dan format.
 Jika ada istilah teknis bisnis/konstruksi, gunakan padanan yang tepat.
 
 TEKS ASLI:
-${text.substring(0, 1500)}
+${text.substring(0, 2000)}
 
 TERJEMAHAN (${langName}):`;
 
-  return await askOllama(prompt);
+  return await askClaude(prompt);
 }
 
 module.exports = { translate, SUPPORTED_LANGUAGES };

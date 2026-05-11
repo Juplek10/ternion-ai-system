@@ -1,22 +1,21 @@
-require("dotenv").config();
-const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
 
 async function summarize(text) {
   const prompt = `Rangkum teks berikut dalam Bahasa Indonesia secara singkat dan padat.
 Fokus pada poin-poin utama yang paling penting untuk Brian Kinayom dari TERNION GROUP.
 
-Format:
-📋 RINGKASAN
+Format output:
+RINGKASAN
 • [poin 1]
 • [poin 2]
-• [dst]
+• [dst — maksimal 5 poin]
 
-💡 Poin Penting: [1-2 kalimat kesimpulan]
+Poin Penting: [1-2 kalimat kesimpulan]
 
 TEKS:
-${text.substring(0, 2000)}`;
+${text.substring(0, 3000)}`;
 
-  return await askOllama(prompt);
+  return await askClaude(prompt);
 }
 
 module.exports = { summarize };

@@ -5,7 +5,7 @@ const path = require("path");
 const axios = require("axios");
 const { execFile } = require("child_process");
 const { promisify } = require("util");
-const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
 
 const execFileAsync = promisify(execFile);
 
@@ -79,10 +79,10 @@ REKOMENDASI: [rekomendasi untuk besok, pisahkan dengan |]
 Jawab dalam Bahasa Indonesia, singkat dan padat.`;
 
   try {
-    const raw = await askOllama(prompt);
+    const raw = await askClaude(prompt);
     return raw;
   } catch (err) {
-    console.error("[DREAM] Ollama error:", err.message);
+    console.error("[DREAM] Claude error:", err.message);
     return null;
   }
 }
