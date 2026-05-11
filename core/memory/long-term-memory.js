@@ -1,8 +1,20 @@
 require("dotenv").config();
 
 const fs = require("fs-extra");
+const path = require("path");
 
-const MEMORY_FILE = "/root/ai-system/memory/long-term.json";
+const MEMORY_DIR = "/root/ai-system/memory";
+const MEMORY_FILE = path.join(MEMORY_DIR, "long-term.json");
+
+// ─── Domain files ────────────────────────────────────────
+const DOMAIN_FILES = {
+  personal:    path.join(MEMORY_DIR, "personal.json"),
+  bisnis:      path.join(MEMORY_DIR, "bisnis.json"),
+  proyek:      path.join(MEMORY_DIR, "proyek.json"),
+  kontak:      path.join(MEMORY_DIR, "kontak.json"),
+  keputusan:   path.join(MEMORY_DIR, "keputusan.json"),
+  percakapan:  path.join(MEMORY_DIR, "percakapan.json")
+};
 
 // ─── Template struktur memory ───────────────────────────
 const DEFAULT_MEMORY = {
@@ -17,7 +29,63 @@ const DEFAULT_MEMORY = {
   learnings: []
 };
 
-// ─── Load memory ────────────────────────────────────────
+// ─── Auto-detect domain dari konten ─────────────────────
+function detectDomain(content) {
+  const c = content.toLowerCase();
+  if (c.includes("proyek") || c.includes("project") || c.includes("deadline") || c.includes("tender"))
+    return "proyek";
+  if (c.includes("pt ") || c.includes("cv ") || c.includes("kontak") || c.includes("telp") || c.includes("vendor") || c.includes("supplier") || c.includes("kontraktor"))
+    return "kontak";
+  if (c.includes("keputusan") || c.includes("putuskan") || c.includes("strategi") || c.includes("deal") || c.includes("sepakat") || c.includes("setuju"))
+    return "keputusan";
+  if (c.includes("bisnis") || c.includes("anggaran") || c.includes("budget") || c.includes("omzet") || c.includes("revenue") || c.includes("nilai") || c.includes("kontrak"))
+    return "bisnis";
+  if (c.includes("brian") || c.includes("saya") || c.includes("aku") || c.includes("keluarga") || c.includes("pribadi"))
+    return "personal";
+  return "percakapan";
+}
+
+// ─── Load domain memory ─────────────────────────────────
+async function loadDomainMemory(domain) {
+  const file = DOMAIN_FILES[domain];
+  if (!file) return { domain, entries: [], last_updated: new Date().toISOString() };
+  try {
+    await fs.ensureFile(file);
+    const data = await fs.readJson(file).catch(() => null);
+    if (!data || !Array.isArray(data.entries)) {
+      return { domain, entries: [], last_updated: new Date().toISOString() };
+    }
+    return data;
+  } catch {
+    return { domain, entries: [], last_updated: new Date().toISOString() };
+  }
+}
+
+// ─── Simpan domain memory + async backup ke Drive ───────
+async function saveDomainMemory(domain, data) {
+  const file = DOMAIN_FILES[domain];
+  if (!file) return;
+  data.last_updated = new Date().toISOString();
+  await fs.ensureFile(file);
+  await fs.writeJson(file, data, { spaces: 2 });
+
+  // Async backup ke Drive — tidak tunggu hasilnya
+  backupDomainToDrive(domain, file).catch(() => {});
+}
+
+// ─── Backup domain file ke Google Drive ─────────────────
+async function backupDomainToDrive(domain, filePath) {
+  try {
+    const { uploadFile, findOrCreateFolder } = require("../integrations/drive-backup");
+    await uploadFile(filePath, "CORE-SYSTEM/memory");
+    console.log(`[MEMORY] Backup Drive: ${domain}.json @ ${new Date().toISOString()}`);
+  } catch (err) {
+    // Drive mungkin offline — log saja, jangan crash
+    console.error(`[MEMORY] Backup Drive gagal (${domain}):`, err.message);
+  }
+}
+
+// ─── Load memory utama ───────────────────────────────────
 async function loadMemory() {
   try {
     await fs.ensureFile(MEMORY_FILE);
@@ -25,47 +93,49 @@ async function loadMemory() {
     if (!data || typeof data !== "object") return { ...DEFAULT_MEMORY };
     return {
       facts: {
-        brian: data.facts?.brian || [],
-        business: data.facts?.business || [],
+        brian:     data.facts?.brian     || [],
+        business:  data.facts?.business  || [],
         decisions: data.facts?.decisions || [],
-        contacts: data.facts?.contacts || [],
-        projects: data.facts?.projects || []
+        contacts:  data.facts?.contacts  || [],
+        projects:  data.facts?.projects  || []
       },
       conversations: data.conversations || [],
-      learnings: data.learnings || []
+      learnings:     data.learnings     || []
     };
-  } catch (err) {
+  } catch {
     return { ...DEFAULT_MEMORY };
   }
 }
 
-// ─── Simpan memory ───────────────────────────────────────
+// ─── Simpan memory utama ─────────────────────────────────
 async function saveMemory(mem) {
   await fs.ensureFile(MEMORY_FILE);
   await fs.writeJson(MEMORY_FILE, mem, { spaces: 2 });
 }
 
-// ─── Tambah fakta ────────────────────────────────────────
+// ─── Tambah fakta (+ domain + Drive backup) ─────────────
 async function addFact(category, content) {
   const mem = await loadMemory();
   if (!mem.facts[category]) mem.facts[category] = [];
 
-  const entry = {
-    content,
-    added_at: new Date().toISOString()
-  };
+  const entry = { content, added_at: new Date().toISOString() };
 
-  // Cegah duplikat
   const isDuplicate = mem.facts[category].some(
-    f => f.content.toLowerCase() === content.toLowerCase()
+    f => (f.content || f).toLowerCase() === content.toLowerCase()
   );
   if (!isDuplicate) {
     mem.facts[category].push(entry);
-    // Batasi 100 per kategori
     if (mem.facts[category].length > 100) {
       mem.facts[category] = mem.facts[category].slice(-100);
     }
     await saveMemory(mem);
+
+    // Simpan juga ke domain file
+    const domain = detectDomain(content);
+    const domainData = await loadDomainMemory(domain);
+    domainData.entries.push({ content, category, added_at: entry.added_at });
+    if (domainData.entries.length > 200) domainData.entries = domainData.entries.slice(-200);
+    await saveDomainMemory(domain, domainData);
   }
   return mem;
 }
@@ -79,13 +149,13 @@ async function forgetTopic(topic) {
   for (const cat of Object.keys(mem.facts)) {
     const before = mem.facts[cat].length;
     mem.facts[cat] = mem.facts[cat].filter(
-      f => !f.content.toLowerCase().includes(lowerTopic)
+      f => !(f.content || f).toLowerCase().includes(lowerTopic)
     );
     deleted += before - mem.facts[cat].length;
   }
 
   mem.learnings = mem.learnings.filter(
-    l => !l.content.toLowerCase().includes(lowerTopic)
+    l => !(l.content || l).toLowerCase().includes(lowerTopic)
   );
 
   await saveMemory(mem);
@@ -96,29 +166,22 @@ async function forgetTopic(topic) {
 async function autoExtract(userMessage) {
   const msg = userMessage.toLowerCase();
 
-  // Deteksi nama perusahaan/kontak baru
   const companyPattern = /(?:PT|CV|UD|firma|perusahaan|vendor|supplier|kontraktor)\s+([A-Z][^\s,]+(?:\s[A-Z][^\s,]+)*)/gi;
-  const matches = userMessage.matchAll(companyPattern);
-  for (const m of matches) {
+  for (const m of userMessage.matchAll(companyPattern)) {
     await addFact("contacts", `Perusahaan: ${m[0].trim()}`);
   }
 
-  // Deteksi nilai proyek
   const valuePattern = /(?:nilai|anggaran|budget|kontrak|harga).*?(?:Rp\.?\s*|IDR\s*)?(\d+(?:[.,]\d+)*(?:\s*(?:juta|miliar|ribu|M|B))?)/gi;
-  const valueMatches = userMessage.matchAll(valuePattern);
-  for (const m of valueMatches) {
+  for (const m of userMessage.matchAll(valuePattern)) {
     await addFact("business", `Nilai proyek: ${m[0].trim()}`);
   }
 
-  // Deteksi keputusan
   if (msg.includes("putuskan") || msg.includes("setuju") || msg.includes("deal") || msg.includes("sepakat")) {
     await addFact("decisions", `[${new Date().toLocaleDateString("id-ID")}] ${userMessage.substring(0, 150)}`);
   }
 
-  // Deteksi deadline
   const deadlinePattern = /(?:deadline|tenggat|batas waktu|due date).*?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{1,2}\s+(?:januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+\d{4})/gi;
-  const deadlineMatches = userMessage.matchAll(deadlinePattern);
-  for (const m of deadlineMatches) {
+  for (const m of userMessage.matchAll(deadlinePattern)) {
     await addFact("projects", `Deadline: ${m[0].trim()}`);
   }
 }
@@ -143,17 +206,43 @@ async function searchMemory(query) {
   }
   searchIn(mem.learnings, "learnings");
 
-  return results.slice(0, 5); // max 5 hasil
+  return results.slice(0, 5);
 }
 
-// ─── Format ringkasan memory ─────────────────────────────
+// ─── Ringkasan per domain untuk /memory ─────────────────
 async function getMemorySummary() {
   const mem = await loadMemory();
 
+  // Load semua domain counts
+  const domains = {};
+  let lastBackup = "belum pernah";
+  for (const [domain, file] of Object.entries(DOMAIN_FILES)) {
+    try {
+      const data = await fs.readJson(file).catch(() => ({ entries: [] }));
+      domains[domain] = {
+        count: (data.entries || []).length,
+        last_updated: data.last_updated || "-"
+      };
+      if (data.last_updated && (lastBackup === "belum pernah" || data.last_updated > lastBackup)) {
+        lastBackup = data.last_updated;
+      }
+    } catch {
+      domains[domain] = { count: 0, last_updated: "-" };
+    }
+  }
+
   const countFacts = Object.values(mem.facts).reduce((sum, arr) => sum + arr.length, 0);
-  const latestLearnings = mem.learnings.slice(-5).map(l => `  • ${l.content}`).join("\n");
+  const latestLearnings = mem.learnings.slice(-5).map(l => `  • ${l.content || l}`).join("\n");
   const latestDecisions = mem.facts.decisions.slice(-3).map(d => `  • ${d.content || d}`).join("\n");
-  const activeProjects = mem.facts.projects.slice(-5).map(p => `  • ${p.content || p}`).join("\n");
+  const activeProjects  = mem.facts.projects.slice(-5).map(p => `  • ${p.content || p}`).join("\n");
+
+  // Format waktu backup
+  let backupStr = "belum pernah";
+  if (lastBackup !== "belum pernah") {
+    try {
+      backupStr = new Date(lastBackup).toLocaleString("id-ID", { timeZone: "Asia/Makassar" });
+    } catch { backupStr = lastBackup; }
+  }
 
   return {
     total_facts: countFacts,
@@ -161,7 +250,9 @@ async function getMemorySummary() {
     total_learnings: mem.learnings.length,
     latest_learnings: latestLearnings || "  (kosong)",
     latest_decisions: latestDecisions || "  (kosong)",
-    active_projects: activeProjects || "  (kosong)"
+    active_projects:  activeProjects  || "  (kosong)",
+    domains,
+    last_backup: backupStr
   };
 }
 
@@ -172,5 +263,8 @@ module.exports = {
   forgetTopic,
   autoExtract,
   searchMemory,
-  getMemorySummary
+  getMemorySummary,
+  detectDomain,
+  loadDomainMemory,
+  saveDomainMemory
 };

@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const askOllama = require("../providers/ollama");
+const askClaude = require("../providers/claude-pipe");
 
 const HEAVY_MODEL = "ternion-ai";
 const LIGHT_MODEL = "qwen2.5:3b";
@@ -12,16 +13,30 @@ function classifyTask(type) {
 }
 
 async function routeTask(type, prompt) {
-  const model = classifyTask(type);
+  const primaryAI = process.env.PRIMARY_AI || "ollama";
 
-  switch (type) {
-    case "heartbeat":
-      return await askOllama(prompt, LIGHT_MODEL);
-    case "memory":
-      return await askOllama(prompt, LIGHT_MODEL);
-    default:
-      return await askOllama(prompt, model);
+  // /ahs, /rab, /konstruksi selalu pakai Ollama 7b (structured output)
+  if (HEAVY_TYPES.includes(type)) {
+    return await askOllama(prompt, HEAVY_MODEL);
   }
+
+  // Heartbeat dan memory selalu pakai Ollama light (cepat)
+  if (type === "heartbeat" || type === "memory") {
+    return await askOllama(prompt, LIGHT_MODEL);
+  }
+
+  // Chat umum: gunakan PRIMARY_AI dari .env
+  if (primaryAI === "claude") {
+    try {
+      return await askClaude(prompt);
+    } catch (err) {
+      console.error("[ROUTER] Claude gagal, fallback ke qwen2.5:3b:", err.message);
+      return await askOllama(prompt, LIGHT_MODEL);
+    }
+  }
+
+  // Default: ollama light
+  return await askOllama(prompt, LIGHT_MODEL);
 }
 
 module.exports = routeTask;

@@ -70,6 +70,42 @@ module.exports = {
       restart_delay: 10000,
       kill_timeout: 5000,
       max_restarts: 3
+    },
+    {
+      name: "health-check",
+      script: "/root/ai-system/core/health-check.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 5000,
+      kill_timeout: 3000,
+      max_restarts: 10
+    },
+    {
+      name: "auto-recovery",
+      script: "/root/ai-system/core/auto-recovery.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 10000,
+      kill_timeout: 5000,
+      max_restarts: 5
+    },
+    {
+      name: "notification-engine",
+      script: "/root/ai-system/core/proactive/notification-engine.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 5000,
+      kill_timeout: 3000,
+      max_restarts: 5
+    },
+    {
+      name: "lpse-monitor",
+      script: "/root/ai-system/core/tools/lpse-monitor.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 30000,
+      kill_timeout: 5000,
+      max_restarts: 3
     }
   ]
 };

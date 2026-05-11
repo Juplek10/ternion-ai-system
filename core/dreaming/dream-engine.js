@@ -3,7 +3,11 @@ require("dotenv").config();
 const fs = require("fs-extra");
 const path = require("path");
 const axios = require("axios");
+const { execFile } = require("child_process");
+const { promisify } = require("util");
 const askOllama = require("../providers/ollama");
+
+const execFileAsync = promisify(execFile);
 
 const SESSIONS_DIR = "/root/ai-system/sessions";
 const DREAMS_DIR = "/root/ai-system/memory/dreams";
@@ -129,6 +133,103 @@ async function updateLongTermMemory(parsed, date) {
   }
 }
 
+const SOUL_PATH = "/root/ai-system/prompts/ternion-soul.txt";
+const DREAM_LOG = "/root/ai-system/memory/dream-log.json";
+
+// ─── Teaching Loop: Claude review → update soul ──────────
+async function runTeachingLoop(messages, date) {
+  if (messages.length === 0) {
+    console.log("[DREAM] Teaching loop skip — tidak ada percakapan");
+    return null;
+  }
+
+  const transcript = messages
+    .filter(m => m.role === "user")
+    .map(m => m.content.substring(0, 300))
+    .slice(-30)
+    .join("\n---\n");
+
+  let currentSoul = "";
+  try { currentSoul = fs.readFileSync(SOUL_PATH, "utf8").substring(0, 3000); } catch {}
+
+  const reviewPrompt = `Kamu adalah AI trainer untuk sistem Ternion-AI.
+
+SOUL SAAT INI (ringkasan):
+${currentSoul.substring(0, 1000)}
+
+PERCAKAPAN HARI INI DENGAN BRIAN:
+${transcript}
+
+Tugasmu:
+1. Identifikasi topik yang sering ditanya Brian hari ini
+2. Identifikasi konteks bisnis baru yang perlu diingat Ollama
+3. Identifikasi jika ada jawaban yang perlu diperbaiki
+4. Buat tambahan/penyempurnaan untuk system prompt Ollama
+
+Format output WAJIB:
+TOPIK_HARI_INI: [topik 1] | [topik 2] | [dst]
+KONTEKS_BARU: [fakta bisnis baru] | [dst]
+PERBAIKAN: [hal yang perlu diperbaiki] | [dst]
+SOUL_TAMBAHAN: [teks tambahan untuk system prompt, max 200 kata]
+
+Jawab dalam Bahasa Indonesia.`;
+
+  let claudeResult = null;
+  try {
+    const { stdout } = await execFileAsync(
+      "claude",
+      ["-p", reviewPrompt, "--output-format", "text"],
+      { timeout: 90000, maxBuffer: 1024 * 1024 * 2 }
+    );
+    claudeResult = stdout.trim();
+    console.log("[DREAM] Teaching loop Claude selesai");
+  } catch (err) {
+    console.error("[DREAM] Teaching loop Claude gagal:", err.message);
+    return null;
+  }
+
+  // Parse hasil Claude
+  const extract = (label) => {
+    const match = claudeResult.match(new RegExp(`${label}:\\s*(.+)`));
+    return match ? match[1].split("|").map(s => s.trim()).filter(Boolean) : [];
+  };
+
+  const topikHariIni = extract("TOPIK_HARI_INI");
+  const konteksBaru = extract("KONTEKS_BARU");
+  const perbaikan = extract("PERBAIKAN");
+  const soulTambahan = (() => {
+    const m = claudeResult.match(/SOUL_TAMBAHAN:\s*([\s\S]+?)(?:\n[A-Z_]+:|$)/);
+    return m ? m[1].trim() : "";
+  })();
+
+  // Update soul jika ada tambahan
+  let soulUpdated = false;
+  if (soulTambahan && soulTambahan.length > 20) {
+    try {
+      const existingSoul = fs.readFileSync(SOUL_PATH, "utf8");
+      const addendum = `\n\n═══════════════════════════════════════\nUPDATE ${date} (Teaching Loop)\n═══════════════════════════════════════\n${soulTambahan}`;
+      fs.writeFileSync(SOUL_PATH, existingSoul + addendum, "utf8");
+      soulUpdated = true;
+      console.log("[DREAM] Soul diupdate oleh teaching loop");
+    } catch (err) {
+      console.error("[DREAM] Gagal update soul:", err.message);
+    }
+  }
+
+  // Log ke dream-log.json
+  try {
+    await fs.ensureFile(DREAM_LOG);
+    let log = [];
+    try { log = await fs.readJson(DREAM_LOG); } catch { log = []; }
+    if (!Array.isArray(log)) log = [];
+    log.push({ date, topikHariIni, konteksBaru, perbaikan, soulTambahan, soulUpdated, generated_at: new Date().toISOString() });
+    if (log.length > 90) log = log.slice(-90);
+    await fs.writeJson(DREAM_LOG, log, { spaces: 2 });
+  } catch {}
+
+  return { topikHariIni, konteksBaru, perbaikan, soulTambahan, soulUpdated, percakapanDiproses: messages.filter(m => m.role === "user").length };
+}
+
 // ─── MAIN DREAM PROCESS ──────────────────────────────────
 async function runDream() {
   const now = new Date();
@@ -175,6 +276,12 @@ async function runDream() {
   // Update long-term memory
   await updateLongTermMemory(parsed, date);
 
+  // Teaching Loop: Claude review → update soul
+  const teaching = await runTeachingLoop(messages, date).catch(err => {
+    console.error("[DREAM] Teaching loop error:", err.message);
+    return null;
+  });
+
   // Format report untuk Telegram (dikirim jam 06.00)
   const topikList = parsed.topik.length > 0
     ? parsed.topik.map(t => `  • ${t}`).join("\n")
@@ -189,20 +296,24 @@ async function runDream() {
     ? parsed.rekomendasi.map(r => `  • ${r}`).join("\n")
     : "  • (tidak ada)";
 
-  const report =
-`📅 <b>DREAM REPORT ${dateStr}</b>
+  const teachingSection = teaching
+    ? `\n━━━━━━━━━━━━━━━━━━━━━━━\n🎓 <b>Teaching Loop:</b>\n  💬 Diproses: ${teaching.percakapanDiproses} pesan\n  🔍 Topik: ${(teaching.topikHariIni || []).slice(0, 3).join(", ") || "-"}\n  ✨ Soul update: ${teaching.soulUpdated ? "Ya" : "Tidak ada perubahan"}`
+    : "";
 
+  const report =
+`🌙 <b>DREAM REPORT ${dateStr}</b>
+━━━━━━━━━━━━━━━━━━━━━━━
 🗣️ <b>Percakapan:</b> ${userMsgs.length} pesan
 📌 <b>Topik utama:</b>
 ${topikList}
 💡 <b>Insight baru:</b>
 ${insightList}
-⚠️ <b>Hal yang perlu diperhatikan:</b>
+⚠️ <b>Perhatian:</b>
 ${perhatianList}
-🎯 <b>Rekomendasi untuk besok:</b>
-${rekomendasiList}`;
+🎯 <b>Rekomendasi besok:</b>
+${rekomendasiList}${teachingSection}`;
 
-  return { report, dreamData };
+  return { report, dreamData, teaching };
 }
 
 // ─── Cek apakah jam 03.00 WITA (UTC+8 = UTC+8, jadi jam 19.00 UTC) ──
@@ -221,6 +332,14 @@ let pendingReport = null;
 
 async function dreamScheduler() {
   const today = new Date().toISOString().split("T")[0];
+
+  // Jam 02.00 WITA → teaching loop Claude (sebelum dream)
+  if (isTime(2, 0) && dreamDoneToday !== `tl_${today}`) {
+    dreamDoneToday = `tl_${today}`;
+    console.log("[DREAM] Jam 02.00 WITA — Teaching Loop mulai");
+    const msgs = await getTodaySessions().catch(() => []);
+    await runTeachingLoop(msgs, today).catch(err => console.error("[DREAM] Teaching loop:", err.message));
+  }
 
   // Jam 03.00 WITA → proses dream
   if (isTime(3, 0) && dreamDoneToday !== today) {

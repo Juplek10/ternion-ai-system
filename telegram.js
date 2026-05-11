@@ -17,6 +17,11 @@ const { runAHS } = require("./core/tools/ahs-tool");
 const { runRAB } = require("./core/tools/rab-tool");
 const { runDraft } = require("./core/tools/draft-tool");
 const { runPriceCheck } = require("./core/tools/price-check-tool");
+const { searchWeb } = require("./core/tools/web-search-tool");
+
+// ─── Registry ──────────────────────────────────────────
+const { tambahKontak, cariKontak, listKontak, formatKontak } = require("./core/registry/contact-registry");
+const { tambahProyek, updateProyek, listProyek, detailProyek, formatProyek } = require("./core/registry/project-registry");
 
 // ─── Agents ────────────────────────────────────────────
 const { runProcurementAgent } = require("./core/agents/procurement-agent");
@@ -88,12 +93,16 @@ bot.command("help", async (ctx) => {
 👤 Halo Bry! Ini yang bisa saya lakukan:
 
 🛠️ <b>TOOLS:</b>
-/ahs → Analisa Harga Satuan
-/rab → Generate RAB
-/draft → Buat dokumen/surat
-/harga → Cek harga komoditas
+/ahs [pekerjaan] → Analisa Harga Satuan
+/rab [proyek] → Generate RAB
+/draft [dokumen] → Buat draft dokumen/surat
+/harga [komoditas] → Cek harga + web search
 
-🤝 <b>AGENTS:</b>
+🌐 <b>WEB SEARCH:</b>
+/cari [query] → Web search langsung
+/berita [topik] → Search berita terbaru
+
+🤝 <b>AGENTS (model 7b):</b>
 /procurement → Tender &amp; pengadaan
 /trading → Komoditas &amp; ekspor
 /konstruksi → Proyek konstruksi
@@ -102,21 +111,26 @@ bot.command("help", async (ctx) => {
 
 ⚡ <b>SKILLS:</b>
 /rangkum → Rangkum teks
-/terjemah → Terjemahan
-/analisa → Analisa data
-/ingatkan → Set reminder
+/terjemah [bahasa] [teks] → Terjemahan
+/analisa [data] → Analisa strategis
+/ingatkan [menit] [pesan] → Set reminder
+
+📋 <b>REGISTRY:</b>
+/kontak tambah|cari|list → Kelola kontak
+/proyek tambah|update|list → Kelola proyek
 
 🧠 <b>MEMORY:</b>
-/memory → Lihat memory aktif
+/memory → Ringkasan memory per domain
 /ingat [fakta] → Tambah fakta baru
 /lupa [topik] → Hapus memory
 
 ⚙️ <b>SISTEM:</b>
-/status → Status sistem
-/drive → File di Drive
+/status → Status sistem (RAM, model, soul)
+/drive → File di Google Drive
 /help → Menu ini
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-💬 Atau kirim pesan bebas untuk ngobrol!`;
+💬 Atau kirim pesan bebas untuk ngobrol!
+🔍 Auto web search jika ada kata: cari, harga terbaru, berita, info terbaru`;
 
   await ctx.replyWithHTML(msg);
 });
@@ -168,12 +182,20 @@ bot.command("memory", async (ctx) => {
   await ctx.sendChatAction("typing");
 
   const summary = await getMemorySummary();
+  const d = summary.domains || {};
   const msg =
-`🧠 <b>MEMORY AKTIF</b>
-─────────────────────
+`🧠 <b>TERNION MEMORY</b>
+━━━━━━━━━━━━━━━━━━━
+👤 Personal: ${(d.personal?.count) || 0} fakta
+💼 Bisnis: ${(d.bisnis?.count) || 0} fakta
+🏗️ Proyek: ${(d.proyek?.count) || 0} aktif
+👥 Kontak: ${(d.kontak?.count) || 0} orang
+⚡ Keputusan: ${(d.keputusan?.count) || 0} entri
+💬 Percakapan: ${(d.percakapan?.count) || 0} sesi
+━━━━━━━━━━━━━━━━━━━
 📊 Total fakta: ${summary.total_facts}
-💬 Percakapan tersimpan: ${summary.total_conversations}
 📚 Learnings: ${summary.total_learnings}
+☁️ Last backup: ${summary.last_backup}
 
 🎯 <b>Proyek/Deadline:</b>
 ${summary.active_projects}
@@ -185,6 +207,79 @@ ${summary.latest_decisions}
 ${summary.latest_learnings}`;
 
   await ctx.replyWithHTML(msg);
+});
+
+// ─── /kontak ───────────────────────────────────────────
+bot.command("kontak", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/kontak", "").trim();
+  const parts = args.split(/\s+/);
+  const sub = parts[0]?.toLowerCase();
+
+  if (sub === "tambah") {
+    const [, nama, perusahaan, telp, ...catatanParts] = parts;
+    if (!nama) return ctx.reply("Format: /kontak tambah [nama] [perusahaan] [telp] [catatan]");
+    await tambahKontak(nama, perusahaan, telp, catatanParts.join(" "));
+    return ctx.reply(`✅ Kontak <b>${nama}</b> tersimpan.`, { parse_mode: "HTML" });
+  }
+
+  if (sub === "cari") {
+    const query = parts.slice(1).join(" ");
+    if (!query) return ctx.reply("Format: /kontak cari [nama]");
+    const results = await cariKontak(query);
+    if (results.length === 0) return ctx.reply(`Tidak ada kontak ditemukan untuk "${query}"`);
+    const list = results.slice(0, 10).map((k, i) => formatKontak(k, i)).join("\n\n");
+    return ctx.replyWithHTML(`👥 <b>Hasil Pencarian Kontak:</b>\n\n${list}`);
+  }
+
+  if (sub === "list" || !sub) {
+    const all = await listKontak();
+    if (all.length === 0) return ctx.reply("Belum ada kontak tersimpan. Gunakan /kontak tambah");
+    const list = all.slice(-15).map((k, i) => formatKontak(k, i)).join("\n\n");
+    return ctx.replyWithHTML(`👥 <b>DAFTAR KONTAK TERNION</b>\n━━━━━━━━━━━━━━━━━━\n\n${list}`);
+  }
+
+  return ctx.reply("Sub-command: tambah | cari | list");
+});
+
+// ─── /proyek ───────────────────────────────────────────
+bot.command("proyek", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.sendChatAction("typing");
+  const originalArgs = ctx.message.text.replace("/proyek", "").trim();
+  const parts = originalArgs.split(/\s+/);
+  const sub = parts[0]?.toLowerCase();
+
+  if (sub === "tambah") {
+    const nama = parts[1];
+    const nilai = parts[2];
+    const deadline = parts[3];
+    const status = parts[4] || "tender";
+    if (!nama) return ctx.reply("Format: /proyek tambah [nama] [nilai] [deadline YYYY-MM-DD] [status]");
+    await tambahProyek(nama, nilai, deadline, status);
+    return ctx.replyWithHTML(`✅ Proyek <b>${nama}</b> tersimpan.\n💰 Nilai: ${nilai || "N/A"}\n📅 Deadline: ${deadline || "N/A"}\n📊 Status: ${status}`);
+  }
+
+  if (sub === "update") {
+    const nama = parts[1];
+    const statusBaru = parts.slice(2).join(" ");
+    if (!nama || !statusBaru) return ctx.reply("Format: /proyek update [nama] [status baru]");
+    const n = await updateProyek(nama, statusBaru);
+    return ctx.reply(n > 0 ? `✅ ${n} proyek diupdate ke status "${statusBaru}"` : `Proyek "${nama}" tidak ditemukan.`);
+  }
+
+  if (sub === "list" || !sub) {
+    const all = await listProyek();
+    if (all.length === 0) return ctx.reply("Belum ada proyek. Gunakan /proyek tambah");
+    const list = all.slice(-10).map((p, i) => formatProyek(p, i)).join("\n\n");
+    return ctx.replyWithHTML(`🏗️ <b>PROYEK AKTIF TERNION</b>\n━━━━━━━━━━━━━━━━━━\n\n${list}`);
+  }
+
+  // Cari proyek by nama
+  const results = await detailProyek(originalArgs);
+  if (results.length === 0) return ctx.reply(`Proyek "${originalArgs}" tidak ditemukan.`);
+  const list = results.map((p, i) => formatProyek(p, i)).join("\n\n");
+  return ctx.replyWithHTML(`🏗️ <b>Detail Proyek:</b>\n\n${list}`);
 });
 
 // ─── /ingat ────────────────────────────────────────────
@@ -325,7 +420,10 @@ bot.on("text", async (ctx) => {
       const query = originalText.replace(/^\/harga\s*/i, "").trim();
       if (!query) return ctx.reply("Format: /harga [nama komoditas]\nContoh: /harga mangan NTT");
       await ctx.sendChatAction("typing");
-      const result = await withTyping(ctx, () => runPriceCheck(query));
+      // Coba web search dulu, lalu inject ke AI untuk analisa
+      let webCtx = "";
+      try { webCtx = await searchWeb(`harga ${query} terbaru 2026`); } catch {}
+      const result = await withTyping(ctx, () => runPriceCheck(query + (webCtx ? `\n\nData web terbaru:\n${webCtx}` : "")));
       return sendLong(ctx, result);
     }
 
@@ -406,6 +504,15 @@ bot.on("text", async (ctx) => {
       return ctx.reply(result);
     }
 
+    // ── WEB SEARCH ───────────────────────────────────
+    if (text.startsWith("/cari") || text.startsWith("/berita")) {
+      const query = originalText.replace(/^\/(cari|berita)\s*/i, "").trim();
+      if (!query) return ctx.reply("Format: /cari [topik]\nContoh: /cari harga mangan NTT 2026");
+      await ctx.sendChatAction("typing");
+      const result = await withTyping(ctx, () => searchWeb(query));
+      return sendLong(ctx, result);
+    }
+
     // ── SYSTEM COMMANDS ──────────────────────────────
     // /status, /memory, /ingat, /lupa, /drive, /help
     // ditangani oleh bot.command() di atas
@@ -422,6 +529,13 @@ bot.on("text", async (ctx) => {
       ? `\nKONTEKS MEMORY:\n${memResults.map(r => `- ${r.text}`).join("\n")}\n`
       : "";
 
+    // Auto web search jika pesan mengandung kata kunci tertentu
+    const webTriggers = ["cari", "search", "harga terbaru", "berita", "info terbaru", "berapa harga", "update terbaru"];
+    let webContext = "";
+    if (webTriggers.some(kw => text.includes(kw))) {
+      try { webContext = `\nINFO WEB TERBARU:\n${await searchWeb(originalText)}\n`; } catch {}
+    }
+
     // Bangun prompt dengan history
     const session = await loadSession(chatId);
     const history = session.history
@@ -430,8 +544,8 @@ bot.on("text", async (ctx) => {
       .join("\n");
 
     const fullPrompt = history
-      ? `${history}${memContext}\nUSER: ${originalText}`
-      : `${memContext}${originalText}`;
+      ? `${history}${memContext}${webContext}\nUSER: ${originalText}`
+      : `${memContext}${webContext}${originalText}`;
 
     const taskType = classifyCommand(text);
     const aiReply = await routeTask(taskType, fullPrompt);
