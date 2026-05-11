@@ -159,18 +159,14 @@ async function handleNexusSwitch(teks) {
     return `✅ AI dipause selama ${menit} menit.\nAktif kembali otomatis pukul ${resumeStr} WITA.`;
   }
 
-  if (KEYWORDS_OFF.some(k => lower === k || lower.startsWith(k + " ") || lower.endsWith(" " + k))) {
-    if (KEYWORDS_OFF.some(k => lower.includes(k))) {
-      await deactivateAI("nexus");
-      return "✅ AI dinonaktifkan.\nKirim 'aktif' untuk hidupkan lagi.";
-    }
+  if (KEYWORDS_OFF.some(k => lower === k || lower.startsWith(k + " ") || lower.endsWith(" " + k) || lower.includes(k))) {
+    await deactivateAI("nexus");
+    return "✅ AI dinonaktifkan.\nKirim 'aktif' untuk hidupkan lagi.";
   }
 
-  if (KEYWORDS_ON.some(k => lower === k || lower.startsWith(k + " ") || lower.endsWith(" " + k))) {
-    if (KEYWORDS_ON.some(k => lower.includes(k))) {
-      await activateAI("nexus");
-      return "✅ AI diaktifkan kembali.";
-    }
+  if (KEYWORDS_ON.some(k => lower === k || lower.startsWith(k + " ") || lower.endsWith(" " + k) || lower.includes(k))) {
+    await activateAI("nexus");
+    return "✅ AI diaktifkan kembali.";
   }
 
   return null;

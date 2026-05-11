@@ -118,8 +118,27 @@ async function saveGrupRegistry(data) {
 
 async function registerGroup(groupId, nama, fungsi) {
   const data = await loadGrupRegistry();
-  data.groups[groupId] = { id: groupId, nama, fungsi, registered_at: new Date().toISOString() };
+  data.groups[groupId] = { id: groupId, nama, fungsi, registered_at: new Date().toISOString(), msg_count_today: 0, last_reset: new Date().toISOString().split("T")[0] };
   await saveGrupRegistry(data);
+}
+
+async function trackGroupMessage(groupId, senderName, body) {
+  try {
+    const data = await loadGrupRegistry();
+    if (!data.groups[groupId]) return;
+    const today = new Date().toISOString().split("T")[0];
+    const grp = data.groups[groupId];
+    if (grp.last_reset !== today) {
+      grp.msg_count_today = 0;
+      grp.last_reset = today;
+      grp.senders_today = {};
+      grp.topics_today = [];
+    }
+    grp.msg_count_today = (grp.msg_count_today || 0) + 1;
+    grp.senders_today = grp.senders_today || {};
+    grp.senders_today[senderName] = (grp.senders_today[senderName] || 0) + 1;
+    await saveGrupRegistry(data);
+  } catch {}
 }
 
 // ─── Command routing ──────────────────────────────────────
@@ -213,8 +232,8 @@ async function handleNexusCommand(body, sender) {
   if (lower.startsWith("/wa-add ")) {
     const parts = body.split(/\s+/);
     if (parts.length < 4) return "Format: /wa-add [nomor] [kategori] [nama...]";
-    const [, nomor, kategori, ...namaParts] = parts;
-    const nama = nameParts.join(" ");
+    const [, nomor, kategori, ...namaArr] = parts;
+    const nama = namaArr.join(" ");
     await addContact(nomor, { kategori, nama });
     return `✅ Kontak ditambahkan:\n📞 ${nomor}\n🏷️ ${kategori}\n👤 ${nama}`;
   }
@@ -242,6 +261,40 @@ async function handleNexusCommand(body, sender) {
     return ok ? `✅ Kontak ${nomor} dihapus.` : `❌ Kontak tidak ditemukan.`;
   }
 
+  if (lower.startsWith("/wa-edit ")) {
+    const parts = body.split(/\s+/);
+    if (parts.length < 4) return "Format: /wa-edit [nomor] [field] [nilai...]\nField: nama, panggilan, kategori, gaya_bicara, konteks_bisnis, trust_level";
+    const nomor = parts[1];
+    const field = parts[2].toLowerCase();
+    const nilai = parts.slice(3).join(" ");
+    const allowedFields = ["nama", "panggilan", "kategori", "gaya_bicara", "konteks_bisnis", "trust_level", "sub_kategori", "bahasa"];
+    if (!allowedFields.includes(field)) return `❌ Field '${field}' tidak diizinkan.\nField valid: ${allowedFields.join(", ")}`;
+    const { updateContact } = require("../contacts/contact-manager");
+    const updated = await updateContact(nomor, { [field]: nilai });
+    if (!updated) return `❌ Kontak ${nomor} tidak ditemukan.`;
+    return `✅ Kontak ${nomor} diupdate:\n${field} = ${nilai}`;
+  }
+
+  if (lower.startsWith("/wa-grup ")) {
+    const parts = body.split(/\s+/);
+    const subCmd = parts[1]?.toLowerCase();
+    if (subCmd === "daftar" || subCmd === "tambah") {
+      if (parts.length < 4) return "Format: /wa-grup daftar [groupId] [nama] [fungsi]";
+      const groupId = parts[2];
+      const nama = parts[3];
+      const fungsi = parts.slice(4).join(" ") || "umum";
+      await registerGroup(groupId, nama, fungsi);
+      return `✅ Grup terdaftar:\nID: ${groupId}\nNama: ${nama}\nFungsi: ${fungsi}`;
+    }
+    if (subCmd === "list") {
+      const data = await loadGrupRegistry();
+      const grups = Object.values(data.groups || {});
+      if (grups.length === 0) return "Belum ada grup terdaftar.";
+      return grups.map((g, i) => `${i + 1}. ${g.nama} (${g.id})\n   Fungsi: ${g.fungsi}`).join("\n");
+    }
+    return "Subcommand: /wa-grup daftar [id] [nama] [fungsi] | /wa-grup list";
+  }
+
   if (lower.startsWith("/delegasi ")) {
     const parts = body.split(/\s+/);
     if (parts.length < 3) return "Format: /delegasi [nomor] [role: drafter/rab/scripta/vector]";
@@ -249,10 +302,20 @@ async function handleNexusCommand(body, sender) {
     return `✅ Nomor ${parts[1]} di-setup sebagai ${parts[2].toUpperCase()}.`;
   }
 
-  if (lower === "/followup list") {
+  if (lower === "/followup list" || lower === "/followup-list") {
     const list = await listFollowUps("pending");
     if (list.length === 0) return "✅ Tidak ada follow-up pending.";
     return list.map((f, i) => `${i + 1}. ${f.nama} — ${f.konteks.substring(0, 60)}\n   Deadline: ${f.deadline} | ID: ${f.id}`).join("\n");
+  }
+
+  if (lower.startsWith("/followup set ") || lower.startsWith("/followup-set ")) {
+    const parts = body.split(/\s+/);
+    const nomor = parts[2];
+    const deadline = parts[3];
+    const konteks = parts.slice(4).join(" ");
+    if (!nomor || !deadline || !konteks) return "Format: /followup set [nomor] [YYYY-MM-DD] [konteks]";
+    const fuId = await setFollowUp(nomor, nomor, konteks, deadline);
+    return `✅ Follow-up set!\nNomor: ${nomor}\nDeadline: ${deadline}\nKonteks: ${konteks}\nID: ${fuId}`;
   }
 
   if (lower.startsWith("/followup-cancel ")) {
@@ -306,12 +369,26 @@ async function handleNexusCommand(body, sender) {
   if (lower === "/wa-setup") {
     return (
       `📋 *PANDUAN SETUP KONTAK TERNION-AI*\n\n` +
-      `1. Tambah kontak:\n/wa-add [nomor] [kategori] [nama]\n\n` +
-      `Kategori: nexus | internal | kontraktor | supplier | pengepul | relasi | pemerintah\n\n` +
-      `Contoh:\n/wa-add 628111xxx kontraktor Pak Ahmad\n/wa-add 628222xxx supplier CV Makmur\n\n` +
-      `2. Setup delegasi tim:\n/delegasi [nomor] [drafter/rab/scripta/vector]\n\n` +
-      `3. Lihat semua kontak:\n/wa-list\n\n` +
-      `4. Info detail kontak:\n/wa-info [nomor]`
+      `━━ KONTAK ━━\n` +
+      `/wa-add [nomor] [kategori] [nama]\n` +
+      `/wa-edit [nomor] [field] [nilai]\n` +
+      `/wa-info [nomor]\n` +
+      `/wa-list\n` +
+      `/wa-remove [nomor]\n\n` +
+      `Kategori: nexus | internal | kontraktor\nsupplier | pengepul | relasi | pemerintah\n\n` +
+      `━━ DELEGASI TIM ━━\n` +
+      `/delegasi [nomor] [drafter/rab/scripta/vector]\n\n` +
+      `━━ GRUP ━━\n` +
+      `/wa-grup daftar [groupId] [nama] [fungsi]\n` +
+      `/wa-grup list\n\n` +
+      `━━ FOLLOW-UP ━━\n` +
+      `/followup list\n` +
+      `/followup set [nomor] [YYYY-MM-DD] [konteks]\n` +
+      `/followup-cancel [ID]\n\n` +
+      `━━ AI SWITCH ━━\n` +
+      `stop ai | aktif | pause 30 menit\n` +
+      `status ai\n\n` +
+      `Contoh:\n/wa-add 628111xxx kontraktor Pak Ahmad\n/delegasi 628222xxx drafter`
     );
   }
 
@@ -597,6 +674,9 @@ async function handleMessage(msg) {
   // Grup handling
   if (isGrup(msg)) {
     const body = msg.body || "";
+    const contact = await msg.getContact().catch(() => null);
+    const senderName = contact?.pushname || contact?.name || sender.replace("@c.us", "");
+    await trackGroupMessage(msg.from, senderName, body).catch(() => {});
     if (!shouldRespondInGroup(body)) return;
     await handleIncomingMessage(msg);
     return;
