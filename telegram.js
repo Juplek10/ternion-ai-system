@@ -553,6 +553,18 @@ bot.on("text", async (ctx) => {
       return sendLong(ctx, result);
     }
 
+    // ── DYNAMIC SKILLS (dibuat via /skill baru) ───────
+    if (text.startsWith("/") && !text.startsWith("/ ")) {
+      const cmdRaw = text.split(/\s+/)[0].replace("/", "");
+      const query = originalText.slice(cmdRaw.length + 1).trim();
+      const { runDynamicSkill } = require("./core/evolution/skill-builder");
+      const skillResult = await runDynamicSkill(cmdRaw, query);
+      if (skillResult !== null) {
+        await ctx.sendChatAction("typing");
+        return sendLong(ctx, skillResult);
+      }
+    }
+
     // ── SYSTEM COMMANDS ──────────────────────────────
     // /status, /memory, /ingat, /lupa, /drive, /help
     // ditangani oleh bot.command() di atas
@@ -673,7 +685,18 @@ bot.command("skill", async (ctx) => {
     }
     return;
   }
-  await ctx.reply("Format: /skill baru [nama]: [deskripsi]\nContoh: /skill baru cek-besi: analisa kebutuhan besi beton untuk konstruksi");
+  if (args.toLowerCase() === "list" || args === "") {
+    try {
+      const { listDynamicSkills } = require("./core/evolution/skill-builder");
+      const skills = await listDynamicSkills();
+      if (skills.length === 0) return ctx.reply("Belum ada dynamic skill. Buat dengan:\n/skill baru [nama]: [deskripsi]");
+      const lines = skills.map(s => `• ${s.command} — ${s.description}`).join("\n");
+      return ctx.reply(`📦 Dynamic Skills (${skills.length}):\n\n${lines}`);
+    } catch (err) {
+      return ctx.reply(`❌ Error: ${err.message}`);
+    }
+  }
+  await ctx.reply("Format:\n/skill list — tampilkan semua skill\n/skill baru [nama]: [deskripsi] — buat skill baru\nContoh: /skill baru cek-besi: analisa kebutuhan besi beton");
 });
 
 // ─── /tool baru [nama]: [deskripsi] ──────────────────────

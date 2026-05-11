@@ -10,53 +10,28 @@ const TOOLS_DIR = "/root/ai-system/core/tools";
 
 async function buildTool(toolName, description) {
   const safeName = toolName.replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
-  const filePath = path.join(TOOLS_DIR, `${toolName}-tool.js`);
+  const filePath = path.join(TOOLS_DIR, `${safeName}-tool.js`);
 
-  const genPrompt = `Kamu adalah developer Node.js senior yang membuat tool module untuk sistem AI bisnis.
+  // Generate kode tool dari template langsung (tidak panggil claude CLI sebagai subprocess)
+  const fnName = `run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
+  const code = `const askClaude = require("../providers/claude-pipe");
 
-Buat file JavaScript untuk tool baru:
-- Nama tool: ${safeName}
-- Deskripsi: ${description}
-- Konteks: TERNION GROUP, Brian Kinayom, Kupang NTT
+const SYSTEM_CONTEXT = \`Kamu adalah Ternion-AI, asisten strategis Brian Kinayom (Founder TERNION GROUP, Kupang NTT).
+Tool ini khusus untuk: ${description}.
+Berikan output terstruktur dengan perhitungan detail dan referensi harga NTT 2026.\`;
 
-TEMPLATE yang harus diikuti:
-\`\`\`javascript
-const askClaude = require("../providers/claude-pipe");
+async function ${fnName}(input) {
+  const prompt = \`${description.charAt(0).toUpperCase() + description.slice(1)}.
 
-const SYSTEM_CONTEXT = \`[system context yang relevan]\`;
+Detail dari Bry: \${input}
 
-async function run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")}(input) {
-  const prompt = \`[prompt template berdasarkan deskripsi: ${description}]
-
-Input: \${input}
-
-[format output yang diharapkan]\`;
-
+Berikan hasil yang komprehensif, terstruktur, dan praktis.
+Sertakan tabel, perhitungan, dan estimasi biaya yang relevan untuk proyek di Kupang NTT.\`;
   return await askClaude(prompt, { systemContext: SYSTEM_CONTEXT });
 }
 
-module.exports = { run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")} };
-\`\`\`
-
-Tulis kode JavaScript lengkap saja. Mulai langsung dengan \`const askClaude\`.`;
-
-  let code;
-  try {
-    const { stdout } = await execFileAsync(
-      "claude",
-      ["-p", genPrompt, "--output-format", "text"],
-      { timeout: 60000, maxBuffer: 1024 * 1024 * 4 }
-    );
-    code = stdout.trim();
-    const codeMatch = code.match(/```(?:javascript|js)?\n([\s\S]+?)```/);
-    if (codeMatch) code = codeMatch[1].trim();
-    if (!code.includes("askClaude")) {
-      return `❌ Generate tool gagal — format tidak valid`;
-    }
-  } catch (err) {
-    return `❌ Claude error: ${err.message}`;
-  }
-
+module.exports = { ${fnName} };
+`;
   await fs.ensureDir(TOOLS_DIR);
   await fs.writeFile(filePath, code, "utf8");
 

@@ -5,6 +5,12 @@
       "user_message": "test query",
       "ai_reply": "test reply",
       "context": ""
+    },
+    {
+      "timestamp": "2026-05-11T07:43:40.592Z",
+      "user_message": "test query RAB proyek",
+      "ai_reply": "Ini RAB yang benar...",
+      "context": ""
     }
   ],
   "negative": [
@@ -14,8 +20,27 @@
       "ai_reply": "bad reply",
       "context": "",
       "explanation": null
+    },
+    {
+      "timestamp": "2026-05-11T07:43:42.690Z",
+      "user_message": "test query salah",
+      "ai_reply": "jawaban yang kurang tepat",
+      "context": "",
+      "explanation": "Harusnya harga besi sesuai AHSP Kupang 2026, bukan nasional"
     }
   ],
-  "corrections": [],
-  "knowledge_additions": []
+  "corrections": [
+    {
+      "timestamp": "2026-05-11T07:44:02.386Z",
+      "issue": "jawaban yang kurang tepat",
+      "correction": "Harusnya harga besi sesuai AHSP Kupang 2026, bukan nasional",
+      "original_query": "test query salah"
+    }
+  ],
+  "knowledge_additions": [
+    {
+      "timestamp": "2026-05-11T07:44:03.282Z",
+      "content": "Harga batu merah Kupang 2026: Rp 1.200/biji dari toko Jl El Tari"
+    }
+  ]
 }

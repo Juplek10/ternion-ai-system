@@ -1,11 +1,8 @@
 require("dotenv").config();
 
-const { execFile } = require("child_process");
-const { promisify } = require("util");
+const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-
-const execFileAsync = promisify(execFile);
 
 const SOUL_PATH = "/root/ai-system/prompts/ternion-soul.txt";
 const MEMORY_PATH = "/root/ai-system/memory/long-term.json";
@@ -151,17 +148,47 @@ async function askClaude(prompt, options = {}) {
 
   const fullPrompt = `${soul}${memSection}${semanticMem}${knowledgeSection}${roleSection}\n\n---\n\n${prompt}`;
 
-  try {
-    const { stdout } = await execFileAsync(
-      "claude",
-      ["-p", fullPrompt, "--output-format", "text"],
-      { timeout, maxBuffer: 1024 * 1024 * 8 }
-    );
-    return stdout.trim();
-  } catch (err) {
-    console.error("[CLAUDE-PIPE] Error:", err.message?.substring(0, 200));
-    return "Maaf Bry, coba kirim ulang pesan kamu.";
-  }
+  return new Promise((resolve) => {
+    const child = spawn("claude", ["-p", "--output-format", "text"], {
+      env: process.env,
+      stdio: ["pipe", "pipe", "pipe"]
+    });
+
+    let stdout = "";
+    let stderr = "";
+    let settled = false;
+
+    const done = (result) => {
+      if (!settled) { settled = true; resolve(result); }
+    };
+
+    child.stdout.on("data", (d) => { stdout += d.toString(); });
+    child.stderr.on("data", (d) => { stderr += d.toString(); });
+
+    child.on("close", (code) => {
+      if (code === 0 && stdout.trim()) {
+        done(stdout.trim());
+      } else {
+        console.error("[CLAUDE-PIPE] Error code:", code, stderr.substring(0, 100));
+        done("Maaf Bry, coba kirim ulang pesan kamu.");
+      }
+    });
+
+    child.on("error", (err) => {
+      console.error("[CLAUDE-PIPE] Spawn error:", err.message);
+      done("Maaf Bry, coba kirim ulang pesan kamu.");
+    });
+
+    const timer = setTimeout(() => {
+      child.kill("SIGTERM");
+      done("Maaf Bry, AI sedang sibuk. Coba lagi.");
+    }, timeout);
+
+    child.on("close", () => clearTimeout(timer));
+
+    child.stdin.write(fullPrompt, "utf8");
+    child.stdin.end();
+  });
 }
 
 module.exports = askClaude;

@@ -13,46 +13,28 @@ async function buildSkill(skillName, description) {
   const safeName = skillName.replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
   const filePath = path.join(SKILLS_DIR, `${safeName}-skill.js`);
 
-  const genPrompt = `Kamu adalah developer Node.js senior yang membuat skill module untuk sistem AI bisnis.
+  // Buat fungsi nama dari safeName (camelCase)
+  const fnName = `run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 
-Buat file JavaScript untuk skill baru dengan spesifikasi:
-- Nama skill: ${safeName}
-- Deskripsi: ${description}
-- Konteks: Digunakan oleh Brian Kinayom (TERNION GROUP, Kupang NTT)
+  // Generate kode skill dari template langsung (tidak panggil claude CLI sebagai subprocess)
+  const code = `const askClaude = require("../providers/claude-pipe");
 
-TEMPLATE yang harus diikuti PERSIS:
-\`\`\`javascript
-const askClaude = require("../providers/claude-pipe");
+const SYSTEM_CONTEXT = \`Kamu adalah Ternion-AI, asisten strategis Brian Kinayom (Founder TERNION GROUP, Kupang NTT).
+Skill ini khusus untuk: ${description}.
+Konteks bisnis: procurement, konstruksi, trading komoditas NTT, ekspor-impor.\`;
 
-const SYSTEM_CONTEXT = \`[TULIS system context yang relevan untuk skill ini]\`;
+async function ${fnName}(input) {
+  const prompt = \`${description.charAt(0).toUpperCase() + description.slice(1)}.
 
-async function run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")}(input) {
-  const prompt = \`[TULIS prompt template yang lengkap untuk skill ini berdasarkan deskripsi]\`;
+Input dari Bry: \${input}
+
+Berikan analisa yang detail, praktis, dan spesifik untuk konteks NTT/Kupang.
+Sertakan estimasi biaya jika relevan.\`;
   return await askClaude(prompt, { systemContext: SYSTEM_CONTEXT });
 }
 
-module.exports = { run${safeName.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join("")} };
-\`\`\`
-
-Tulis kode JavaScript lengkap saja, tanpa penjelasan. Mulai langsung dengan \`const askClaude\`.`;
-
-  let code;
-  try {
-    const { stdout } = await execFileAsync(
-      "claude",
-      ["-p", genPrompt, "--output-format", "text"],
-      { timeout: 60000, maxBuffer: 1024 * 1024 * 4 }
-    );
-    // Extract code dari markdown block jika ada
-    code = stdout.trim();
-    const codeMatch = code.match(/```(?:javascript|js)?\n([\s\S]+?)```/);
-    if (codeMatch) code = codeMatch[1].trim();
-    if (!code.startsWith("const") && !code.startsWith("require")) {
-      return `❌ Claude menghasilkan format yang tidak valid untuk skill ${safeName}`;
-    }
-  } catch (err) {
-    return `❌ Claude error saat generate skill: ${err.message}`;
-  }
+module.exports = { ${fnName} };
+`;
 
   // Tulis file
   await fs.ensureDir(SKILLS_DIR);

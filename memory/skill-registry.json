@@ -1,0 +1,9 @@
+[
+  {
+    "name": "cek-besi",
+    "description": "analisa kebutuhan besi beton untuk konstruksi berdasarkan luas dan tipe struktur",
+    "file": "/root/ai-system/core/skills/cek-besi-skill.js",
+    "created_at": "2026-05-11T07:48:37.766Z",
+    "command": "/cek-besi"
+  }
+]

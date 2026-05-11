@@ -42,12 +42,7 @@
       "agent": "chat",
       "user": "/skill baru cek-besi: analisa kebutuhan besi beton untuk konstruksi",
       "assistant": "Bry, perintah `/skill baru` bukan bagian dari sistem Claude Code standar — skill yang tersedia sudah terdaftar dan tidak bisa dibuat lewat perintah itu.\n\nTapi saya bisa bantu dua cara:\n\n**Opsi 1 — Langsung eksekusi sekarang**\nKamu ceritakan detail proyeknya (luas lantai, jumlah lantai, tipe struktur), saya langsung hitung kebutuhan besi betonnya.\n\n**Opsi 2 — Buat tool/script di sistem Ternion-AI**\nSaya tambahkan fungsi `cek-besi` sebagai modul di sistem ini (`/root/ai-system`) — bisa dipanggil b"
-    },
-    {
-      "content": "Harga batu merah Kupang 2026: Rp 1.200/biji dari toko Jl El Tari",
-      "category": "brian",
-      "added_at": "2026-05-11T07:44:03.296Z"
     }
   ],
-  "last_updated": "2026-05-11T07:44:03.312Z"
+  "last_updated": "2026-05-11T05:12:52.699Z"
 }
