@@ -52,9 +52,12 @@ async function checkAndRecover() {
 
   for (const proc of procs) {
     if (!CRITICAL_PROCESSES.includes(proc.name)) continue;
-    if (proc.pm2_env.status !== "online") {
+    const status = proc.pm2_env.status;
+    // "stopping" dan "launching" adalah status transisi saat restart manual — skip
+    if (status === "online" || status === "stopping" || status === "launching") continue;
+    if (status !== "online") {
       const now = new Date().toISOString();
-      console.log(`[AUTO-RECOVERY] ${proc.name} DOWN (${proc.pm2_env.status}) — restart`);
+      console.log(`[AUTO-RECOVERY] ${proc.name} DOWN (${status}) — restart`);
 
       try {
         await execFileAsync("pm2", ["restart", proc.name], { timeout: 30000 });
@@ -83,18 +86,32 @@ async function checkAndRecover() {
   checkGoogleToken().catch(() => {});
 }
 
+// Cek health Google Drive dengan test upload kecil
+// (access_token auto-refresh via googleapis, jadi yang perlu dicek adalah refresh_token)
+let driveAlertSent = null;
 async function checkGoogleToken() {
+  const today = new Date().toISOString().split("T")[0];
+  if (driveAlertSent === today) return;
+
   try {
     const tokenData = JSON.parse(require("fs").readFileSync("/root/ai-system/tokens/google-token.json", "utf8"));
-    const expiry = tokenData.expiry_date;
-    if (!expiry) return;
-    const daysLeft = Math.floor((expiry - Date.now()) / (1000 * 60 * 60 * 24));
-    if (daysLeft < 0) {
-      await sendAlert(`🚨 <b>GOOGLE TOKEN EXPIRED</b>\n\nToken sudah expired ${Math.abs(daysLeft)} hari lalu!\n\n⚡ Action: Jalankan ulang autentikasi Google Drive.\n⏰ ${new Date().toISOString()}`);
-    } else if (daysLeft < 30) {
-      await sendAlert(`⚠️ <b>GOOGLE TOKEN</b>\n\nToken akan expire dalam <b>${daysLeft} hari</b>\nPerlu diperbarui segera!\n⏰ ${new Date().toISOString()}`);
+    if (!tokenData.refresh_token) {
+      driveAlertSent = today;
+      await sendAlert(`🚨 <b>GOOGLE REFRESH TOKEN HILANG</b>\n\nPerlu re-autentikasi Google Drive!\n⚡ Ketik <code>/reauth-google</code> untuk instruksi\n⏰ ${new Date().toISOString()}`);
+      return;
     }
-  } catch {}
+    // Coba test upload untuk verifikasi Drive masih bisa dipakai
+    const { uploadFile } = require("./integrations/drive-backup");
+    const tmpFile = "/tmp/ternion-health-check.json";
+    require("fs").writeFileSync(tmpFile, JSON.stringify({ ts: new Date().toISOString() }));
+    await uploadFile(tmpFile, "CORE-SYSTEM/health");
+    console.log("[AUTO-RECOVERY] Google Drive: OK");
+  } catch (err) {
+    if (driveAlertSent !== today) {
+      driveAlertSent = today;
+      await sendAlert(`⚠️ <b>GOOGLE DRIVE ERROR</b>\n\nGagal akses Drive: ${err.message}\n\nJika terus terjadi, perlu re-auth Google.\n⏰ ${new Date().toISOString()}`);
+    }
+  }
 }
 
 console.log("[AUTO-RECOVERY] Berjalan — cek setiap 10 menit");
