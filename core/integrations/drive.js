@@ -28,14 +28,41 @@ LIST FILES
 */
 
 async function listFiles() {
-
-  const res =
-    await drive.files.list({
-      pageSize: 10,
-      fields: "files(id,name,mimeType)"
-    });
-
+  const res = await drive.files.list({
+    pageSize: 20,
+    fields: "files(id,name,mimeType,size,modifiedTime,parents)"
+  });
   return res.data.files;
+}
+
+async function listFilesInFolder(folderId = "root") {
+  const q = folderId === "root"
+    ? "'root' in parents and trashed=false"
+    : `'${folderId}' in parents and trashed=false`;
+  const res = await drive.files.list({
+    q,
+    pageSize: 25,
+    orderBy: "folder,name",
+    fields: "files(id,name,mimeType,size,modifiedTime)"
+  });
+  return res.data.files || [];
+}
+
+async function getFileInfo(fileId) {
+  const res = await drive.files.get({
+    fileId,
+    fields: "id,name,mimeType,size,modifiedTime,webViewLink"
+  });
+  return res.data;
+}
+
+async function deleteFile(fileId) {
+  await drive.files.delete({ fileId });
+  return true;
+}
+
+async function getDownloadLink(fileId) {
+  return `https://drive.google.com/uc?id=${fileId}&export=download`;
 }
 
 /*
@@ -118,6 +145,10 @@ EXPORTS
 module.exports = {
   drive,
   listFiles,
+  listFilesInFolder,
+  getFileInfo,
+  deleteFile,
+  getDownloadLink,
   createFolder,
   uploadFile
 };

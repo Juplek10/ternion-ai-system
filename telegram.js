@@ -43,8 +43,68 @@ const AUTHORIZED_USERS = [6935073123];
 let conversationCountToday = 0;
 
 // ─── State: track pesan AI terakhir untuk feedback ──────
-const lastAIContext = new Map(); // chatId → { userMsg, aiReply }
-const pendingFeedback = new Map(); // chatId → "negative_explanation" | "knowledge_addition"
+const lastAIContext = new Map();    // chatId → { userMsg, aiReply }
+const pendingFeedback = new Map();  // chatId → "negative_explanation" | "knowledge_addition"
+const pendingAction  = new Map();   // chatId → { action, data } untuk interactive menu
+
+// ─── Keyboard builder helpers ─────────────────────────
+const btn  = (text, data) => ({ text, callback_data: data.substring(0, 64) });
+const btnBack = (target) => btn("⬅️ Kembali", target);
+const btnHome = () => btn("🏠 Menu Utama", "h");
+
+function kb(...rows) {
+  return { reply_markup: { inline_keyboard: rows } };
+}
+
+function fileIcon(mimeType) {
+  if (!mimeType) return "📄";
+  if (mimeType.includes("folder"))       return "📁";
+  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return "📊";
+  if (mimeType.includes("pdf"))          return "📋";
+  if (mimeType.includes("image"))        return "🖼️";
+  if (mimeType.includes("document") || mimeType.includes("word")) return "📄";
+  if (mimeType.includes("presentation")) return "📌";
+  if (mimeType.includes("video"))        return "🎬";
+  if (mimeType.includes("audio"))        return "🎵";
+  if (mimeType.includes("zip") || mimeType.includes("rar")) return "📦";
+  return "📄";
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return "—";
+  const b = parseInt(bytes);
+  if (b < 1024) return b + " B";
+  if (b < 1048576) return (b / 1024).toFixed(1) + " KB";
+  return (b / 1048576).toFixed(1) + " MB";
+}
+
+function formatDate(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Makassar" });
+}
+
+async function editMenu(ctx, text, keyboard_rows) {
+  try {
+    await ctx.editMessageText(text, {
+      parse_mode: "HTML",
+      reply_markup: { inline_keyboard: keyboard_rows },
+      disable_web_page_preview: true
+    });
+  } catch {
+    await ctx.reply(text, {
+      parse_mode: "HTML",
+      reply_markup: { inline_keyboard: keyboard_rows },
+      disable_web_page_preview: true
+    });
+  }
+}
+
+async function sendMenu(ctx, text, keyboard_rows) {
+  await ctx.replyWithHTML(text, {
+    reply_markup: { inline_keyboard: keyboard_rows },
+    disable_web_page_preview: true
+  });
+}
 
 // ─── Global error guards — cegah crash dari unhandled rejection ────
 process.on("unhandledRejection", (reason) => {
@@ -100,77 +160,50 @@ bot.start(async (ctx) => {
 // ─── /help ─────────────────────────────────────────────
 bot.command("help", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
-  const msg =
+  await sendHelpMain(ctx, "send");
+});
+
+async function sendHelpMain(ctx, mode = "send") {
+  const text =
 `🤖 <b>TERNION-AI COMMAND CENTER</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━
-👤 Halo Bry! Ini yang bisa saya lakukan:
+👤 Halo Bry! Pilih kategori:`;
 
-🛠️ <b>TOOLS:</b>
-/ahs [pekerjaan] → Analisa Harga Satuan
-/rab [proyek] → Generate RAB
-/draft [dokumen] → Buat draft dokumen/surat
-/harga [komoditas] → Cek harga + web search
+  const rows = [
+    [btn("🛠️ Tools", "h:t"),     btn("🤝 Agents", "h:a")],
+    [btn("⚡ Skills", "h:s"),    btn("🧠 Memory", "h:m")],
+    [btn("⚙️ Sistem", "h:sy"),   btn("📱 WhatsApp", "h:w")],
+    [btn("💬 Chat bebas", "h:chat")]
+  ];
 
-🌐 <b>WEB SEARCH:</b>
-/cari [query] → Web search langsung
-/berita [topik] → Search berita terbaru
-
-🤝 <b>AGENTS (model 7b):</b>
-/procurement → Tender &amp; pengadaan
-/trading → Komoditas &amp; ekspor
-/konstruksi → Proyek konstruksi
-/strategi → Strategi bisnis
-/admin → Dokumen &amp; administrasi
-
-⚡ <b>SKILLS:</b>
-/rangkum → Rangkum teks
-/terjemah [bahasa] [teks] → Terjemahan
-/analisa [data] → Analisa strategis
-/ingatkan [menit] [pesan] → Set reminder
-
-📋 <b>REGISTRY:</b>
-/kontak tambah|cari|list → Kelola kontak
-/proyek tambah|update|list → Kelola proyek
-
-🧠 <b>MEMORY:</b>
-/memory → Ringkasan memory per domain
-/ingat [fakta] → Tambah fakta baru
-/lupa [topik] → Hapus memory
-
-⚙️ <b>SISTEM:</b>
-/status → Status sistem (RAM, model, soul)
-/drive → File di Google Drive
-/help → Menu ini
-━━━━━━━━━━━━━━━━━━━━━━━━━
-💬 Atau kirim pesan bebas untuk ngobrol!
-🔍 Auto web search jika ada kata: cari, harga terbaru, berita, info terbaru`;
-
-  await ctx.replyWithHTML(msg);
-});
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
 
 // ─── /status ───────────────────────────────────────────
 bot.command("status", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
   await ctx.sendChatAction("typing");
+  await sendStatusMenu(ctx, "send");
+});
 
+async function buildStatusText() {
   let ram = { usedGB: "?", totalGB: "?", pct: "?" };
   try {
     const meminfo = fs.readFileSync("/proc/meminfo", "utf8");
     const total = parseInt(meminfo.match(/MemTotal:\s+(\d+)/)[1]) * 1024;
     const avail = parseInt(meminfo.match(/MemAvailable:\s+(\d+)/)[1]) * 1024;
-    const used = total - avail;
-    ram.pct = Math.round((used / total) * 100);
+    const used  = total - avail;
+    ram.pct    = Math.round((used / total) * 100);
     ram.usedGB = (used / 1e9).toFixed(1);
-    ram.totalGB = (total / 1e9).toFixed(1);
-  } catch (e) {}
+    ram.totalGB= (total / 1e9).toFixed(1);
+  } catch {}
 
   let claudeStatus = "✅ Claude (primary)";
   try {
     const { execSync } = require("child_process");
     execSync("claude --version", { timeout: 5000, stdio: "pipe" });
-  } catch (e) {
-    claudeStatus = "❌ Claude CLI tidak tersedia";
-  }
+  } catch { claudeStatus = "❌ Claude CLI tidak tersedia"; }
 
   const soul = getSoul();
   const soulStatus = soul && soul.length > 100 ? "✅ loaded" : "❌ error";
@@ -182,53 +215,68 @@ bot.command("status", async (ctx) => {
     waAiStatus = await getWAStatus();
   } catch {}
 
-  const msg =
-`⚙️ <b>STATUS TERNION-AI</b>
+  const ramBar = "█".repeat(Math.round((ram.pct || 0) / 10)) + "░".repeat(10 - Math.round((ram.pct || 0) / 10));
+  const ramColor = (ram.pct || 0) > 80 ? "🔴" : (ram.pct || 0) > 60 ? "🟡" : "🟢";
+
+  return `⚙️ <b>STATUS TERNION-AI</b>
 ─────────────────────
 ⏰ ${timeStr} WITA
 🤖 AI: ${claudeStatus}
-🤖 AI WA: ${waAiStatus}
-💾 RAM: ${ram.usedGB} / ${ram.totalGB} GB (${ram.pct}%)
+📱 AI WA: ${waAiStatus}
+${ramColor} RAM: ${ramBar} ${ram.pct}%
+   ${ram.usedGB} / ${ram.totalGB} GB
 💬 Percakapan hari ini: ${conversationCountToday}
 🔋 Soul: ${soulStatus}
-📡 Bot: ✅ online
-🧠 Mode: Claude-only architecture`;
+📡 Bot: ✅ online`;
+}
 
-  await ctx.replyWithHTML(msg);
-});
+async function sendStatusMenu(ctx, mode = "send") {
+  const text = await buildStatusText();
+  const rows = [
+    [btn("🔄 Restart Bot", "st:rb"),    btn("💾 Backup Sekarang", "st:bk")],
+    [btn("📊 Lihat Logs",  "st:lg"),    btn("🧹 Clear Cache",     "st:cc")],
+    [btn("📱 AI WA Status","st:wa")]
+  ];
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
 
 // ─── /memory ───────────────────────────────────────────
 bot.command("memory", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
   await ctx.sendChatAction("typing");
+  await sendMemoryMain(ctx, "send");
+});
 
+async function sendMemoryMain(ctx, mode = "send") {
   const summary = await getMemorySummary();
   const d = summary.domains || {};
-  const msg =
+  const counts = {
+    p:  d.personal?.count  || 0,
+    b:  d.bisnis?.count    || 0,
+    pr: d.proyek?.count    || 0,
+    k:  d.kontak?.count    || 0,
+    kp: d.keputusan?.count || 0,
+    c:  d.percakapan?.count|| 0,
+  };
+
+  const text =
 `🧠 <b>TERNION MEMORY</b>
 ━━━━━━━━━━━━━━━━━━━
-👤 Personal: ${(d.personal?.count) || 0} fakta
-💼 Bisnis: ${(d.bisnis?.count) || 0} fakta
-🏗️ Proyek: ${(d.proyek?.count) || 0} aktif
-👥 Kontak: ${(d.kontak?.count) || 0} orang
-⚡ Keputusan: ${(d.keputusan?.count) || 0} entri
-💬 Percakapan: ${(d.percakapan?.count) || 0} sesi
-━━━━━━━━━━━━━━━━━━━
-📊 Total fakta: ${summary.total_facts}
-📚 Learnings: ${summary.total_learnings}
-☁️ Last backup: ${summary.last_backup}
+📊 Total: ${summary.total_facts} fakta | ${summary.total_learnings} learnings
+☁️ Backup: ${summary.last_backup}
 
-🎯 <b>Proyek/Deadline:</b>
-${summary.active_projects}
+Tap domain untuk lihat entri:`;
 
-💡 <b>Keputusan Terakhir:</b>
-${summary.latest_decisions}
+  const rows = [
+    [btn(`👤 Personal (${counts.p})`,    "m:p:0"),  btn(`💼 Bisnis (${counts.b})`,     "m:b:0")],
+    [btn(`🏗️ Proyek (${counts.pr})`,    "m:pr:0"), btn(`👥 Kontak (${counts.k})`,     "m:k:0")],
+    [btn(`⚡ Keputusan (${counts.kp})`,  "m:kp:0"), btn(`💬 Percakapan (${counts.c})`, "m:c:0")]
+  ];
 
-🔬 <b>Learning Terbaru:</b>
-${summary.latest_learnings}`;
-
-  await ctx.replyWithHTML(msg);
-});
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
 
 // ─── /kontak ───────────────────────────────────────────
 bot.command("kontak", async (ctx) => {
@@ -254,10 +302,7 @@ bot.command("kontak", async (ctx) => {
   }
 
   if (sub === "list" || !sub) {
-    const all = await listKontak();
-    if (all.length === 0) return ctx.reply("Belum ada kontak tersimpan. Gunakan /kontak tambah");
-    const list = all.slice(-15).map((k, i) => formatKontak(k, i)).join("\n\n");
-    return ctx.replyWithHTML(`👥 <b>DAFTAR KONTAK TERNION</b>\n━━━━━━━━━━━━━━━━━━\n\n${list}`);
+    return sendKontakList(ctx, 0, "send");
   }
 
   return ctx.reply("Sub-command: tambah | cari | list");
@@ -290,10 +335,7 @@ bot.command("proyek", async (ctx) => {
   }
 
   if (sub === "list" || !sub) {
-    const all = await listProyek();
-    if (all.length === 0) return ctx.reply("Belum ada proyek. Gunakan /proyek tambah");
-    const list = all.slice(-10).map((p, i) => formatProyek(p, i)).join("\n\n");
-    return ctx.replyWithHTML(`🏗️ <b>PROYEK AKTIF TERNION</b>\n━━━━━━━━━━━━━━━━━━\n\n${list}`);
+    return sendProyekList(ctx, 0, "send");
   }
 
   // Cari proyek by nama
@@ -327,18 +369,49 @@ bot.command("lupa", async (ctx) => {
 bot.command("drive", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
   await ctx.sendChatAction("typing");
-
-  try {
-    const { listFiles } = require("./core/integrations/drive");
-    const files = await listFiles();
-    if (!files || files.length === 0) return ctx.reply("Drive kosong atau tidak terhubung.");
-
-    const list = files.slice(0, 10).map((f, i) => `${i + 1}. ${f.name}`).join("\n");
-    await ctx.reply(`📁 FILE DI GOOGLE DRIVE:\n\n${list}`);
-  } catch (err) {
-    await ctx.reply("Drive tidak terhubung. Cek token Google.");
-  }
+  await sendDriveFolder(ctx, "root", "send");
 });
+
+async function sendDriveFolder(ctx, folderId, mode) {
+  try {
+    const { listFilesInFolder } = require("./core/integrations/drive");
+    const files = await listFilesInFolder(folderId);
+
+    if (!files || files.length === 0) {
+      const text = folderId === "root"
+        ? "📁 <b>Google Drive</b>\n\nDrive kosong atau tidak ada file."
+        : "📁 Folder ini kosong.";
+      const rows = folderId !== "root" ? [[btnBack("dr:root")]] : [];
+      if (mode === "edit") await editMenu(ctx, text, rows);
+      else await sendMenu(ctx, text, rows);
+      return;
+    }
+
+    const folderName = folderId === "root" ? "Google Drive" : "Folder";
+    const text = `📁 <b>${folderName}</b>\n━━━━━━━━━━━━━━━━━\n${files.length} item`;
+
+    const rows = files.map(f => {
+      const icon = fileIcon(f.mimeType);
+      const isFolder = f.mimeType === "application/vnd.google-apps.folder";
+      const cbData = isFolder ? `dr:f:${f.id}` : `dr:fi:${f.id}`;
+      const label = `${icon} ${f.name}`.substring(0, 40);
+      return [btn(label, cbData)];
+    });
+
+    if (folderId !== "root") {
+      rows.push([btnBack("dr:root"), btnHome()]);
+    } else {
+      rows.push([btn("🔄 Refresh", "dr:root")]);
+    }
+
+    if (mode === "edit") await editMenu(ctx, text, rows);
+    else await sendMenu(ctx, text, rows);
+  } catch (err) {
+    const errText = "❌ Drive tidak terhubung.\nPastikan token Google valid.";
+    if (mode === "edit") await editMenu(ctx, errText, []);
+    else await ctx.reply(errText);
+  }
+}
 
 // ═══════════════════════════════════════════════
 // DOCUMENT UPLOAD PIPELINE
@@ -389,6 +462,32 @@ bot.on("text", async (ctx) => {
   const chatId = ctx.chat.id;
 
   if (!isAuthorized(chatId)) return ctx.reply("Unauthorized.");
+
+  // ── Intercept pending interactive actions ─────────
+  if (pendingAction.has(chatId)) {
+    const action = pendingAction.get(chatId);
+    pendingAction.delete(chatId);
+    if (action.action === "proyek_update") {
+      const idx = action.idx;
+      try {
+        const fsExtra = require("fs-extra");
+        const PROJ_FILE = "/root/ai-system/memory/proyek.json";
+        const d2 = await fsExtra.readJson(PROJ_FILE).catch(() => ({ entries: [] }));
+        const entries = d2.entries || [];
+        if (entries[idx]) {
+          entries[idx].status = originalText.trim();
+          entries[idx].updated_at = new Date().toISOString();
+          await fsExtra.writeJson(PROJ_FILE, { ...d2, entries }, { spaces: 2 });
+          await ctx.reply(`✅ Status proyek diupdate ke: "${originalText.trim()}"`);
+        } else {
+          await ctx.reply("❌ Proyek tidak ditemukan.");
+        }
+      } catch (err) {
+        await ctx.reply(`❌ Gagal update: ${err.message}`);
+      }
+      return;
+    }
+  }
 
   // ── Intercept feedback follow-up ─────────────────
   if (pendingFeedback.has(chatId)) {
@@ -641,7 +740,189 @@ bot.on("text", async (ctx) => {
   }
 });
 
-// ─── FEEDBACK CALLBACK HANDLER ──────────────────────────
+// ─── Helper: Proyek list ───────────────────────────────
+async function sendProyekList(ctx, page, mode) {
+  const PAGE_SIZE = 8;
+  const all = await listProyek();
+  if (all.length === 0) {
+    const t = "🏗️ <b>PROYEK TERNION</b>\n\nBelum ada proyek.\nGunakan /proyek tambah";
+    if (mode === "edit") await editMenu(ctx, t, []);
+    else await ctx.replyWithHTML(t);
+    return;
+  }
+
+  const total = all.length;
+  const start = page * PAGE_SIZE;
+  const slice = all.slice(start, start + PAGE_SIZE);
+
+  const text = `🏗️ <b>PROYEK TERNION</b>\n━━━━━━━━━━━━━━━━━\n${total} proyek — halaman ${page + 1}`;
+
+  const STATUS_ICONS = { tender:"🔵", aktif:"🟢", selesai:"✅", ditunda:"🟡", batal:"🔴" };
+
+  const rows = slice.map((p, i) => {
+    const realIdx = start + i;
+    const icon = STATUS_ICONS[p.status?.toLowerCase()] || "🏗️";
+    const label = `${icon} ${(p.nama || p.name || "Tanpa nama").substring(0, 28)} – ${p.status || "?"}`;
+    return [btn(label, `pj:v:${realIdx}`)];
+  });
+
+  const navRow = [];
+  if (page > 0)                              navRow.push(btn("⬅️ Prev", `pj:${page-1}`));
+  if (start + PAGE_SIZE < total)             navRow.push(btn("➡️ Next", `pj:${page+1}`));
+  if (navRow.length) rows.push(navRow);
+  rows.push([btnHome()]);
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+async function sendProyekDetail(ctx, idx, mode) {
+  const all = await listProyek();
+  const p = all[idx];
+  if (!p) { await editMenu(ctx, "❌ Proyek tidak ditemukan.", [[btnBack("pj:0")]]); return; }
+
+  const text =
+`🏗️ <b>${p.nama || p.name}</b>
+━━━━━━━━━━━━━━━━━
+📊 Status: ${p.status || "—"}
+💰 Nilai: ${p.nilai || "—"}
+📅 Deadline: ${p.deadline || "—"}
+📝 Catatan: ${(p.catatan || p.notes || "—").substring(0, 200)}`;
+
+  const rows = [
+    [btn("✏️ Update Status", `pj:u:${idx}`), btn("🗑️ Hapus", `pj:d:${idx}`)],
+    [btn("📋 Buat RAB", `pj:rab:${idx}`)],
+    [btnBack("pj:0"), btnHome()]
+  ];
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── Helper: Kontak WA list ────────────────────────────
+async function sendKontakList(ctx, page, mode) {
+  const PAGE_SIZE = 8;
+  const { listContacts } = require("./core/contacts/contact-manager");
+  const all = (await listContacts()).filter(c => !c.nomor.includes("XXXXXXX") && !c.nomor.startsWith("_"));
+
+  if (all.length === 0) {
+    const t = "👥 <b>KONTAK WA</b>\n\nBelum ada kontak terdaftar.\nGunakan /wa_add untuk menambah.";
+    if (mode === "edit") await editMenu(ctx, t, []);
+    else await ctx.replyWithHTML(t);
+    return;
+  }
+
+  const total = all.length;
+  const start = page * PAGE_SIZE;
+  const slice = all.slice(start, start + PAGE_SIZE);
+
+  const CAT_ICONS = { nexus:"👑", internal:"🏢", kontraktor:"🔨", supplier:"📦", pengepul:"⛏️", relasi:"🤝", pemerintah:"🏛️", tidak_dikenal:"❓" };
+
+  const text = `👥 <b>KONTAK WA TERNION</b>\n━━━━━━━━━━━━━━━━━\n${total} kontak — halaman ${page + 1}`;
+
+  const rows = slice.map(c => {
+    const icon = CAT_ICONS[c.kategori] || "👤";
+    const label = `${icon} ${(c.nama || c.nomor).substring(0, 25)} (${c.kategori || "?"})`;
+    return [btn(label, `kn:v:${c.nomor}`.substring(0, 64))];
+  });
+
+  const navRow = [];
+  if (page > 0)                              navRow.push(btn("⬅️ Prev", `kn:${page-1}`));
+  if (start + PAGE_SIZE < total)             navRow.push(btn("➡️ Next", `kn:${page+1}`));
+  if (navRow.length) rows.push(navRow);
+  rows.push([btnHome()]);
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+async function sendKontakDetail(ctx, nomor, mode) {
+  const { getContact, formatContactInfo } = require("./core/contacts/contact-manager");
+  const c = await getContact(nomor);
+  if (!c) { await editMenu(ctx, `❌ Kontak ${nomor} tidak ditemukan.`, [[btnBack("kn:0")]]); return; }
+
+  const CAT_ICONS = { nexus:"👑", internal:"🏢", kontraktor:"🔨", supplier:"📦", pengepul:"⛏️", relasi:"🤝", pemerintah:"🏛️", tidak_dikenal:"❓" };
+  const icon = CAT_ICONS[c.kategori] || "👤";
+
+  const text =
+`${icon} <b>${c.nama || c.nomor}</b>
+━━━━━━━━━━━━━━━━━
+📞 Nomor: ${c.nomor}
+🏷️ Kategori: ${c.kategori} | ${c.role || "—"}
+💬 Gaya: ${c.gaya_bicara || "—"}
+🔒 Info sensitif: ${c.info_sensitif ? "Ya" : "Tidak"}
+✅ Perlu approval: ${c.perlu_approval ? "Ya" : "Tidak"}
+💼 Konteks: ${(c.konteks_bisnis || "—").substring(0, 100)}
+📊 Interaksi: ${c.total_interactions || 0}x
+🕐 Terakhir: ${c.last_interaction ? c.last_interaction.split("T")[0] : "belum"}`;
+
+  const rows = [
+    [btn("💬 Lihat History", `kn:h:${nomor}`.substring(0,64)), btn("🗑️ Hapus", `kn:del:${nomor}`.substring(0,64))],
+    [btnBack("kn:0"), btnHome()]
+  ];
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── Helper: Memory domain entries ────────────────────
+async function sendMemoryDomain(ctx, domain, offset, mode) {
+  const PAGE_SIZE = 5;
+  const MEMORY_DIR = "/root/ai-system/memory";
+  const fsExtra = require("fs-extra");
+
+  const domainFiles = {
+    p:  "personal.json",
+    b:  "bisnis.json",
+    pr: "proyek.json",
+    k:  "kontak.json",
+    kp: "keputusan.json",
+    c:  "percakapan.json"
+  };
+
+  const domainLabels = {
+    p: "👤 Personal", b: "💼 Bisnis", pr: "🏗️ Proyek",
+    k: "👥 Kontak",   kp: "⚡ Keputusan", c: "💬 Percakapan"
+  };
+
+  const file = domainFiles[domain];
+  if (!file) { await editMenu(ctx, "❌ Domain tidak dikenal.", [[btnBack("m")]]); return; }
+
+  let entries = [];
+  try {
+    const data = await fsExtra.readJson(`${MEMORY_DIR}/${file}`).catch(() => null);
+    entries = data?.entries || data?.data || [];
+    if (!Array.isArray(entries)) entries = Object.values(entries).filter(v => typeof v === "string" || v?.content);
+  } catch {}
+
+  const label = domainLabels[domain] || domain;
+  const total = entries.length;
+  const slice = entries.slice(offset, offset + PAGE_SIZE);
+
+  if (total === 0) {
+    await editMenu(ctx, `${label}\n\nBelum ada data.`, [[btnBack("m")]]);
+    return;
+  }
+
+  const text = `${label}\n━━━━━━━━━━━━━━━━━\n${total} entri — menampilkan ${offset + 1}–${Math.min(offset + PAGE_SIZE, total)}:\n\n` +
+    slice.map((e, i) => {
+      const content = (e?.content || e?.text || e?.value || String(e)).substring(0, 120);
+      const ts = e?.created_at ? `\n<i>${e.created_at.split("T")[0]}</i>` : "";
+      return `${offset + i + 1}. ${content}${ts}`;
+    }).join("\n\n");
+
+  const navRow = [];
+  if (offset > 0)                          navRow.push(btn("⬅️ Prev", `m:${domain}:${offset - PAGE_SIZE}`));
+  if (offset + PAGE_SIZE < total)          navRow.push(btn("➡️ Selanjutnya", `m:${domain}:${offset + PAGE_SIZE}`));
+  const rows = [];
+  if (navRow.length) rows.push(navRow);
+  rows.push([btnBack("m"), btnHome()]);
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── INTERACTIVE CALLBACK HANDLER ─────────────────────
 bot.on("callback_query", async (ctx) => {
   const chatId = ctx.chat?.id || ctx.callbackQuery?.message?.chat?.id;
   if (!isAuthorized(chatId)) return ctx.answerCbQuery("Unauthorized");
@@ -649,27 +930,374 @@ bot.on("callback_query", async (ctx) => {
   const data = ctx.callbackQuery.data;
   const context = lastAIContext.get(chatId) || { userMsg: "", aiReply: "" };
 
-  try {
-    await ctx.answerCbQuery();
-    // Edit pesan separator agar tombol hilang
-    await ctx.editMessageText("─ ✓").catch(() => {});
-  } catch {}
+  await ctx.answerCbQuery().catch(() => {});
 
+  // ── FEEDBACK ─────────────────────────────────────────
   if (data === "fb_positive") {
     addPositive(context.userMsg, context.aiReply).catch(() => {});
-    await ctx.reply("Noted Bry! 👍").catch(() => {});
+    await ctx.editMessageText("─ 👍 Noted!").catch(() => {});
+    return;
   }
-
-  else if (data === "fb_negative") {
+  if (data === "fb_negative") {
     addNegative(context.userMsg, context.aiReply).catch(() => {});
     pendingFeedback.set(chatId, "negative_explanation");
-    await ctx.reply("Maaf Bry, apa yang kurang tepat?\nSaya catat untuk diperbaiki.").catch(() => {});
+    await ctx.editMessageText("─ 👎 Dicatat.").catch(() => {});
+    await ctx.reply("Maaf Bry, apa yang kurang tepat? Saya catat untuk diperbaiki.").catch(() => {});
+    return;
+  }
+  if (data === "fb_add") {
+    pendingFeedback.set(chatId, "knowledge_addition");
+    await ctx.editMessageText("─ 💡 Tambahkan...").catch(() => {});
+    await ctx.reply("Apa yang ingin kamu tambahkan atau koreksi, Bry?").catch(() => {});
+    return;
   }
 
-  else if (data === "fb_add") {
-    pendingFeedback.set(chatId, "knowledge_addition");
-    await ctx.reply("Apa yang ingin kamu tambahkan atau koreksi, Bry?").catch(() => {});
+  // ── HELP MENUS ────────────────────────────────────────
+  if (data === "h") {
+    await sendHelpMain(ctx, "edit");
+    return;
   }
+  if (data === "h:t") {
+    await editMenu(ctx,
+`🛠️ <b>TOOLS</b>
+━━━━━━━━━━━━━━━━━
+/ahs [pekerjaan] — Analisa Harga Satuan
+/rab [proyek] — Generate RAB lengkap
+/draft [dokumen] — Buat draft dokumen/surat
+/harga [komoditas] — Cek harga + web search
+/cari [query] — Web search langsung
+/berita [topik] — Search berita terbaru`,
+      [[btnBack("h"), btnHome()]]);
+    return;
+  }
+  if (data === "h:a") {
+    await editMenu(ctx,
+`🤝 <b>AGENTS</b>
+━━━━━━━━━━━━━━━━━
+/procurement — Tender & pengadaan
+/trading — Komoditas & ekspor
+/konstruksi — Proyek konstruksi
+/strategi — Strategi bisnis
+/admin — Dokumen & administrasi`,
+      [[btnBack("h"), btnHome()]]);
+    return;
+  }
+  if (data === "h:s") {
+    await editMenu(ctx,
+`⚡ <b>SKILLS</b>
+━━━━━━━━━━━━━━━━━
+/rangkum [teks] — Rangkum teks
+/terjemah [bahasa] [teks] — Terjemahan
+/analisa [data] — Analisa strategis
+/ingatkan [menit] [pesan] — Set reminder
+/skill list — Dynamic skills
+/skill baru [nama]: [deskripsi] — Buat skill`,
+      [[btnBack("h"), btnHome()]]);
+    return;
+  }
+  if (data === "h:m") {
+    await editMenu(ctx,
+`🧠 <b>MEMORY</b>
+━━━━━━━━━━━━━━━━━
+/memory — Browser memory interaktif
+/ingat [fakta] — Tambah fakta baru
+/lupa [topik] — Hapus memory
+/knowledge [topik] — Lihat knowledge base
+/update [topik] [fakta] — Update knowledge`,
+      [[btn("🧠 Buka Memory", "m"), btnBack("h")], [btnHome()]]);
+    return;
+  }
+  if (data === "h:sy") {
+    await editMenu(ctx,
+`⚙️ <b>SISTEM</b>
+━━━━━━━━━━━━━━━━━
+/status — Status sistem + quick actions
+/drive — Google Drive browser
+/ai_off /ai_on /ai_pause [menit]
+/approve [ID] — Setujui approval WA
+/reject [ID] [alasan] — Tolak approval
+/tunda [ID] — Tunda approval
+/followup — Daftar follow-up pending`,
+      [[btn("⚙️ Buka Status", "st:view"), btn("📁 Drive", "dr:root")],
+       [btnBack("h"), btnHome()]]);
+    return;
+  }
+  if (data === "h:w") {
+    await editMenu(ctx,
+`📱 <b>WHATSAPP</b>
+━━━━━━━━━━━━━━━━━
+/wa_list — Daftar kontak WA terdaftar
+/wa_add [nomor] [kat] [nama] — Tambah kontak
+/ai_status — Status AI WhatsApp
+/ai_off — Matikan AI WA
+/ai_on — Aktifkan AI WA
+/ai_pause [menit] — Pause sementara`,
+      [[btn("👥 Kontak WA", "kn:0"), btnBack("h")], [btnHome()]]);
+    return;
+  }
+  if (data === "h:chat") {
+    await editMenu(ctx, "💬 Kirim saja pesan bebas, Bry!\nAku siap ngobrol, analisa, atau bantu apapun.", [[btnHome()]]);
+    return;
+  }
+
+  // ── STATUS ACTIONS ────────────────────────────────────
+  if (data === "st:view") {
+    await sendStatusMenu(ctx, "edit");
+    return;
+  }
+  if (data === "st:rb") {
+    await editMenu(ctx,
+      "🔄 <b>Restart Bot?</b>\n\nBot Telegram akan di-restart.\nProses lain (WA, worker) tidak terganggu.",
+      [[btn("✅ Ya, Restart", "st:rb:ok"), btn("❌ Batal", "st:view")]]);
+    return;
+  }
+  if (data === "st:rb:ok") {
+    await editMenu(ctx, "🔄 Merestart bot...", []);
+    await ctx.reply("✅ Bot di-restart. Kembali online dalam ~5 detik.").catch(() => {});
+    setTimeout(() => process.exit(0), 1000);
+    return;
+  }
+  if (data === "st:bk") {
+    await editMenu(ctx, "⏳ Menjalankan backup...", []);
+    try {
+      const { execSync } = require("child_process");
+      execSync("pm2 trigger backup-scheduler backup", { timeout: 10000, stdio: "pipe" });
+      await editMenu(ctx, "✅ Backup berhasil dijalankan!", [[btnBack("st:view")]]);
+    } catch {
+      await editMenu(ctx, "💾 Backup dijadwalkan. Cek backup-scheduler logs.", [[btnBack("st:view")]]);
+    }
+    return;
+  }
+  if (data === "st:lg") {
+    try {
+      const { execSync } = require("child_process");
+      const logs = execSync("pm2 logs --nostream --lines 15 telegram 2>&1", { timeout: 5000 }).toString();
+      await editMenu(ctx, `📊 <b>Logs (15 baris terakhir):</b>\n\n<pre>${logs.substring(0, 3000).replace(/</g,"&lt;")}</pre>`,
+        [[btnBack("st:view")]]);
+    } catch {
+      await editMenu(ctx, "❌ Gagal ambil logs.", [[btnBack("st:view")]]);
+    }
+    return;
+  }
+  if (data === "st:cc") {
+    try {
+      const { execSync } = require("child_process");
+      execSync("find /root/ai-system/memory/wa-states -name '*.json' -delete 2>/dev/null || true", { timeout: 5000 });
+      await editMenu(ctx, "✅ Cache WA states dibersihkan!", [[btnBack("st:view")]]);
+    } catch {
+      await editMenu(ctx, "❌ Gagal clear cache.", [[btnBack("st:view")]]);
+    }
+    return;
+  }
+  if (data === "st:wa") {
+    const { getStatus: getWAStatus } = require("./core/contacts/master-switch");
+    const waStatus = await getWAStatus().catch(() => "❓ unknown");
+    await editMenu(ctx, `📱 <b>Status AI WhatsApp</b>\n\n${waStatus}`,
+      [[btn("🟢 Aktifkan", "st:wa:on"), btn("🔴 Matikan", "st:wa:off")],
+       [btn("⏸️ Pause 30m", "st:wa:p30"), btnBack("st:view")]]);
+    return;
+  }
+  if (data === "st:wa:on") {
+    const { activateAI } = require("./core/contacts/master-switch");
+    await activateAI("telegram");
+    await editMenu(ctx, "🟢 AI WhatsApp diaktifkan!", [[btnBack("st:view")]]);
+    return;
+  }
+  if (data === "st:wa:off") {
+    const { deactivateAI } = require("./core/contacts/master-switch");
+    await deactivateAI("telegram");
+    await editMenu(ctx, "🔴 AI WhatsApp dimatikan.", [[btnBack("st:view")]]);
+    return;
+  }
+  if (data === "st:wa:p30") {
+    const { pauseAI } = require("./core/contacts/master-switch");
+    await pauseAI(30);
+    await editMenu(ctx, "⏸️ AI WhatsApp dipause 30 menit.", [[btnBack("st:view")]]);
+    return;
+  }
+
+  // ── MEMORY BROWSER ─────────────────────────────────────
+  if (data === "m") {
+    await sendMemoryMain(ctx, "edit");
+    return;
+  }
+  const memMatch = data.match(/^m:([a-z]+):(\d+)$/);
+  if (memMatch) {
+    const [, domain, offsetStr] = memMatch;
+    await sendMemoryDomain(ctx, domain, parseInt(offsetStr), "edit");
+    return;
+  }
+
+  // ── PROYEK ─────────────────────────────────────────────
+  const pjPageMatch = data.match(/^pj:(\d+)$/);
+  if (pjPageMatch) {
+    await sendProyekList(ctx, parseInt(pjPageMatch[1]), "edit");
+    return;
+  }
+  const pjViewMatch = data.match(/^pj:v:(\d+)$/);
+  if (pjViewMatch) {
+    await sendProyekDetail(ctx, parseInt(pjViewMatch[1]), "edit");
+    return;
+  }
+  const pjUpdateMatch = data.match(/^pj:u:(\d+)$/);
+  if (pjUpdateMatch) {
+    const idx = parseInt(pjUpdateMatch[1]);
+    pendingAction.set(chatId, { action: "proyek_update", idx });
+    await editMenu(ctx,
+      `✏️ Ketik status baru untuk proyek ini:\n(contoh: aktif, selesai, ditunda, batal)`,
+      [[btn("❌ Batal", `pj:v:${idx}`)]]);
+    return;
+  }
+  const pjDeleteMatch = data.match(/^pj:d:(\d+)$/);
+  if (pjDeleteMatch) {
+    const idx = parseInt(pjDeleteMatch[1]);
+    const all = await listProyek();
+    const p = all[idx];
+    await editMenu(ctx,
+      `🗑️ Hapus proyek <b>${p?.nama || p?.name || idx}</b>?\n\nIni tidak bisa dibatalkan.`,
+      [[btn("✅ Ya, Hapus", `pj:dc:${idx}`), btn("❌ Batal", `pj:v:${idx}`)]]);
+    return;
+  }
+  const pjDeleteConfirm = data.match(/^pj:dc:(\d+)$/);
+  if (pjDeleteConfirm) {
+    const idx = parseInt(pjDeleteConfirm[1]);
+    try {
+      const fsExtra = require("fs-extra");
+      const PROJ_FILE = "/root/ai-system/memory/proyek.json";
+      const data2 = await fsExtra.readJson(PROJ_FILE).catch(() => ({ entries: [] }));
+      const entries = data2.entries || [];
+      entries.splice(idx, 1);
+      await fsExtra.writeJson(PROJ_FILE, { ...data2, entries }, { spaces: 2 });
+      await editMenu(ctx, "✅ Proyek dihapus.", [[btn("🏗️ Kembali ke List", "pj:0")]]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Gagal hapus: ${err.message}`, [[btnBack("pj:0")]]);
+    }
+    return;
+  }
+  const pjRabMatch = data.match(/^pj:rab:(\d+)$/);
+  if (pjRabMatch) {
+    const idx = parseInt(pjRabMatch[1]);
+    const all = await listProyek();
+    const p = all[idx];
+    await editMenu(ctx, `⏳ Membuat RAB untuk ${p?.nama || p?.name}...`, []);
+    try {
+      const result = await withTyping(ctx, () => runRAB(p?.nama || p?.name || "proyek"));
+      await ctx.reply(result.substring(0, 4000));
+    } catch (err) {
+      await ctx.reply(`❌ Gagal buat RAB: ${err.message}`);
+    }
+    return;
+  }
+
+  // ── KONTAK WA ──────────────────────────────────────────
+  const knPageMatch = data.match(/^kn:(\d+)$/);
+  if (knPageMatch) {
+    await sendKontakList(ctx, parseInt(knPageMatch[1]), "edit");
+    return;
+  }
+  const knViewMatch = data.match(/^kn:v:(.+)$/);
+  if (knViewMatch) {
+    await sendKontakDetail(ctx, knViewMatch[1], "edit");
+    return;
+  }
+  const knDelMatch = data.match(/^kn:del:(.+)$/);
+  if (knDelMatch) {
+    const nomor = knDelMatch[1];
+    await editMenu(ctx,
+      `🗑️ Hapus kontak <b>${nomor}</b>?`,
+      [[btn("✅ Ya, Hapus", `kn:dc:${nomor}`.substring(0,64)), btn("❌ Batal", `kn:v:${nomor}`.substring(0,64))]]);
+    return;
+  }
+  const knDelConfirm = data.match(/^kn:dc:(.+)$/);
+  if (knDelConfirm) {
+    const nomor = knDelConfirm[1];
+    const { removeContact } = require("./core/contacts/contact-manager");
+    const ok = await removeContact(nomor);
+    await editMenu(ctx,
+      ok ? `✅ Kontak ${nomor} dihapus.` : `❌ Kontak tidak ditemukan.`,
+      [[btn("👥 Kembali ke List", "kn:0")]]);
+    return;
+  }
+  const knHistMatch = data.match(/^kn:h:(.+)$/);
+  if (knHistMatch) {
+    const nomor = knHistMatch[1];
+    const { getContact } = require("./core/contacts/contact-manager");
+    const c = await getContact(nomor);
+    const histText = [
+      ...(c?.history_proyek || []).map(h => `🏗️ ${h}`),
+      ...(c?.history_harga  || []).map(h => `💰 ${h}`)
+    ].slice(-10).join("\n") || "(belum ada history)";
+    await editMenu(ctx,
+      `📋 <b>History: ${c?.nama || nomor}</b>\n━━━━━━━━━━━━━━━━━\n${histText}`,
+      [[btnBack(`kn:v:${nomor}`.substring(0,64))]]);
+    return;
+  }
+
+  // ── DRIVE BROWSER ──────────────────────────────────────
+  if (data === "dr:root") {
+    await sendDriveFolder(ctx, "root", "edit");
+    return;
+  }
+  const drFolderMatch = data.match(/^dr:f:(.+)$/);
+  if (drFolderMatch) {
+    await sendDriveFolder(ctx, drFolderMatch[1], "edit");
+    return;
+  }
+  const drFileMatch = data.match(/^dr:fi:(.+)$/);
+  if (drFileMatch) {
+    const fileId = drFileMatch[1];
+    try {
+      const { getFileInfo, getDownloadLink } = require("./core/integrations/drive");
+      const info = await getFileInfo(fileId);
+      const dlLink = getDownloadLink(fileId);
+      const text =
+`${fileIcon(info.mimeType)} <b>${info.name}</b>
+━━━━━━━━━━━━━━━━━
+📦 Ukuran: ${formatBytes(info.size)}
+📅 Diubah: ${formatDate(info.modifiedTime)}
+🔗 <a href="${info.webViewLink || dlLink}">Buka di Drive</a>`;
+      await editMenu(ctx, text, [
+        [btn("⬇️ Download", `dr:dl:${fileId}`), btn("🗑️ Hapus", `dr:rm:${fileId}`)],
+        [btnBack("dr:root"), btnHome()]
+      ]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Gagal baca file: ${err.message}`, [[btnBack("dr:root")]]);
+    }
+    return;
+  }
+  const drDlMatch = data.match(/^dr:dl:(.+)$/);
+  if (drDlMatch) {
+    const fileId = drDlMatch[1];
+    const { getDownloadLink } = require("./core/integrations/drive");
+    const link = getDownloadLink(fileId);
+    await editMenu(ctx,
+      `⬇️ <b>Download Link:</b>\n\n<a href="${link}">${link}</a>\n\n<i>Link aktif untuk download langsung.</i>`,
+      [[btnBack("dr:root")]]);
+    return;
+  }
+  const drRmMatch = data.match(/^dr:rm:(.+)$/);
+  if (drRmMatch) {
+    const fileId = drRmMatch[1];
+    await editMenu(ctx,
+      `🗑️ <b>Hapus file ini?</b>\n\nFile akan dihapus permanen dari Drive.`,
+      [[btn("✅ Ya, Hapus", `dr:rm:ok:${fileId}`), btnBack("dr:root")]]);
+    return;
+  }
+  const drRmOkMatch = data.match(/^dr:rm:ok:(.+)$/);
+  if (drRmOkMatch) {
+    const fileId = drRmOkMatch[1];
+    try {
+      const { deleteFile } = require("./core/integrations/drive");
+      await deleteFile(fileId);
+      await editMenu(ctx, "✅ File berhasil dihapus dari Drive.", [[btn("📁 Kembali ke Drive", "dr:root")]]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Gagal hapus: ${err.message}`, [[btnBack("dr:root")]]);
+    }
+    return;
+  }
+
+  // ── Fallback ────────────────────────────────────────────
+  await ctx.answerCbQuery("Memproses...").catch(() => {});
 });
 
 // ─── /skill baru [nama]: [deskripsi] ─────────────────────
@@ -874,8 +1502,8 @@ bot.command("wa_add", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
   const args = ctx.message.text.replace("/wa_add", "").trim().split(/\s+/);
   if (args.length < 3) return ctx.reply("Format: /wa_add [nomor] [kategori] [nama...]");
-  const [nomor, kategori, ...namaParts] = args;
-  const nama = nameParts.join(" ");
+  const [nomor, kategori, ...namaArr] = args;
+  const nama = namaArr.join(" ");
   try {
     const { addContact } = require("./core/contacts/contact-manager");
     await addContact(nomor, { kategori, nama });
