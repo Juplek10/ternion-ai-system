@@ -3,15 +3,17 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 
-// Lazy-load drive untuk mencegah crash saat token expired
+const TOKEN_PATH = "/root/ai-system/tokens/google-token.json";
+
+// Lazy-load drive — googleapis auto-refresh token via refresh_token
 function getDrive() {
   const { google, oauth2Client } = require("./google");
   try {
-    const tokenData = JSON.parse(fs.readFileSync("/root/ai-system/tokens/google-token.json", "utf8"));
+    const tokenData = JSON.parse(fs.readFileSync(TOKEN_PATH, "utf8"));
     oauth2Client.setCredentials(tokenData);
     return google.drive({ version: "v3", auth: oauth2Client });
   } catch (err) {
-    throw new Error("Google token tidak tersedia atau expired: " + err.message);
+    throw new Error("Google token tidak tersedia: " + err.message);
   }
 }
 

@@ -19,7 +19,7 @@ async function askOllama(prompt, model = "qwen2.5:3b") {
         num_predict: 250
       }
     },
-    { timeout: 150000 }
+    { timeout: 90000 }
   );
 
   return response.data.response;

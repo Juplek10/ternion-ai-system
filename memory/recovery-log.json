@@ -1,0 +1,8 @@
+[
+  {
+    "timestamp": "2026-05-11T03:49:59.554Z",
+    "process": "telegram",
+    "action": "restart_failed",
+    "error": "Command failed: pm2 restart telegram\n\u001b[31m[PM2][ERROR] \u001b[39mProcess 2 not found\n"
+  }
+]

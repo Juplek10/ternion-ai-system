@@ -41,14 +41,22 @@ const AUTHORIZED_USERS = [6935073123];
 
 let conversationCountToday = 0;
 
-const bot = new Telegraf(TELEGRAM_TOKEN, { handlerTimeout: 180000 });
+// ─── Global error guards — cegah crash dari unhandled rejection ────
+process.on("unhandledRejection", (reason) => {
+  console.error("[UNHANDLED_REJECTION]", reason instanceof Error ? reason.message : String(reason));
+});
+process.on("uncaughtException", (err) => {
+  console.error("[UNCAUGHT_EXCEPTION]", err.message);
+});
 
-bot.handleError = async (err, ctx) => {
-  console.log("BOT ERROR (handled):", err.message);
-  try {
-    await ctx.reply("Maaf Bry, ada kendala teknis. Kirim ulang pesan kamu.");
-  } catch (e) {}
-};
+// handlerTimeout 120s: beri waktu cukup untuk Claude/Ollama, tapi tidak sampai crash
+const bot = new Telegraf(TELEGRAM_TOKEN, { handlerTimeout: 120000 });
+
+// bot.catch() = API resmi Telegraf 4.x untuk error middleware
+bot.catch((err, ctx) => {
+  console.error("[BOT_CATCH]", err instanceof Error ? err.message : String(err));
+  ctx.reply("Maaf Bry, ada kendala teknis. Kirim ulang pesan kamu.").catch(() => {});
+});
 
 function isAuthorized(chatId) {
   return AUTHORIZED_USERS.includes(chatId);
@@ -61,14 +69,14 @@ function classifyCommand(text) {
   return "light";
 }
 
-// ─── Helper: kirim pesan panjang ───────────────────────
+// ─── Helper: kirim pesan panjang — safe, tidak throw ───
 async function sendLong(ctx, text) {
   const chunks = [];
   for (let i = 0; i < text.length; i += 4000) {
     chunks.push(text.substring(i, i + 4000));
   }
   for (const chunk of chunks) {
-    await ctx.reply(chunk);
+    try { await ctx.reply(chunk); } catch {}
   }
 }
 
@@ -557,12 +565,15 @@ bot.on("text", async (ctx) => {
     return sendLong(ctx, aiReply);
 
   } catch (err) {
-    console.error("TELEGRAM ERROR:", err.message);
-    return ctx.reply("Maaf Bry, AI sedang sibuk. Coba lagi dalam beberapa detik.");
+    console.error("[TELEGRAM_ERROR]", err.message);
+    // PENTING: await + try-catch terpisah — jangan return Promise yang bisa reject
+    try { await ctx.reply("Maaf Bry, AI sedang sibuk. Coba lagi dalam beberapa detik."); } catch {}
   }
 });
 
-bot.launch({ dropPendingUpdates: true });
+bot.launch({ dropPendingUpdates: true }).catch((err) => {
+  console.error("[BOT_LAUNCH_ERROR]", err.message);
+});
 
 console.log("TERNION-AI TELEGRAM ONLINE");
 
