@@ -1,0 +1,36 @@
+{
+  "domain": "bisnis",
+  "last_updated": "2026-05-11T00:00:00Z",
+  "entries": [
+    {
+      "category": "ternion_profile",
+      "content": "TERNION GROUP: holding bisnis milik Brian Kinayom, Kupang NTT. Berdiri untuk mengintegrasikan bisnis-bisnis di NTT",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "unit_bisnis",
+      "content": "5 lini bisnis TERNION: (1) Procurement/Pengadaan, (2) Konstruksi, (3) Trading komoditas, (4) Ekspor-impor, (5) Kafe",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "tim",
+      "content": "Struktur tim TERNION: Brian (NEXUS/pemimpin), VECTOR (operasional lapangan), SCRIPTA (administrasi & dokumen)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "pasar",
+      "content": "Target pasar utama TERNION: NTT (home market), Timor Leste (ekspor), Jakarta (supply chain dan investor)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "strategi",
+      "content": "Keunggulan TERNION: network lokal NTT kuat, pemahaman pasar perbatasan Timor Leste, multi-bisnis terintegrasi",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "visi",
+      "content": "Visi: TERNION GROUP menjadi holding terkemuka di NTT dan gateway bisnis ke Timor Leste",
+      "added_at": "2026-05-11T00:00:00Z"
+    }
+  ]
+}

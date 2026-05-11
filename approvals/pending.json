@@ -14075,5 +14075,3589 @@
     "status": "pending",
     "type": "background-report",
     "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445183321,
+    "createdAt": "2026-05-10T20:33:03.321Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445243321,
+    "createdAt": "2026-05-10T20:34:03.321Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445303321,
+    "createdAt": "2026-05-10T20:35:03.321Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445363322,
+    "createdAt": "2026-05-10T20:36:03.322Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445423321,
+    "createdAt": "2026-05-10T20:37:03.321Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445483323,
+    "createdAt": "2026-05-10T20:38:03.323Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445543323,
+    "createdAt": "2026-05-10T20:39:03.323Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445603325,
+    "createdAt": "2026-05-10T20:40:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445663324,
+    "createdAt": "2026-05-10T20:41:03.324Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445723325,
+    "createdAt": "2026-05-10T20:42:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445783326,
+    "createdAt": "2026-05-10T20:43:03.326Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445843325,
+    "createdAt": "2026-05-10T20:44:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445903325,
+    "createdAt": "2026-05-10T20:45:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778445963327,
+    "createdAt": "2026-05-10T20:46:03.327Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446023325,
+    "createdAt": "2026-05-10T20:47:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446083326,
+    "createdAt": "2026-05-10T20:48:03.326Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446143325,
+    "createdAt": "2026-05-10T20:49:03.325Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446203327,
+    "createdAt": "2026-05-10T20:50:03.327Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446263329,
+    "createdAt": "2026-05-10T20:51:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446323329,
+    "createdAt": "2026-05-10T20:52:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446383328,
+    "createdAt": "2026-05-10T20:53:03.328Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446443328,
+    "createdAt": "2026-05-10T20:54:03.328Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446503331,
+    "createdAt": "2026-05-10T20:55:03.331Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446563328,
+    "createdAt": "2026-05-10T20:56:03.328Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446623331,
+    "createdAt": "2026-05-10T20:57:03.331Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446683329,
+    "createdAt": "2026-05-10T20:58:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446743329,
+    "createdAt": "2026-05-10T20:59:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446803365,
+    "createdAt": "2026-05-10T21:00:03.365Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446863329,
+    "createdAt": "2026-05-10T21:01:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446923329,
+    "createdAt": "2026-05-10T21:02:03.329Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778446983328,
+    "createdAt": "2026-05-10T21:03:03.328Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447043330,
+    "createdAt": "2026-05-10T21:04:03.330Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447103331,
+    "createdAt": "2026-05-10T21:05:03.331Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447163330,
+    "createdAt": "2026-05-10T21:06:03.330Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447223331,
+    "createdAt": "2026-05-10T21:07:03.331Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447283332,
+    "createdAt": "2026-05-10T21:08:03.332Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447343333,
+    "createdAt": "2026-05-10T21:09:03.333Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447403335,
+    "createdAt": "2026-05-10T21:10:03.335Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447463334,
+    "createdAt": "2026-05-10T21:11:03.334Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447523336,
+    "createdAt": "2026-05-10T21:12:03.336Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447583335,
+    "createdAt": "2026-05-10T21:13:03.335Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447643335,
+    "createdAt": "2026-05-10T21:14:03.335Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447703337,
+    "createdAt": "2026-05-10T21:15:03.337Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447763336,
+    "createdAt": "2026-05-10T21:16:03.336Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447823337,
+    "createdAt": "2026-05-10T21:17:03.337Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447883339,
+    "createdAt": "2026-05-10T21:18:03.339Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778447943339,
+    "createdAt": "2026-05-10T21:19:03.339Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448003341,
+    "createdAt": "2026-05-10T21:20:03.341Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448063342,
+    "createdAt": "2026-05-10T21:21:03.342Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448123342,
+    "createdAt": "2026-05-10T21:22:03.342Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448183342,
+    "createdAt": "2026-05-10T21:23:03.342Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448243342,
+    "createdAt": "2026-05-10T21:24:03.342Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448303343,
+    "createdAt": "2026-05-10T21:25:03.343Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448363343,
+    "createdAt": "2026-05-10T21:26:03.343Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448423342,
+    "createdAt": "2026-05-10T21:27:03.342Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448483344,
+    "createdAt": "2026-05-10T21:28:03.344Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448543345,
+    "createdAt": "2026-05-10T21:29:03.345Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448603345,
+    "createdAt": "2026-05-10T21:30:03.345Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448663345,
+    "createdAt": "2026-05-10T21:31:03.345Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448723346,
+    "createdAt": "2026-05-10T21:32:03.346Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448783346,
+    "createdAt": "2026-05-10T21:33:03.346Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448843348,
+    "createdAt": "2026-05-10T21:34:03.348Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448903348,
+    "createdAt": "2026-05-10T21:35:03.348Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778448963350,
+    "createdAt": "2026-05-10T21:36:03.350Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449023350,
+    "createdAt": "2026-05-10T21:37:03.350Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449083349,
+    "createdAt": "2026-05-10T21:38:03.349Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449143352,
+    "createdAt": "2026-05-10T21:39:03.352Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449203361,
+    "createdAt": "2026-05-10T21:40:03.361Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449263358,
+    "createdAt": "2026-05-10T21:41:03.358Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449323359,
+    "createdAt": "2026-05-10T21:42:03.359Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449383360,
+    "createdAt": "2026-05-10T21:43:03.360Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449443361,
+    "createdAt": "2026-05-10T21:44:03.361Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449503361,
+    "createdAt": "2026-05-10T21:45:03.361Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449563361,
+    "createdAt": "2026-05-10T21:46:03.361Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449623362,
+    "createdAt": "2026-05-10T21:47:03.362Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449683363,
+    "createdAt": "2026-05-10T21:48:03.363Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449743362,
+    "createdAt": "2026-05-10T21:49:03.362Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449803363,
+    "createdAt": "2026-05-10T21:50:03.363Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449863365,
+    "createdAt": "2026-05-10T21:51:03.365Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449923364,
+    "createdAt": "2026-05-10T21:52:03.364Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778449983364,
+    "createdAt": "2026-05-10T21:53:03.364Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450043365,
+    "createdAt": "2026-05-10T21:54:03.365Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450103366,
+    "createdAt": "2026-05-10T21:55:03.366Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450163366,
+    "createdAt": "2026-05-10T21:56:03.366Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450223365,
+    "createdAt": "2026-05-10T21:57:03.365Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450283367,
+    "createdAt": "2026-05-10T21:58:03.367Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450343367,
+    "createdAt": "2026-05-10T21:59:03.367Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450403375,
+    "createdAt": "2026-05-10T22:00:03.375Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450463371,
+    "createdAt": "2026-05-10T22:01:03.371Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450523372,
+    "createdAt": "2026-05-10T22:02:03.372Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450583371,
+    "createdAt": "2026-05-10T22:03:03.371Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450643371,
+    "createdAt": "2026-05-10T22:04:03.371Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450703371,
+    "createdAt": "2026-05-10T22:05:03.371Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450763373,
+    "createdAt": "2026-05-10T22:06:03.373Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450823372,
+    "createdAt": "2026-05-10T22:07:03.372Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450883373,
+    "createdAt": "2026-05-10T22:08:03.373Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778450943373,
+    "createdAt": "2026-05-10T22:09:03.373Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451003373,
+    "createdAt": "2026-05-10T22:10:03.373Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451063374,
+    "createdAt": "2026-05-10T22:11:03.374Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451123375,
+    "createdAt": "2026-05-10T22:12:03.375Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451183375,
+    "createdAt": "2026-05-10T22:13:03.375Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451243375,
+    "createdAt": "2026-05-10T22:14:03.375Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451303377,
+    "createdAt": "2026-05-10T22:15:03.377Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451363377,
+    "createdAt": "2026-05-10T22:16:03.377Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451423378,
+    "createdAt": "2026-05-10T22:17:03.378Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451483377,
+    "createdAt": "2026-05-10T22:18:03.377Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451543379,
+    "createdAt": "2026-05-10T22:19:03.379Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451603379,
+    "createdAt": "2026-05-10T22:20:03.379Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451663380,
+    "createdAt": "2026-05-10T22:21:03.380Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451723382,
+    "createdAt": "2026-05-10T22:22:03.382Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451783383,
+    "createdAt": "2026-05-10T22:23:03.383Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451843383,
+    "createdAt": "2026-05-10T22:24:03.383Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451903384,
+    "createdAt": "2026-05-10T22:25:03.384Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778451963386,
+    "createdAt": "2026-05-10T22:26:03.386Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452023388,
+    "createdAt": "2026-05-10T22:27:03.388Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452083388,
+    "createdAt": "2026-05-10T22:28:03.388Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452143389,
+    "createdAt": "2026-05-10T22:29:03.389Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452203395,
+    "createdAt": "2026-05-10T22:30:03.395Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452263393,
+    "createdAt": "2026-05-10T22:31:03.393Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452323394,
+    "createdAt": "2026-05-10T22:32:03.394Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452383396,
+    "createdAt": "2026-05-10T22:33:03.396Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452443396,
+    "createdAt": "2026-05-10T22:34:03.396Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452503397,
+    "createdAt": "2026-05-10T22:35:03.397Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452563396,
+    "createdAt": "2026-05-10T22:36:03.396Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452623397,
+    "createdAt": "2026-05-10T22:37:03.397Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452683399,
+    "createdAt": "2026-05-10T22:38:03.399Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452743401,
+    "createdAt": "2026-05-10T22:39:03.401Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452803403,
+    "createdAt": "2026-05-10T22:40:03.403Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452863399,
+    "createdAt": "2026-05-10T22:41:03.399Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452923399,
+    "createdAt": "2026-05-10T22:42:03.399Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778452983400,
+    "createdAt": "2026-05-10T22:43:03.400Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453043399,
+    "createdAt": "2026-05-10T22:44:03.399Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453103401,
+    "createdAt": "2026-05-10T22:45:03.401Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453163400,
+    "createdAt": "2026-05-10T22:46:03.400Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453223402,
+    "createdAt": "2026-05-10T22:47:03.402Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453283402,
+    "createdAt": "2026-05-10T22:48:03.402Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453343403,
+    "createdAt": "2026-05-10T22:49:03.403Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453403404,
+    "createdAt": "2026-05-10T22:50:03.404Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453463405,
+    "createdAt": "2026-05-10T22:51:03.405Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453523405,
+    "createdAt": "2026-05-10T22:52:03.405Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453583404,
+    "createdAt": "2026-05-10T22:53:03.404Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453643406,
+    "createdAt": "2026-05-10T22:54:03.406Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453703405,
+    "createdAt": "2026-05-10T22:55:03.405Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453763406,
+    "createdAt": "2026-05-10T22:56:03.406Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453823407,
+    "createdAt": "2026-05-10T22:57:03.407Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453883408,
+    "createdAt": "2026-05-10T22:58:03.408Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778453943408,
+    "createdAt": "2026-05-10T22:59:03.408Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454003413,
+    "createdAt": "2026-05-10T23:00:03.413Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454063409,
+    "createdAt": "2026-05-10T23:01:03.409Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454123410,
+    "createdAt": "2026-05-10T23:02:03.410Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454183411,
+    "createdAt": "2026-05-10T23:03:03.411Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454243413,
+    "createdAt": "2026-05-10T23:04:03.413Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454303412,
+    "createdAt": "2026-05-10T23:05:03.412Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454363413,
+    "createdAt": "2026-05-10T23:06:03.413Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454423414,
+    "createdAt": "2026-05-10T23:07:03.414Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454483414,
+    "createdAt": "2026-05-10T23:08:03.414Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454543420,
+    "createdAt": "2026-05-10T23:09:03.420Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454603417,
+    "createdAt": "2026-05-10T23:10:03.417Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454663417,
+    "createdAt": "2026-05-10T23:11:03.417Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454723418,
+    "createdAt": "2026-05-10T23:12:03.418Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454783416,
+    "createdAt": "2026-05-10T23:13:03.416Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454843416,
+    "createdAt": "2026-05-10T23:14:03.416Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454903416,
+    "createdAt": "2026-05-10T23:15:03.416Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778454963416,
+    "createdAt": "2026-05-10T23:16:03.416Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455023418,
+    "createdAt": "2026-05-10T23:17:03.418Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455083419,
+    "createdAt": "2026-05-10T23:18:03.419Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455143420,
+    "createdAt": "2026-05-10T23:19:03.420Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455203423,
+    "createdAt": "2026-05-10T23:20:03.423Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455263421,
+    "createdAt": "2026-05-10T23:21:03.421Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455323421,
+    "createdAt": "2026-05-10T23:22:03.421Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455383422,
+    "createdAt": "2026-05-10T23:23:03.422Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455443424,
+    "createdAt": "2026-05-10T23:24:03.424Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455503423,
+    "createdAt": "2026-05-10T23:25:03.423Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455563424,
+    "createdAt": "2026-05-10T23:26:03.424Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455623425,
+    "createdAt": "2026-05-10T23:27:03.425Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455683423,
+    "createdAt": "2026-05-10T23:28:03.423Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455743423,
+    "createdAt": "2026-05-10T23:29:03.423Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455803428,
+    "createdAt": "2026-05-10T23:30:03.428Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455863424,
+    "createdAt": "2026-05-10T23:31:03.424Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455923425,
+    "createdAt": "2026-05-10T23:32:03.425Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778455983424,
+    "createdAt": "2026-05-10T23:33:03.424Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456043424,
+    "createdAt": "2026-05-10T23:34:03.424Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456103425,
+    "createdAt": "2026-05-10T23:35:03.425Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456163425,
+    "createdAt": "2026-05-10T23:36:03.425Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456223426,
+    "createdAt": "2026-05-10T23:37:03.426Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456283428,
+    "createdAt": "2026-05-10T23:38:03.428Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456343428,
+    "createdAt": "2026-05-10T23:39:03.428Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456403431,
+    "createdAt": "2026-05-10T23:40:03.431Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456463430,
+    "createdAt": "2026-05-10T23:41:03.430Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456523430,
+    "createdAt": "2026-05-10T23:42:03.430Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456583430,
+    "createdAt": "2026-05-10T23:43:03.430Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456643431,
+    "createdAt": "2026-05-10T23:44:03.431Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456703431,
+    "createdAt": "2026-05-10T23:45:03.431Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456763432,
+    "createdAt": "2026-05-10T23:46:03.432Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456823433,
+    "createdAt": "2026-05-10T23:47:03.433Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456883433,
+    "createdAt": "2026-05-10T23:48:03.433Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778456943433,
+    "createdAt": "2026-05-10T23:49:03.433Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457003434,
+    "createdAt": "2026-05-10T23:50:03.434Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457063433,
+    "createdAt": "2026-05-10T23:51:03.433Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457123433,
+    "createdAt": "2026-05-10T23:52:03.433Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457183434,
+    "createdAt": "2026-05-10T23:53:03.434Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457243434,
+    "createdAt": "2026-05-10T23:54:03.434Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457303435,
+    "createdAt": "2026-05-10T23:55:03.435Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457363435,
+    "createdAt": "2026-05-10T23:56:03.435Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457423435,
+    "createdAt": "2026-05-10T23:57:03.435Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457483436,
+    "createdAt": "2026-05-10T23:58:03.436Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457543437,
+    "createdAt": "2026-05-10T23:59:03.437Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457603440,
+    "createdAt": "2026-05-11T00:00:03.440Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457663440,
+    "createdAt": "2026-05-11T00:01:03.440Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457723439,
+    "createdAt": "2026-05-11T00:02:03.439Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457783441,
+    "createdAt": "2026-05-11T00:03:03.441Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457843442,
+    "createdAt": "2026-05-11T00:04:03.442Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457903442,
+    "createdAt": "2026-05-11T00:05:03.442Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778457963443,
+    "createdAt": "2026-05-11T00:06:03.443Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458023442,
+    "createdAt": "2026-05-11T00:07:03.442Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458083443,
+    "createdAt": "2026-05-11T00:08:03.443Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458143451,
+    "createdAt": "2026-05-11T00:09:03.451Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458203443,
+    "createdAt": "2026-05-11T00:10:03.443Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458263445,
+    "createdAt": "2026-05-11T00:11:03.445Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458323445,
+    "createdAt": "2026-05-11T00:12:03.445Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458383445,
+    "createdAt": "2026-05-11T00:13:03.445Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458443446,
+    "createdAt": "2026-05-11T00:14:03.446Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458503446,
+    "createdAt": "2026-05-11T00:15:03.446Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458563448,
+    "createdAt": "2026-05-11T00:16:03.448Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458623447,
+    "createdAt": "2026-05-11T00:17:03.447Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458683448,
+    "createdAt": "2026-05-11T00:18:03.448Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458743448,
+    "createdAt": "2026-05-11T00:19:03.448Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458803449,
+    "createdAt": "2026-05-11T00:20:03.449Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458863449,
+    "createdAt": "2026-05-11T00:21:03.449Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458923451,
+    "createdAt": "2026-05-11T00:22:03.451Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778458983451,
+    "createdAt": "2026-05-11T00:23:03.451Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459043452,
+    "createdAt": "2026-05-11T00:24:03.452Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459103451,
+    "createdAt": "2026-05-11T00:25:03.451Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459163451,
+    "createdAt": "2026-05-11T00:26:03.451Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459223452,
+    "createdAt": "2026-05-11T00:27:03.452Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459283453,
+    "createdAt": "2026-05-11T00:28:03.453Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459343453,
+    "createdAt": "2026-05-11T00:29:03.453Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459403456,
+    "createdAt": "2026-05-11T00:30:03.456Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459463455,
+    "createdAt": "2026-05-11T00:31:03.455Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459523455,
+    "createdAt": "2026-05-11T00:32:03.455Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459583454,
+    "createdAt": "2026-05-11T00:33:03.454Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459643456,
+    "createdAt": "2026-05-11T00:34:03.456Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459703457,
+    "createdAt": "2026-05-11T00:35:03.457Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459763458,
+    "createdAt": "2026-05-11T00:36:03.458Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459823459,
+    "createdAt": "2026-05-11T00:37:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459883459,
+    "createdAt": "2026-05-11T00:38:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778459943461,
+    "createdAt": "2026-05-11T00:39:03.461Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460003460,
+    "createdAt": "2026-05-11T00:40:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460063459,
+    "createdAt": "2026-05-11T00:41:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460123460,
+    "createdAt": "2026-05-11T00:42:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460183460,
+    "createdAt": "2026-05-11T00:43:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460243459,
+    "createdAt": "2026-05-11T00:44:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460303460,
+    "createdAt": "2026-05-11T00:45:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460363459,
+    "createdAt": "2026-05-11T00:46:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460423459,
+    "createdAt": "2026-05-11T00:47:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460483459,
+    "createdAt": "2026-05-11T00:48:03.459Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460543460,
+    "createdAt": "2026-05-11T00:49:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460603461,
+    "createdAt": "2026-05-11T00:50:03.461Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460663462,
+    "createdAt": "2026-05-11T00:51:03.462Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460723460,
+    "createdAt": "2026-05-11T00:52:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460783460,
+    "createdAt": "2026-05-11T00:53:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460843460,
+    "createdAt": "2026-05-11T00:54:03.460Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460903461,
+    "createdAt": "2026-05-11T00:55:03.461Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778460963463,
+    "createdAt": "2026-05-11T00:56:03.463Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461023462,
+    "createdAt": "2026-05-11T00:57:03.462Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461083463,
+    "createdAt": "2026-05-11T00:58:03.463Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461143463,
+    "createdAt": "2026-05-11T00:59:03.463Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461203486,
+    "createdAt": "2026-05-11T01:00:03.486Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461263465,
+    "createdAt": "2026-05-11T01:01:03.465Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461323465,
+    "createdAt": "2026-05-11T01:02:03.465Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461383466,
+    "createdAt": "2026-05-11T01:03:03.466Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461443465,
+    "createdAt": "2026-05-11T01:04:03.465Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461503470,
+    "createdAt": "2026-05-11T01:05:03.470Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461563467,
+    "createdAt": "2026-05-11T01:06:03.467Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461623468,
+    "createdAt": "2026-05-11T01:07:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461683467,
+    "createdAt": "2026-05-11T01:08:03.467Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461743470,
+    "createdAt": "2026-05-11T01:09:03.470Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461803468,
+    "createdAt": "2026-05-11T01:10:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461863469,
+    "createdAt": "2026-05-11T01:11:03.469Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461923468,
+    "createdAt": "2026-05-11T01:12:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778461983468,
+    "createdAt": "2026-05-11T01:13:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462043469,
+    "createdAt": "2026-05-11T01:14:03.469Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462103469,
+    "createdAt": "2026-05-11T01:15:03.469Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462163470,
+    "createdAt": "2026-05-11T01:16:03.470Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462223468,
+    "createdAt": "2026-05-11T01:17:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462283469,
+    "createdAt": "2026-05-11T01:18:03.469Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462343468,
+    "createdAt": "2026-05-11T01:19:03.468Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462403473,
+    "createdAt": "2026-05-11T01:20:03.473Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462463470,
+    "createdAt": "2026-05-11T01:21:03.470Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462523472,
+    "createdAt": "2026-05-11T01:22:03.472Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462583471,
+    "createdAt": "2026-05-11T01:23:03.471Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462643475,
+    "createdAt": "2026-05-11T01:24:03.475Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462703473,
+    "createdAt": "2026-05-11T01:25:03.473Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462763472,
+    "createdAt": "2026-05-11T01:26:03.472Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462823473,
+    "createdAt": "2026-05-11T01:27:03.473Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462883472,
+    "createdAt": "2026-05-11T01:28:03.472Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778462943473,
+    "createdAt": "2026-05-11T01:29:03.473Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463003479,
+    "createdAt": "2026-05-11T01:30:03.479Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463063473,
+    "createdAt": "2026-05-11T01:31:03.473Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463123475,
+    "createdAt": "2026-05-11T01:32:03.475Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463183476,
+    "createdAt": "2026-05-11T01:33:03.476Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463243478,
+    "createdAt": "2026-05-11T01:34:03.478Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463303479,
+    "createdAt": "2026-05-11T01:35:03.479Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463363477,
+    "createdAt": "2026-05-11T01:36:03.477Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463423478,
+    "createdAt": "2026-05-11T01:37:03.478Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463483478,
+    "createdAt": "2026-05-11T01:38:03.478Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463543484,
+    "createdAt": "2026-05-11T01:39:03.484Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463603482,
+    "createdAt": "2026-05-11T01:40:03.482Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463663480,
+    "createdAt": "2026-05-11T01:41:03.480Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463723491,
+    "createdAt": "2026-05-11T01:42:03.491Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463783483,
+    "createdAt": "2026-05-11T01:43:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463843483,
+    "createdAt": "2026-05-11T01:44:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463903483,
+    "createdAt": "2026-05-11T01:45:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778463963483,
+    "createdAt": "2026-05-11T01:46:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464023483,
+    "createdAt": "2026-05-11T01:47:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464083483,
+    "createdAt": "2026-05-11T01:48:03.483Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464143482,
+    "createdAt": "2026-05-11T01:49:03.482Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464203487,
+    "createdAt": "2026-05-11T01:50:03.487Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464263484,
+    "createdAt": "2026-05-11T01:51:03.484Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464323485,
+    "createdAt": "2026-05-11T01:52:03.485Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464383486,
+    "createdAt": "2026-05-11T01:53:03.486Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464443487,
+    "createdAt": "2026-05-11T01:54:03.487Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464503487,
+    "createdAt": "2026-05-11T01:55:03.487Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464563488,
+    "createdAt": "2026-05-11T01:56:03.488Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464623487,
+    "createdAt": "2026-05-11T01:57:03.487Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464683488,
+    "createdAt": "2026-05-11T01:58:03.488Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464743488,
+    "createdAt": "2026-05-11T01:59:03.488Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464803492,
+    "createdAt": "2026-05-11T02:00:03.492Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464863489,
+    "createdAt": "2026-05-11T02:01:03.489Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464923490,
+    "createdAt": "2026-05-11T02:02:03.490Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778464983490,
+    "createdAt": "2026-05-11T02:03:03.490Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465043489,
+    "createdAt": "2026-05-11T02:04:03.489Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465103491,
+    "createdAt": "2026-05-11T02:05:03.491Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465163489,
+    "createdAt": "2026-05-11T02:06:03.489Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465223490,
+    "createdAt": "2026-05-11T02:07:03.490Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465283491,
+    "createdAt": "2026-05-11T02:08:03.491Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465343491,
+    "createdAt": "2026-05-11T02:09:03.491Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465403494,
+    "createdAt": "2026-05-11T02:10:03.494Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465463495,
+    "createdAt": "2026-05-11T02:11:03.495Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465523509,
+    "createdAt": "2026-05-11T02:12:03.509Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465583496,
+    "createdAt": "2026-05-11T02:13:03.496Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465643496,
+    "createdAt": "2026-05-11T02:14:03.496Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465703496,
+    "createdAt": "2026-05-11T02:15:03.496Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465763499,
+    "createdAt": "2026-05-11T02:16:03.499Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465823498,
+    "createdAt": "2026-05-11T02:17:03.498Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465883498,
+    "createdAt": "2026-05-11T02:18:03.498Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778465943499,
+    "createdAt": "2026-05-11T02:19:03.499Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466003503,
+    "createdAt": "2026-05-11T02:20:03.503Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466063501,
+    "createdAt": "2026-05-11T02:21:03.501Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466123500,
+    "createdAt": "2026-05-11T02:22:03.500Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466183500,
+    "createdAt": "2026-05-11T02:23:03.500Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466243502,
+    "createdAt": "2026-05-11T02:24:03.502Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466303504,
+    "createdAt": "2026-05-11T02:25:03.504Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466363504,
+    "createdAt": "2026-05-11T02:26:03.504Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466423504,
+    "createdAt": "2026-05-11T02:27:03.504Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466483505,
+    "createdAt": "2026-05-11T02:28:03.505Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466543505,
+    "createdAt": "2026-05-11T02:29:03.505Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466603507,
+    "createdAt": "2026-05-11T02:30:03.507Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466663508,
+    "createdAt": "2026-05-11T02:31:03.508Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466723508,
+    "createdAt": "2026-05-11T02:32:03.508Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466783508,
+    "createdAt": "2026-05-11T02:33:03.508Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466843509,
+    "createdAt": "2026-05-11T02:34:03.509Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466903509,
+    "createdAt": "2026-05-11T02:35:03.509Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778466963511,
+    "createdAt": "2026-05-11T02:36:03.511Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467023511,
+    "createdAt": "2026-05-11T02:37:03.511Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467083511,
+    "createdAt": "2026-05-11T02:38:03.511Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467143524,
+    "createdAt": "2026-05-11T02:39:03.524Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467203520,
+    "createdAt": "2026-05-11T02:40:03.520Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467263515,
+    "createdAt": "2026-05-11T02:41:03.515Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467323520,
+    "createdAt": "2026-05-11T02:42:03.520Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467383518,
+    "createdAt": "2026-05-11T02:43:03.518Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467443526,
+    "createdAt": "2026-05-11T02:44:03.526Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467503516,
+    "createdAt": "2026-05-11T02:45:03.516Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467563515,
+    "createdAt": "2026-05-11T02:46:03.515Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467623518,
+    "createdAt": "2026-05-11T02:47:03.518Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467683519,
+    "createdAt": "2026-05-11T02:48:03.519Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467743519,
+    "createdAt": "2026-05-11T02:49:03.519Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467803526,
+    "createdAt": "2026-05-11T02:50:03.526Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467863520,
+    "createdAt": "2026-05-11T02:51:03.520Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467923523,
+    "createdAt": "2026-05-11T02:52:03.523Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778467983522,
+    "createdAt": "2026-05-11T02:53:03.522Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468043520,
+    "createdAt": "2026-05-11T02:54:03.520Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468103522,
+    "createdAt": "2026-05-11T02:55:03.522Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468163526,
+    "createdAt": "2026-05-11T02:56:03.526Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468223524,
+    "createdAt": "2026-05-11T02:57:03.524Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468283526,
+    "createdAt": "2026-05-11T02:58:03.526Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468343526,
+    "createdAt": "2026-05-11T02:59:03.526Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468403533,
+    "createdAt": "2026-05-11T03:00:03.533Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468463528,
+    "createdAt": "2026-05-11T03:01:03.528Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468523527,
+    "createdAt": "2026-05-11T03:02:03.527Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468583528,
+    "createdAt": "2026-05-11T03:03:03.528Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468643530,
+    "createdAt": "2026-05-11T03:04:03.530Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468703533,
+    "createdAt": "2026-05-11T03:05:03.533Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468763533,
+    "createdAt": "2026-05-11T03:06:03.533Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468823533,
+    "createdAt": "2026-05-11T03:07:03.533Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468883533,
+    "createdAt": "2026-05-11T03:08:03.533Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778468943534,
+    "createdAt": "2026-05-11T03:09:03.534Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469003536,
+    "createdAt": "2026-05-11T03:10:03.536Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469063535,
+    "createdAt": "2026-05-11T03:11:03.535Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469123537,
+    "createdAt": "2026-05-11T03:12:03.537Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469183537,
+    "createdAt": "2026-05-11T03:13:03.537Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469243539,
+    "createdAt": "2026-05-11T03:14:03.539Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469303539,
+    "createdAt": "2026-05-11T03:15:03.539Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469363537,
+    "createdAt": "2026-05-11T03:16:03.537Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469423538,
+    "createdAt": "2026-05-11T03:17:03.538Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469483538,
+    "createdAt": "2026-05-11T03:18:03.538Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469543538,
+    "createdAt": "2026-05-11T03:19:03.538Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469603544,
+    "createdAt": "2026-05-11T03:20:03.544Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469663540,
+    "createdAt": "2026-05-11T03:21:03.540Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469723542,
+    "createdAt": "2026-05-11T03:22:03.542Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469783542,
+    "createdAt": "2026-05-11T03:23:03.542Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469843541,
+    "createdAt": "2026-05-11T03:24:03.541Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469903544,
+    "createdAt": "2026-05-11T03:25:03.544Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778469963545,
+    "createdAt": "2026-05-11T03:26:03.545Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470023545,
+    "createdAt": "2026-05-11T03:27:03.545Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470083546,
+    "createdAt": "2026-05-11T03:28:03.546Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470143546,
+    "createdAt": "2026-05-11T03:29:03.546Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470203549,
+    "createdAt": "2026-05-11T03:30:03.549Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470263548,
+    "createdAt": "2026-05-11T03:31:03.548Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470323550,
+    "createdAt": "2026-05-11T03:32:03.550Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470383551,
+    "createdAt": "2026-05-11T03:33:03.551Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470443549,
+    "createdAt": "2026-05-11T03:34:03.549Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470503564,
+    "createdAt": "2026-05-11T03:35:03.564Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470563550,
+    "createdAt": "2026-05-11T03:36:03.550Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470623552,
+    "createdAt": "2026-05-11T03:37:03.552Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470683550,
+    "createdAt": "2026-05-11T03:38:03.550Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470743555,
+    "createdAt": "2026-05-11T03:39:03.555Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470803558,
+    "createdAt": "2026-05-11T03:40:03.558Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470863558,
+    "createdAt": "2026-05-11T03:41:03.558Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470923559,
+    "createdAt": "2026-05-11T03:42:03.559Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778470983559,
+    "createdAt": "2026-05-11T03:43:03.559Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471043559,
+    "createdAt": "2026-05-11T03:44:03.559Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471103560,
+    "createdAt": "2026-05-11T03:45:03.560Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471163561,
+    "createdAt": "2026-05-11T03:46:03.561Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471223563,
+    "createdAt": "2026-05-11T03:47:03.563Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471283563,
+    "createdAt": "2026-05-11T03:48:03.563Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471343562,
+    "createdAt": "2026-05-11T03:49:03.562Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471396637,
+    "createdAt": "2026-05-11T03:49:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471456635,
+    "createdAt": "2026-05-11T03:50:56.635Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471516634,
+    "createdAt": "2026-05-11T03:51:56.634Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471576634,
+    "createdAt": "2026-05-11T03:52:56.634Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471636633,
+    "createdAt": "2026-05-11T03:53:56.633Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471696635,
+    "createdAt": "2026-05-11T03:54:56.635Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471756634,
+    "createdAt": "2026-05-11T03:55:56.634Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471816635,
+    "createdAt": "2026-05-11T03:56:56.635Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471876636,
+    "createdAt": "2026-05-11T03:57:56.636Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471936636,
+    "createdAt": "2026-05-11T03:58:56.636Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778471996635,
+    "createdAt": "2026-05-11T03:59:56.635Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472056636,
+    "createdAt": "2026-05-11T04:00:56.636Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472116637,
+    "createdAt": "2026-05-11T04:01:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472176636,
+    "createdAt": "2026-05-11T04:02:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472236637,
+    "createdAt": "2026-05-11T04:03:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472296636,
+    "createdAt": "2026-05-11T04:04:56.636Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472356637,
+    "createdAt": "2026-05-11T04:05:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472416637,
+    "createdAt": "2026-05-11T04:06:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472476637,
+    "createdAt": "2026-05-11T04:07:56.637Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472536638,
+    "createdAt": "2026-05-11T04:08:56.638Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472596638,
+    "createdAt": "2026-05-11T04:09:56.638Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472656638,
+    "createdAt": "2026-05-11T04:10:56.638Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472716640,
+    "createdAt": "2026-05-11T04:11:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472776640,
+    "createdAt": "2026-05-11T04:12:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472836639,
+    "createdAt": "2026-05-11T04:13:56.639Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472896642,
+    "createdAt": "2026-05-11T04:14:56.642Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778472956642,
+    "createdAt": "2026-05-11T04:15:56.642Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473016642,
+    "createdAt": "2026-05-11T04:16:56.642Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473076641,
+    "createdAt": "2026-05-11T04:17:56.641Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473136641,
+    "createdAt": "2026-05-11T04:18:56.641Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473196640,
+    "createdAt": "2026-05-11T04:19:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473256640,
+    "createdAt": "2026-05-11T04:20:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473316640,
+    "createdAt": "2026-05-11T04:21:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473376640,
+    "createdAt": "2026-05-11T04:22:56.640Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473381779,
+    "createdAt": "2026-05-11T04:23:01.779Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473441775,
+    "createdAt": "2026-05-11T04:24:01.775Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473501780,
+    "createdAt": "2026-05-11T04:25:01.780Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473561821,
+    "createdAt": "2026-05-11T04:26:01.821Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473621782,
+    "createdAt": "2026-05-11T04:27:01.782Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473681787,
+    "createdAt": "2026-05-11T04:28:01.787Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473741781,
+    "createdAt": "2026-05-11T04:29:01.781Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473801781,
+    "createdAt": "2026-05-11T04:30:01.781Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473861783,
+    "createdAt": "2026-05-11T04:31:01.783Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473921779,
+    "createdAt": "2026-05-11T04:32:01.779Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778473981781,
+    "createdAt": "2026-05-11T04:33:01.781Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474041780,
+    "createdAt": "2026-05-11T04:34:01.780Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474101780,
+    "createdAt": "2026-05-11T04:35:01.780Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474161781,
+    "createdAt": "2026-05-11T04:36:01.781Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474221781,
+    "createdAt": "2026-05-11T04:37:01.781Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474281784,
+    "createdAt": "2026-05-11T04:38:01.784Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474341889,
+    "createdAt": "2026-05-11T04:39:01.889Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474401887,
+    "createdAt": "2026-05-11T04:40:01.887Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474461882,
+    "createdAt": "2026-05-11T04:41:01.882Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474521887,
+    "createdAt": "2026-05-11T04:42:01.887Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474581887,
+    "createdAt": "2026-05-11T04:43:01.887Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474641883,
+    "createdAt": "2026-05-11T04:44:01.883Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474701900,
+    "createdAt": "2026-05-11T04:45:01.900Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474761885,
+    "createdAt": "2026-05-11T04:46:01.885Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474821885,
+    "createdAt": "2026-05-11T04:47:01.885Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474881889,
+    "createdAt": "2026-05-11T04:48:01.889Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778474941884,
+    "createdAt": "2026-05-11T04:49:01.884Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475001889,
+    "createdAt": "2026-05-11T04:50:01.889Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475061888,
+    "createdAt": "2026-05-11T04:51:01.888Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475121885,
+    "createdAt": "2026-05-11T04:52:01.885Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475181892,
+    "createdAt": "2026-05-11T04:53:01.892Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475241885,
+    "createdAt": "2026-05-11T04:54:01.885Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475301902,
+    "createdAt": "2026-05-11T04:55:01.902Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475361907,
+    "createdAt": "2026-05-11T04:56:01.907Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475421900,
+    "createdAt": "2026-05-11T04:57:01.900Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475481904,
+    "createdAt": "2026-05-11T04:58:01.904Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475541911,
+    "createdAt": "2026-05-11T04:59:01.911Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475601941,
+    "createdAt": "2026-05-11T05:00:01.941Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475661923,
+    "createdAt": "2026-05-11T05:01:01.923Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475721923,
+    "createdAt": "2026-05-11T05:02:01.923Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
+  },
+  {
+    "id": 1778475781932,
+    "createdAt": "2026-05-11T05:03:01.932Z",
+    "status": "pending",
+    "type": "background-report",
+    "description": "AI background worker heartbeat"
   }
 ]

@@ -54,11 +54,9 @@ async function getTodaySessions() {
   return allMessages;
 }
 
-// ─── Generate dream report dengan Ollama ────────────────
+// ─── Generate dream report + proactive insights ──────────
 async function generateDreamReport(messages) {
-  if (messages.length === 0) {
-    return null;
-  }
+  if (messages.length === 0) return null;
 
   const transcript = messages
     .filter(m => m.role === "user")
@@ -66,23 +64,120 @@ async function generateDreamReport(messages) {
     .slice(-20)
     .join("\n---\n");
 
-  const prompt = `Berikut adalah percakapan hari ini antara Brian Kinayom dan Ternion-AI:
+  const prompt = `Berikut adalah percakapan hari ini antara Brian Kinayom (Founder TERNION GROUP, Kupang NTT) dan Ternion-AI:
 
 ${transcript}
 
-Buatkan DREAM REPORT singkat dengan format berikut:
-TOPIK_UTAMA: [list topik yang dibahas, pisahkan dengan |]
-INSIGHT: [insight atau temuan penting, pisahkan dengan |]
-PERHATIAN: [hal yang perlu diperhatikan, pisahkan dengan |]
-REKOMENDASI: [rekomendasi untuk besok, pisahkan dengan |]
+Buatkan DREAM REPORT + PROACTIVE INSIGHTS dengan format WAJIB:
+TOPIK_UTAMA: [list topik, pisahkan dengan |]
+INSIGHT: [temuan penting, pisahkan dengan |]
+PERHATIAN: [hal yang perlu diwaspadai, pisahkan dengan |]
+REKOMENDASI: [rekomendasi konkret untuk besok, pisahkan dengan |]
+PELUANG_TIDAK_DITINDAKLANJUTI: [peluang bisnis yang disebutkan tapi belum ada aksi, pisahkan dengan |]
+AKSI_MENDESAK: [hal yang harus dilakukan Brian besok pagi, pisahkan dengan |]
+RISIKO_BISNIS: [risiko bisnis yang perlu diwaspadai minggu ini, pisahkan dengan |]
 
-Jawab dalam Bahasa Indonesia, singkat dan padat.`;
+Jawab dalam Bahasa Indonesia, tajam dan actionable. Fokus pada nilai bisnis nyata untuk TERNION GROUP.`;
 
   try {
-    const raw = await askClaude(prompt);
+    const raw = await askClaude(prompt, { skipKnowledge: false });
     return raw;
   } catch (err) {
     console.error("[DREAM] Claude error:", err.message);
+    return null;
+  }
+}
+
+// ─── Pattern recognition: topik berulang → knowledge ────
+async function runPatternRecognition(date) {
+  try {
+    const PATTERN_FILE = "/root/ai-system/memory/topic-patterns.json";
+    await fs.ensureFile(PATTERN_FILE);
+    let patterns = await fs.readJson(PATTERN_FILE).catch(() => ({}));
+
+    // Baca percakapan 7 hari terakhir
+    const sessionsDir = SESSIONS_DIR;
+    const files = await fs.readdir(sessionsDir).catch(() => []);
+    const topicCount = {};
+
+    for (const file of files.filter(f => f.endsWith(".json")).slice(-7)) {
+      try {
+        const session = await fs.readJson(path.join(sessionsDir, file));
+        for (const msg of (session.history || []).filter(m => m.role === "user")) {
+          // Ekstrak topik sederhana
+          const words = msg.content.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+          for (const word of words) {
+            if (!["adalah", "dengan", "untuk", "yang", "dalam", "pada", "atau", "tidak", "bisa"].includes(word)) {
+              topicCount[word] = (topicCount[word] || 0) + 1;
+            }
+          }
+        }
+      } catch {}
+    }
+
+    // Topik yang muncul ≥3x → buat knowledge entry
+    const { updateKnowledgeFromConversation } = require("../knowledge/ternion-knowledge");
+    const hotTopics = Object.entries(topicCount)
+      .filter(([, count]) => count >= 3)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10);
+
+    for (const [topic, count] of hotTopics) {
+      if (!patterns[topic] || patterns[topic].count < count) {
+        patterns[topic] = { count, last_seen: date };
+        if (count >= 5) {
+          await updateKnowledgeFromConversation(`Topik sering dibahas Brian (${count}x): ${topic}`).catch(() => {});
+        }
+      }
+    }
+
+    await fs.writeJson(PATTERN_FILE, patterns, { spaces: 2 });
+    return hotTopics.slice(0, 5).map(([t, c]) => `${t} (${c}x)`);
+  } catch (err) {
+    console.error("[DREAM] Pattern recognition error:", err.message);
+    return [];
+  }
+}
+
+// ─── Generate dan simpan daily summary ──────────────────
+async function generateDailySummary(messages, parsed, date) {
+  try {
+    const SUMMARY_DIR = "/root/ai-system/memory/daily-summary";
+    await fs.ensureDir(SUMMARY_DIR);
+
+    const userMsgs = messages.filter(m => m.role === "user").map(m => m.content.substring(0, 150)).slice(-10);
+    const summaryPrompt = `Buat ringkasan 1 paragraf (maksimal 200 kata) dari percakapan Brian hari ini:
+
+Topik: ${(parsed.topik || []).join(", ")}
+Pesan user: ${userMsgs.join(" | ")}
+
+Ringkasan harus mencakup: apa yang dibahas, keputusan apa yang dibuat, dan konteks bisnis penting.
+Tulis dalam Bahasa Indonesia, padat dan informatif.`;
+
+    let summary = "";
+    try {
+      const { stdout } = await execFileAsync(
+        "claude",
+        ["-p", summaryPrompt, "--output-format", "text"],
+        { timeout: 30000, maxBuffer: 1024 * 1024 }
+      );
+      summary = stdout.trim();
+    } catch {}
+
+    const summaryData = {
+      date,
+      summary: summary || `Hari ${date}: ${(parsed.topik || []).join(", ")}`,
+      topik: parsed.topik || [],
+      keputusan: parsed.insight || [],
+      pesan_count: userMsgs.length,
+      generated_at: new Date().toISOString()
+    };
+
+    await fs.writeJson(path.join(SUMMARY_DIR, `${date}.json`), summaryData, { spaces: 2 });
+    console.log(`[DREAM] Daily summary saved: ${date}`);
+    return summaryData;
+  } catch (err) {
+    console.error("[DREAM] Daily summary error:", err.message);
     return null;
   }
 }
@@ -276,28 +371,52 @@ async function runDream() {
   // Update long-term memory
   await updateLongTermMemory(parsed, date);
 
+  // Pattern recognition — topik berulang → knowledge
+  const hotTopics = await runPatternRecognition(date).catch(() => []);
+
+  // Daily summary untuk konteks hari berikutnya
+  await generateDailySummary(messages, parsed, date).catch(() => {});
+
   // Teaching Loop: Claude review → update soul
   const teaching = await runTeachingLoop(messages, date).catch(err => {
     console.error("[DREAM] Teaching loop error:", err.message);
     return null;
   });
 
-  // Format report untuk Telegram (dikirim jam 06.00)
-  const topikList = parsed.topik.length > 0
-    ? parsed.topik.map(t => `  • ${t}`).join("\n")
-    : "  • (tidak ada)";
-  const insightList = parsed.insight.length > 0
-    ? parsed.insight.map(i => `  • ${i}`).join("\n")
-    : "  • (tidak ada)";
-  const perhatianList = parsed.perhatian.length > 0
-    ? parsed.perhatian.map(p => `  • ${p}`).join("\n")
-    : "  • (tidak ada)";
-  const rekomendasiList = parsed.rekomendasi.length > 0
-    ? parsed.rekomendasi.map(r => `  • ${r}`).join("\n")
-    : "  • (tidak ada)";
+  // Prompt optimizer: improve agents berdasarkan feedback
+  let evolutionReport = "";
+  try {
+    const { runPromptOptimizer } = require("../evolution/prompt-optimizer");
+    const evo = await runPromptOptimizer();
+    if (evo.updated.length > 0) {
+      evolutionReport = `\n━━━━━━━━━━━━━━━━━━━━━━━\n🧬 <b>Agent Evolution:</b>\n  🔄 Updated: ${evo.updated.map(u => u.agent).join(", ")}`;
+    }
+  } catch (err) {
+    console.error("[DREAM] Prompt optimizer error:", err.message);
+  }
+
+  // Format proactive insights
+  const extract = (label) => {
+    if (!rawReport) return [];
+    const match = rawReport.match(new RegExp(`${label}:\\s*(.+)`));
+    return match ? match[1].split("|").map(s => s.trim()).filter(Boolean) : [];
+  };
+  const peluang = extract("PELUANG_TIDAK_DITINDAKLANJUTI");
+  const aksiMendesak = extract("AKSI_MENDESAK");
+  const risikoBisnis = extract("RISIKO_BISNIS");
+
+  const listOrEmpty = (arr) => arr.length > 0 ? arr.map(t => `  • ${t}`).join("\n") : "  • (tidak ada)";
+
+  const proactiveSection = (peluang.length > 0 || aksiMendesak.length > 0)
+    ? `\n━━━━━━━━━━━━━━━━━━━━━━━\n🎯 <b>INSIGHT TERNION-AI</b>\n⚡ Aksi mendesak besok:\n${listOrEmpty(aksiMendesak)}\n💡 Peluang belum ditindaklanjuti:\n${listOrEmpty(peluang)}\n⚠️ Risiko yang perlu diwaspadai:\n${listOrEmpty(risikoBisnis)}`
+    : "";
+
+  const hotTopicSection = hotTopics.length > 0
+    ? `\n🔥 <b>Hot topics minggu ini:</b> ${hotTopics.join(", ")}`
+    : "";
 
   const teachingSection = teaching
-    ? `\n━━━━━━━━━━━━━━━━━━━━━━━\n🎓 <b>Teaching Loop:</b>\n  💬 Diproses: ${teaching.percakapanDiproses} pesan\n  🔍 Topik: ${(teaching.topikHariIni || []).slice(0, 3).join(", ") || "-"}\n  ✨ Soul update: ${teaching.soulUpdated ? "Ya" : "Tidak ada perubahan"}`
+    ? `\n━━━━━━━━━━━━━━━━━━━━━━━\n🎓 <b>Teaching Loop:</b>\n  💬 Diproses: ${teaching.percakapanDiproses} pesan\n  ✨ Soul update: ${teaching.soulUpdated ? "Ya" : "Tidak ada perubahan"}`
     : "";
 
   const report =
@@ -305,13 +424,13 @@ async function runDream() {
 ━━━━━━━━━━━━━━━━━━━━━━━
 🗣️ <b>Percakapan:</b> ${userMsgs.length} pesan
 📌 <b>Topik utama:</b>
-${topikList}
+${listOrEmpty(parsed.topik)}
 💡 <b>Insight baru:</b>
-${insightList}
+${listOrEmpty(parsed.insight)}
 ⚠️ <b>Perhatian:</b>
-${perhatianList}
+${listOrEmpty(parsed.perhatian)}
 🎯 <b>Rekomendasi besok:</b>
-${rekomendasiList}${teachingSection}`;
+${listOrEmpty(parsed.rekomendasi)}${proactiveSection}${hotTopicSection}${teachingSection}${evolutionReport}`;
 
   return { report, dreamData, teaching };
 }

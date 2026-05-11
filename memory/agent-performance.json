@@ -1,0 +1,92 @@
+{
+  "chat": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "procurement": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "trading": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "construction": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "strategy": {
+    "total_calls": 1,
+    "positive_count": 1,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "admin": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "ahs": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "rab": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "draft": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  },
+  "price": {
+    "total_calls": 0,
+    "positive_count": 0,
+    "negative_count": 0,
+    "common_complaints": [],
+    "knowledge_additions": [],
+    "last_improved": null,
+    "created_at": "2026-05-11T05:02:33.772Z"
+  }
+}

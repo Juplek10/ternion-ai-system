@@ -34,6 +34,10 @@
       {
         "content": "Pasar target: NTT, Timor Leste, Jakarta",
         "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Nilai proyek: nilai 3 miliar",
+        "added_at": "2026-05-11T04:08:29.288Z"
       }
     ],
     "decisions": [],
@@ -49,6 +53,10 @@
       {
         "content": "Nama orang disebutkan: Brian dari Kupang",
         "added_at": "2026-05-11T04:06:15.982Z"
+      },
+      {
+        "content": "Perusahaan: PT Maju Jaya",
+        "added_at": "2026-05-11T04:08:28.373Z"
       }
     ],
     "projects": []
@@ -58,6 +66,26 @@
       "timestamp": "2026-05-11T04:06:15.140Z",
       "user": "Nama saya Brian dari Kupang",
       "assistant": "Halo Brian! Senang bertemu denganmu di Kupang, NTT."
+    },
+    {
+      "timestamp": "2026-05-11T04:08:48.836Z",
+      "user": "Saya sedang nego proyek gedung dinas senilai 3 miliar dengan Pak Yusuf dari PT Maju Jaya",
+      "assistant": "Bry, info ini saya catat. Sebelum saya bantu strateginya, butuh beberapa detail:\n\n**1. Posisi kamu sekarang:**\n- Kamu sebagai **subkon** PT Maju Jaya, atau kamu yang **menang tender** dan mereka mau joint/subkon?\n- Sudah ada dokumen kontrak / LoI, atau masih tahap lisan?\n\n**2. Angka nego:**\n- 3 mili"
+    },
+    {
+      "timestamp": "2026-05-11T04:09:07.439Z",
+      "user": "Ingat proyek apa yang baru saya ceritakan?",
+      "assistant": "Bry, kamu baru cerita soal nego **proyek gedung dinas senilai 3 miliar** dengan **Pak Yusuf dari PT Maju Jaya**.\n\nBelum sempat detail lebih jauh — posisi kamu sebagai subkon atau pemenang tender, dan angka pastinya masih saya tunggu klarifikasi dari kamu."
+    },
+    {
+      "timestamp": "2026-05-11T04:12:16.347Z",
+      "user": "Ingat proyek apa yang baru saya ceritakan?",
+      "assistant": "Bry, proyek yang kamu ceritakan: **nego gedung dinas senilai 3 miliar** dengan **Pak Yusuf dari PT Maju Jaya**.\n\nBelum ada detail lanjutan — posisi kamu (subkon atau pemenang tender) dan status dokumen masih pending konfirmasi dari kamu."
+    },
+    {
+      "timestamp": "2026-05-11T04:32:36.077Z",
+      "user": "Cari harga semen kupang terbaru",
+      "assistant": "Bry, ini hasil pencarian harga semen di Kupang terbaru:\n\n**HARGA SEMEN KUPANG**\n\n| Merek | Berat | Harga/Sak |\n|-------|-------|-----------|\n| Semen Kupang | 25 kg | Rp 39.500 |\n| Semen Bosowa | 25 kg | Rp 42.500 |\n| Merek lain (umum) | 40–50 kg | Rp 50.000 – Rp 80.000 |\n\n**Referensi harga nasional "
     }
   ],
   "learnings": []

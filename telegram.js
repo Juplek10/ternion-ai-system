@@ -11,6 +11,7 @@ const routeTask = require("./core/router/router");
 const { loadSession, addMessage } = require("./core/session");
 const { getSoul } = require("./core/identity/soul-guardian");
 const { autoExtract, saveConversation, searchMemory, addFact, forgetTopic, getMemorySummary } = require("./core/memory/long-term-memory");
+const { addPositive, addNegative, addNegativeExplanation, addKnowledge } = require("./core/memory/feedback-memory");
 
 // ─── Tools ─────────────────────────────────────────────
 const { runAHS } = require("./core/tools/ahs-tool");
@@ -40,6 +41,10 @@ const TELEGRAM_TOKEN = "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
 const AUTHORIZED_USERS = [6935073123];
 
 let conversationCountToday = 0;
+
+// ─── State: track pesan AI terakhir untuk feedback ──────
+const lastAIContext = new Map(); // chatId → { userMsg, aiReply }
+const pendingFeedback = new Map(); // chatId → "negative_explanation" | "knowledge_addition"
 
 // ─── Global error guards — cegah crash dari unhandled rejection ────
 process.on("unhandledRejection", (reason) => {
@@ -378,6 +383,32 @@ bot.on("text", async (ctx) => {
 
   if (!isAuthorized(chatId)) return ctx.reply("Unauthorized.");
 
+  // ── Intercept feedback follow-up ─────────────────
+  if (pendingFeedback.has(chatId)) {
+    const feedbackType = pendingFeedback.get(chatId);
+    pendingFeedback.delete(chatId);
+    if (feedbackType === "negative_explanation") {
+      await addNegativeExplanation(originalText).catch(() => {});
+      await ctx.reply("✅ Terima kasih Bry! Saya catat untuk diperbaiki.");
+      // Update agent performance tracking
+      try {
+        const { recordNegativeFeedback } = require("./core/evolution/agent-evolution");
+        await recordNegativeFeedback("chat", originalText);
+      } catch {}
+      return;
+    }
+    if (feedbackType === "knowledge_addition") {
+      await addKnowledge(originalText).catch(() => {});
+      // Update knowledge base
+      try {
+        const { updateKnowledgeFromConversation } = require("./core/knowledge/ternion-knowledge");
+        await updateKnowledgeFromConversation(originalText);
+      } catch {}
+      await ctx.reply(`✅ Tersimpan sebagai knowledge baru:\n"${originalText.substring(0, 100)}"`);
+      return;
+    }
+  }
+
   console.log("CMD:", text.substring(0, 60));
 
   try {
@@ -568,7 +599,21 @@ bot.on("text", async (ctx) => {
       console.error("[MEMORY] saveConversation error:", err.message)
     );
 
-    return sendLong(ctx, aiReply);
+    // Kirim balasan + feedback keyboard
+    lastAIContext.set(chatId, { userMsg: originalText, aiReply });
+    await sendLong(ctx, aiReply);
+    try {
+      await ctx.reply("─", {
+        reply_markup: {
+          inline_keyboard: [[
+            { text: "👍 Bagus", callback_data: "fb_positive" },
+            { text: "👎 Kurang tepat", callback_data: "fb_negative" },
+            { text: "💡 Tambahkan", callback_data: "fb_add" }
+          ]]
+        }
+      });
+    } catch {}
+    return;
 
   } catch (err) {
     console.error("[TELEGRAM_ERROR]", err.message);
@@ -576,6 +621,118 @@ bot.on("text", async (ctx) => {
     try { await ctx.reply("Maaf Bry, AI sedang sibuk. Coba lagi dalam beberapa detik."); } catch {}
   }
 });
+
+// ─── FEEDBACK CALLBACK HANDLER ──────────────────────────
+bot.on("callback_query", async (ctx) => {
+  const chatId = ctx.chat?.id || ctx.callbackQuery?.message?.chat?.id;
+  if (!isAuthorized(chatId)) return ctx.answerCbQuery("Unauthorized");
+
+  const data = ctx.callbackQuery.data;
+  const context = lastAIContext.get(chatId) || { userMsg: "", aiReply: "" };
+
+  try {
+    await ctx.answerCbQuery();
+    // Edit pesan separator agar tombol hilang
+    await ctx.editMessageText("─ ✓").catch(() => {});
+  } catch {}
+
+  if (data === "fb_positive") {
+    addPositive(context.userMsg, context.aiReply).catch(() => {});
+    await ctx.reply("Noted Bry! 👍").catch(() => {});
+  }
+
+  else if (data === "fb_negative") {
+    addNegative(context.userMsg, context.aiReply).catch(() => {});
+    pendingFeedback.set(chatId, "negative_explanation");
+    await ctx.reply("Maaf Bry, apa yang kurang tepat?\nSaya catat untuk diperbaiki.").catch(() => {});
+  }
+
+  else if (data === "fb_add") {
+    pendingFeedback.set(chatId, "knowledge_addition");
+    await ctx.reply("Apa yang ingin kamu tambahkan atau koreksi, Bry?").catch(() => {});
+  }
+});
+
+// ─── /skill baru [nama]: [deskripsi] ─────────────────────
+bot.command("skill", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/skill", "").trim();
+  if (args.toLowerCase().startsWith("baru ")) {
+    const rest = args.replace(/^baru\s+/i, "");
+    const colonIdx = rest.indexOf(":");
+    if (colonIdx === -1) return ctx.reply("Format: /skill baru [nama]: [deskripsi]");
+    const skillName = rest.substring(0, colonIdx).trim().toLowerCase().replace(/\s+/g, "-");
+    const deskripsi = rest.substring(colonIdx + 1).trim();
+    await ctx.reply(`🔧 Membangun skill /${skillName}...`);
+    try {
+      const { buildSkill } = require("./core/evolution/skill-builder");
+      const result = await buildSkill(skillName, deskripsi);
+      await ctx.reply(result);
+    } catch (err) {
+      await ctx.reply(`❌ Error: ${err.message}`);
+    }
+    return;
+  }
+  await ctx.reply("Format: /skill baru [nama]: [deskripsi]\nContoh: /skill baru cek-besi: analisa kebutuhan besi beton untuk konstruksi");
+});
+
+// ─── /tool baru [nama]: [deskripsi] ──────────────────────
+bot.command("tool", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/tool", "").trim();
+  if (args.toLowerCase().startsWith("baru ")) {
+    const rest = args.replace(/^baru\s+/i, "");
+    const colonIdx = rest.indexOf(":");
+    if (colonIdx === -1) return ctx.reply("Format: /tool baru [nama]: [deskripsi]");
+    const toolName = rest.substring(0, colonIdx).trim().toLowerCase().replace(/\s+/g, "-");
+    const deskripsi = rest.substring(colonIdx + 1).trim();
+    await ctx.reply(`🔧 Membangun tool /${toolName}...`);
+    try {
+      const { buildTool } = require("./core/evolution/tool-builder");
+      const result = await buildTool(toolName, deskripsi);
+      await ctx.reply(result);
+    } catch (err) {
+      await ctx.reply(`❌ Error: ${err.message}`);
+    }
+    return;
+  }
+  await ctx.reply("Format: /tool baru [nama]: [deskripsi]");
+});
+
+// ─── /knowledge [topik] ──────────────────────────────────
+bot.command("knowledge", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.sendChatAction("typing");
+  const topik = ctx.message.text.replace("/knowledge", "").trim();
+  try {
+    const { getKnowledge } = require("./core/knowledge/ternion-knowledge");
+    const result = await getKnowledge(topik || "all");
+    await sendLong(ctx, result);
+  } catch (err) {
+    await ctx.reply(`❌ Knowledge base error: ${err.message}`);
+  }
+});
+
+// ─── /update [topik] [fakta] ─────────────────────────────
+bot.command("update", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/update", "").trim();
+  const parts = args.split(/\s+/);
+  const topik = parts[0];
+  const fakta = parts.slice(1).join(" ");
+  if (!topik || !fakta) return ctx.reply("Format: /update [topik] [fakta baru]\nContoh: /update konstruksi harga semen Kupang naik ke 65ribu");
+  try {
+    const { updateKnowledge } = require("./core/knowledge/ternion-knowledge");
+    await updateKnowledge(topik, fakta);
+    await ctx.reply(`✅ Knowledge [${topik}] diupdate:\n"${fakta}"`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+// ─── Handler feedback follow-up (negative/knowledge) ────
+// Ini harus di atas bot.on("text") — TIDAK. Kita intercept di bot.on("text")
+// Sudah dihandle di bot.on("text") dengan cek pendingFeedback
 
 bot.launch({ dropPendingUpdates: true }).catch((err) => {
   console.error("[BOT_LAUNCH_ERROR]", err.message);

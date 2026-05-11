@@ -1,0 +1,21 @@
+{
+  "positive": [
+    {
+      "timestamp": "2026-05-11T05:02:33.751Z",
+      "user_message": "test query",
+      "ai_reply": "test reply",
+      "context": ""
+    }
+  ],
+  "negative": [
+    {
+      "timestamp": "2026-05-11T05:02:33.767Z",
+      "user_message": "bad query",
+      "ai_reply": "bad reply",
+      "context": "",
+      "explanation": null
+    }
+  ],
+  "corrections": [],
+  "knowledge_additions": []
+}

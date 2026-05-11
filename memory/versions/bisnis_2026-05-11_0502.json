@@ -1,11 +1,6 @@
 {
-  "domain": "proyek",
+  "domain": "bisnis",
   "entries": [
-    {
-      "content": "Nilai proyek: nilai 3 miliar",
-      "category": "business",
-      "added_at": "2026-05-11T04:08:29.288Z"
-    },
     {
       "content": "Saya sedang nego proyek gedung dinas senilai 3 miliar dengan Pak Yusuf dari PT Maju Jaya",
       "timestamp": "2026-05-11T04:08:48.836Z"
@@ -19,5 +14,5 @@
       "timestamp": "2026-05-11T04:12:16.347Z"
     }
   ],
-  "last_updated": "2026-05-11T04:12:16.354Z"
+  "last_updated": "2026-05-11T04:12:16.352Z"
 }

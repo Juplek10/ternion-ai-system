@@ -1,0 +1,51 @@
+{
+  "domain": "procurement",
+  "last_updated": "2026-05-11T00:00:00Z",
+  "entries": [
+    {
+      "category": "regulasi",
+      "content": "Perpres 12/2021: update dari Perpres 16/2018. Dasar hukum pengadaan pemerintah Indonesia",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "threshold",
+      "content": "Pengadaan Langsung (jasa): s.d. Rp 100 juta. Tender wajib: di atas Rp 200 juta (konstruksi)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "threshold",
+      "content": "Penunjukan Langsung: untuk kondisi tertentu (darurat, keamanan nasional, dll)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "dokumen_tender",
+      "content": "Dokumen kualifikasi wajib: NIB, SIUJK/SBU (sesuai subklasifikasi), NPWP, PKP, Akta pendirian, laporan keuangan",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "dokumen_tender",
+      "content": "SBU (Sertifikat Badan Usaha) untuk konstruksi: grade K (kecil) s.d. 2.5M, M (menengah) s.d. 50M, B (besar) di atas 50M",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "strategi",
+      "content": "Jaminan penawaran biasanya 1-3% dari HPS. Siapkan rekening koran 3 bulan terakhir",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "strategi",
+      "content": "LPSE NTT: lpse.nttprov.go.id. LPSE nasional: lpse.lkpp.go.id",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "strategi",
+      "content": "Tips tender NTT: bangun relasi dengan PPK dan panitia sejak awal, hadir di aanwijzing, pelajari riwayat pemenang tender sebelumnya",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "ekatalog",
+      "content": "e-Katalog LKPP: peluang untuk masuk sebagai penyedia tetap. Tidak perlu tender, cukup negosiasi harga",
+      "added_at": "2026-05-11T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "domain": "konstruksi",
+  "last_updated": "2026-05-11T00:00:00Z",
+  "entries": [
+    {
+      "category": "harga_material",
+      "content": "Semen Portland 50kg: Rp 80.000-90.000 (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "harga_material",
+      "content": "Besi beton polos 10mm: Rp 85.000-95.000/batang (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "harga_material",
+      "content": "Pasir pasang: Rp 300.000-400.000/m3 (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "harga_material",
+      "content": "Keramik 60x60 medium: Rp 85.000-110.000/m2 (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "harga_material",
+      "content": "Batu bata merah: Rp 800-1.200/biji (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "upah_tenaga",
+      "content": "Mandor harian: Rp 180.000-220.000/hari (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "upah_tenaga",
+      "content": "Tukang harian: Rp 150.000-180.000/hari (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "upah_tenaga",
+      "content": "Pekerja harian: Rp 100.000-130.000/hari (Kupang 2026)",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "regulasi",
+      "content": "SNI 2847:2019 - Persyaratan beton struktural untuk bangunan gedung",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "regulasi",
+      "content": "PPN konstruksi 11% berlaku sejak April 2022",
+      "added_at": "2026-05-11T00:00:00Z"
+    },
+    {
+      "category": "vendor",
+      "content": "Supplier material utama Kupang: Toko Bangunan di Jl. El Tari, Jl. Timor Raya",
+      "added_at": "2026-05-11T00:00:00Z"
+    }
+  ]
+}
