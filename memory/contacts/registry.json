@@ -1,0 +1,164 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-05-11T00:00:00.000Z",
+  "contacts": {
+    "6282266130808": {
+      "nomor": "6282266130808",
+      "nama": "Brian Kinayom",
+      "panggilan": "Bry",
+      "role": "NEXUS",
+      "kategori": "nexus",
+      "sub_kategori": "pimpinan",
+      "bahasa": "indonesia",
+      "gaya_bicara": "santai dan strategis",
+      "boleh_akses": ["semua"],
+      "info_sensitif": false,
+      "perlu_approval": false,
+      "konteks_bisnis": "Founder TERNION GROUP — konstruksi + trading komoditas NTT",
+      "history_proyek": [],
+      "history_harga": [],
+      "follow_up_pending": [],
+      "last_interaction": "",
+      "total_interactions": 0,
+      "trust_level": "penuh",
+      "delegasi_ke": null,
+      "master_switch": true,
+      "added_at": "2026-05-11T00:00:00.000Z"
+    },
+    "_template_internal_1": {
+      "_NOTE": "TEMPLATE — Hapus _template_ dan isi nomor sebenarnya",
+      "nomor": "628XXXXXXX_1",
+      "nama": null,
+      "panggilan": null,
+      "role": "VECTOR",
+      "kategori": "internal",
+      "sub_kategori": "lapangan",
+      "bahasa": "indonesia",
+      "gaya_bicara": "santai profesional",
+      "boleh_akses": ["info lapangan", "progres proyek"],
+      "info_sensitif": false,
+      "perlu_approval": true,
+      "konteks_bisnis": "Tim lapangan TERNION",
+      "history_proyek": [],
+      "follow_up_pending": [],
+      "last_interaction": "",
+      "total_interactions": 0,
+      "trust_level": "tinggi",
+      "delegasi_role": "vector"
+    },
+    "_template_internal_2": {
+      "_NOTE": "TEMPLATE — Hapus _template_ dan isi nomor sebenarnya",
+      "nomor": "628XXXXXXX_2",
+      "nama": null,
+      "role": "SCRIPTA",
+      "kategori": "internal",
+      "sub_kategori": "administrasi",
+      "delegasi_role": "scripta"
+    },
+    "_template_internal_3": {
+      "_NOTE": "TEMPLATE — Hapus _template_ dan isi nomor sebenarnya",
+      "nomor": "628XXXXXXX_3",
+      "nama": null,
+      "role": "DRAFTER",
+      "kategori": "internal",
+      "sub_kategori": "desain",
+      "delegasi_role": "drafter"
+    },
+    "_template_rab": {
+      "_NOTE": "TEMPLATE — Hapus _template_ dan isi nomor sebenarnya",
+      "nomor": "628XXXXXXX_rab",
+      "nama": null,
+      "role": "RAB",
+      "kategori": "internal",
+      "sub_kategori": "estimasi",
+      "delegasi_role": "rab"
+    },
+    "_template_kontraktor_1": {
+      "_NOTE": "TEMPLATE KONTRAKTOR 1",
+      "nomor": "628XXXXXXX_k1",
+      "nama": null,
+      "role": "KONTRAKTOR",
+      "kategori": "kontraktor",
+      "bahasa": "indonesia",
+      "gaya_bicara": "teknis, to the point",
+      "boleh_akses": ["spesifikasi teknis", "volume pekerjaan", "jadwal proyek"],
+      "info_sensitif": true,
+      "perlu_approval": true,
+      "trust_level": "sedang"
+    },
+    "_template_kontraktor_2": {
+      "_NOTE": "TEMPLATE KONTRAKTOR 2",
+      "nomor": "628XXXXXXX_k2",
+      "nama": null,
+      "role": "KONTRAKTOR",
+      "kategori": "kontraktor"
+    },
+    "_template_kontraktor_3": {
+      "_NOTE": "TEMPLATE KONTRAKTOR 3",
+      "nomor": "628XXXXXXX_k3",
+      "nama": null,
+      "role": "KONTRAKTOR",
+      "kategori": "kontraktor"
+    },
+    "_template_supplier_1": {
+      "_NOTE": "TEMPLATE SUPPLIER 1",
+      "nomor": "628XXXXXXX_s1",
+      "nama": null,
+      "role": "SUPPLIER",
+      "kategori": "supplier",
+      "auto_extract_harga": true
+    },
+    "_template_supplier_2": {
+      "_NOTE": "TEMPLATE SUPPLIER 2",
+      "nomor": "628XXXXXXX_s2",
+      "nama": null,
+      "role": "SUPPLIER",
+      "kategori": "supplier"
+    },
+    "_template_supplier_3": {
+      "_NOTE": "TEMPLATE SUPPLIER 3",
+      "nomor": "628XXXXXXX_s3",
+      "nama": null,
+      "role": "SUPPLIER",
+      "kategori": "supplier"
+    },
+    "_template_pengepul_1": {
+      "_NOTE": "TEMPLATE PENGEPUL MANGAN 1",
+      "nomor": "628XXXXXXX_p1",
+      "nama": null,
+      "role": "PENGEPUL",
+      "kategori": "pengepul",
+      "sub_kategori": "mangan",
+      "auto_extract_harga": true
+    },
+    "_template_pengepul_2": { "_NOTE": "TEMPLATE PENGEPUL 2", "nomor": "628XXXXXXX_p2", "kategori": "pengepul" },
+    "_template_pengepul_3": { "_NOTE": "TEMPLATE PENGEPUL 3", "nomor": "628XXXXXXX_p3", "kategori": "pengepul" },
+    "_template_pengepul_4": { "_NOTE": "TEMPLATE PENGEPUL 4", "nomor": "628XXXXXXX_p4", "kategori": "pengepul" },
+    "_template_pengepul_5": { "_NOTE": "TEMPLATE PENGEPUL 5", "nomor": "628XXXXXXX_p5", "kategori": "pengepul" },
+    "_template_relasi_1": {
+      "_NOTE": "TEMPLATE RELASI 1",
+      "nomor": "628XXXXXXX_r1",
+      "nama": null,
+      "role": "RELASI",
+      "kategori": "relasi",
+      "info_sensitif": true
+    },
+    "_template_relasi_2": { "_NOTE": "TEMPLATE RELASI 2", "nomor": "628XXXXXXX_r2", "kategori": "relasi" },
+    "_template_relasi_3": { "_NOTE": "TEMPLATE RELASI 3", "nomor": "628XXXXXXX_r3", "kategori": "relasi" },
+    "_template_pemerintah_1": {
+      "_NOTE": "TEMPLATE PEMERINTAH/DINAS 1",
+      "nomor": "628XXXXXXX_g1",
+      "nama": null,
+      "role": "PEMERINTAH",
+      "kategori": "pemerintah",
+      "bahasa": "indonesia formal",
+      "gaya_bicara": "formal, hormat",
+      "info_sensitif": true
+    },
+    "_template_pemerintah_2": {
+      "_NOTE": "TEMPLATE PEMERINTAH/DINAS 2",
+      "nomor": "628XXXXXXX_g2",
+      "kategori": "pemerintah"
+    }
+  }
+}

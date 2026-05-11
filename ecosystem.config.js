@@ -117,6 +117,17 @@ module.exports = {
       max_restarts: 999,
       min_uptime: "30s",
       env: { NODE_ENV: "production" }
+    },
+    {
+      name: "follow-up-engine",
+      script: "/root/ai-system/core/contacts/follow-up-engine.js",
+      instances: 1,
+      exec_mode: "fork",
+      restart_delay: 10000,
+      kill_timeout: 5000,
+      max_restarts: 5,
+      cron_restart: "0 * * * *",
+      env: { NODE_ENV: "production" }
     }
   ]
 };

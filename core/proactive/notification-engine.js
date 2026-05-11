@@ -113,31 +113,118 @@ ${deadlineWarning}
   console.log("[NOTIF] Morning brief terkirim");
 }
 
-// ─── Weekly Report (Senin 07.00 WITA) ───────────────────
+// ─── Weekly Consolidation Report (Jumat 17.00 WITA) ────
 async function sendWeeklyReport() {
   const key = `weekly_${todayKey()}`;
   if (sentToday[key]) return;
   sentToday[key] = true;
 
-  let learnings = { learnings: [] };
-  try {
-    learnings = await fs.readJson(path.join(MEMORY_DIR, "long-term.json"));
-  } catch {}
+  let proyek = { entries: [] };
+  let followups = { followups: [] };
+  let approvals = { pending: {} };
+  let delegasi = { log: [] };
+  let kontak = { contacts: {} };
+  let hargaLog = [];
 
-  const weeklyLearnings = (learnings.learnings || []).slice(-7)
-    .map(l => `  • ${(l.content || l).substring(0, 100)}`).join("\n") || "  (belum ada)";
+  try { proyek = await fs.readJson(path.join(MEMORY_DIR, "proyek.json")); } catch {}
+  try { followups = await fs.readJson("/root/ai-system/memory/follow-ups/list.json"); } catch {}
+  try { approvals = await fs.readJson("/root/ai-system/approvals/pending.json"); } catch {}
+  try { delegasi = await fs.readJson("/root/ai-system/memory/delegasi-log.json"); } catch {}
+  try { kontak = await fs.readJson("/root/ai-system/memory/contacts/registry.json"); } catch {}
+
+  const now = new Date();
+  const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+
+  // Tanggal periode
+  const periodeAwal = weekAgo.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+  const periodeAkhir = now.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+
+  // Proyek aktif
+  const proyekAktif = (proyek.entries || []).slice(-5)
+    .map(p => `  • ${(p.content || "").substring(0, 80)}`).join("\n") || "  (belum ada)";
+
+  // Follow-up pending
+  const fuPending = (followups.followups || []).filter(f => f.status === "pending");
+  const fuList = fuPending.length > 0
+    ? fuPending.map(f => `  • ${f.nama} — ${f.konteks.substring(0, 60)} (deadline: ${f.deadline})`).join("\n")
+    : "  (tidak ada)";
+
+  // Approval pending
+  const aprPending = Object.values(approvals.pending || {}).filter(a => a.status === "pending");
+  const aprList = aprPending.length > 0
+    ? aprPending.map(a => `  • ${a.nama} — ${a.konteks.substring(0, 60)}`).join("\n")
+    : "  (tidak ada)";
+
+  // Delegasi minggu ini
+  const delegasiMingguIni = (delegasi.log || []).filter(d => new Date(d.waktu) >= weekAgo);
+  const delegasiSummary = delegasiMingguIni.length > 0
+    ? `  ${delegasiMingguIni.length} delegasi — ${[...new Set(delegasiMingguIni.map(d => d.topik_label))].join(", ")}`
+    : "  (tidak ada)";
+
+  // Kontak aktif
+  const kontakAktif = Object.values(kontak.contacts || {})
+    .filter(c => c.last_interaction && new Date(c.last_interaction) >= weekAgo && !c.nomor.includes("XXXXXXX"))
+    .length;
+
+  const ramPct = getRAMPct();
 
   const msg =
 `📊 <b>WEEKLY REPORT TERNION</b>
-━━━━━━━━━━━━━━━━━━━━━
-📚 <b>Learnings minggu ini:</b>
-${weeklyLearnings}
+━━━━━━━━━━━━━━━━━━━━━━━
+📅 Periode: ${periodeAwal} – ${periodeAkhir}
 
-💪 Semangat minggu baru, Bry!
-🎯 Fokus minggu ini dan tetap konsisten.`;
+🏗️ <b>PROYEK AKTIF:</b>
+${proyekAktif}
+
+👥 <b>AKTIVITAS TIM:</b>
+  ${delegasiSummary}
+
+🤝 <b>KONTAK AKTIF MINGGU INI:</b>
+  ${kontakAktif} kontak berinteraksi
+
+📋 <b>FOLLOW-UP PENDING (${fuPending.length}):</b>
+${fuList}
+
+⚡ <b>APPROVAL PENDING (${aprPending.length}):</b>
+${aprList}
+
+⚠️ <b>PERLU PERHATIAN:</b>
+${fuPending.length > 3 ? "  • " + fuPending.length + " follow-up menumpuk — perlu tindak lanjut\n" : ""}${aprPending.length > 0 ? "  • " + aprPending.length + " approval belum diproses\n" : ""}${fuPending.length <= 3 && aprPending.length === 0 ? "  • Semua aman ✅\n" : ""}
+💡 <b>REKOMENDASI AI:</b>
+  • Review follow-up sebelum akhir pekan
+  • Konfirmasi approval yang pending
+  • Update status proyek aktif
+
+💻 Sistem: RAM ${ramPct}%`;
 
   await send(msg);
-  console.log("[NOTIF] Weekly report terkirim");
+  console.log("[NOTIF] Weekly Consolidation Report terkirim");
+}
+
+// ─── Group Summary (21.00 WITA setiap hari) ─────────────
+async function sendGroupSummary() {
+  const key = `grp_summary_${todayKey()}`;
+  if (sentToday[key]) return;
+  sentToday[key] = true;
+
+  let grupRegistry = { groups: {} };
+  try {
+    grupRegistry = await fs.readJson("/root/ai-system/memory/contacts/grup-registry.json");
+  } catch {}
+
+  const groups = Object.values(grupRegistry.groups || {});
+  if (groups.length === 0) return;
+
+  for (const grp of groups) {
+    const summaryMsg =
+      `💬 <b>SUMMARY GRUP: ${grp.nama}</b>\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `📊 Fungsi: ${grp.fungsi || "umum"}\n` +
+      `📌 Status: aktif terpantau\n` +
+      `⏰ ${new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Makassar" })}`;
+    await send(summaryMsg);
+  }
+  console.log("[NOTIF] Group summary terkirim");
 }
 
 // ─── Alert RAM tinggi ────────────────────────────────────
@@ -151,6 +238,12 @@ async function checkRAMAlert() {
   }
 }
 
+// ─── Helper: cek Jumat ──────────────────────────────────
+function isFriday() {
+  const d = new Date();
+  return d.getUTCDay() === 5;
+}
+
 // ─── Scheduler ───────────────────────────────────────────
 async function tick() {
   const h = localHour();
@@ -159,8 +252,11 @@ async function tick() {
   // Morning brief: 06.00 WITA
   if (h === 6 && m < 5) await sendMorningBrief();
 
-  // Weekly report: Senin 07.00 WITA
-  if (h === 7 && m < 5 && isMonday()) await sendWeeklyReport();
+  // Weekly Consolidation Report: Jumat 17.00 WITA
+  if (h === 17 && m < 5 && isFriday()) await sendWeeklyReport();
+
+  // Group Summary: 21.00 WITA setiap hari
+  if (h === 21 && m < 5) await sendGroupSummary();
 
   // RAM check setiap tick
   await checkRAMAlert().catch(() => {});

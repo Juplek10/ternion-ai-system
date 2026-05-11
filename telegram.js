@@ -176,11 +176,18 @@ bot.command("status", async (ctx) => {
   const soulStatus = soul && soul.length > 100 ? "✅ loaded" : "❌ error";
   const timeStr = new Date().toLocaleString("id-ID", { timeZone: "Asia/Makassar" });
 
+  let waAiStatus = "❓ unknown";
+  try {
+    const { getStatus: getWAStatus } = require("./core/contacts/master-switch");
+    waAiStatus = await getWAStatus();
+  } catch {}
+
   const msg =
 `⚙️ <b>STATUS TERNION-AI</b>
 ─────────────────────
 ⏰ ${timeStr} WITA
 🤖 AI: ${claudeStatus}
+🤖 AI WA: ${waAiStatus}
 💾 RAM: ${ram.usedGB} / ${ram.totalGB} GB (${ram.pct}%)
 💬 Percakapan hari ini: ${conversationCountToday}
 🔋 Soul: ${soulStatus}
@@ -756,6 +763,142 @@ bot.command("update", async (ctx) => {
 // ─── Handler feedback follow-up (negative/knowledge) ────
 // Ini harus di atas bot.on("text") — TIDAK. Kita intercept di bot.on("text")
 // Sudah dihandle di bot.on("text") dengan cek pendingFeedback
+
+// ─── /ai-off, /ai-on, /ai-pause, /ai-status (Telegram) ──
+bot.command("ai_off", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const { deactivateAI } = require("./core/contacts/master-switch");
+  await deactivateAI("telegram");
+  await ctx.reply("🔴 AI WA dimatikan via Telegram.\nKirim /ai_on untuk aktifkan kembali.");
+});
+
+bot.command("ai_on", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const { activateAI } = require("./core/contacts/master-switch");
+  await activateAI("telegram");
+  await ctx.reply("🟢 AI WA diaktifkan kembali.");
+});
+
+bot.command("ai_pause", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/ai_pause", "").trim();
+  const menit = parseInt(args) || 30;
+  const { pauseAI } = require("./core/contacts/master-switch");
+  await pauseAI(menit);
+  await ctx.reply(`🟡 AI WA dipause selama ${menit} menit.\nAktif kembali otomatis setelah itu.`);
+});
+
+bot.command("ai_status", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const { getStatus } = require("./core/contacts/master-switch");
+  const status = await getStatus();
+  await ctx.reply(`🤖 AI WA: ${status}`);
+});
+
+// ─── /approve, /reject, /tunda (Approval Workflow) ───────
+bot.command("approve", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/approve", "").trim().split(/\s+/);
+  const id = args[0];
+  const detail = args.slice(1).join(" ");
+  if (!id) return ctx.reply("Format: /approve [ID] [detail opsional]");
+  try {
+    const { resolveApproval, getApproveResponse } = require("./core/contacts/approval-workflow");
+    const approval = await resolveApproval(id, "approved", null);
+    if (!approval) return ctx.reply(`❌ ID ${id} tidak ditemukan.`);
+    // Kirim ke WA
+    const { client: waClient } = require("./core/integrations/whatsapp");
+    try {
+      await waClient.sendMessage(`${approval.nomor}@c.us`, getApproveResponse(detail));
+    } catch {}
+    await ctx.reply(`✅ Approval ${id} dikirimkan ke ${approval.nama}.`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+bot.command("reject", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/reject", "").trim().split(/\s+/);
+  const id = args[0];
+  const alasan = args.slice(1).join(" ");
+  if (!id) return ctx.reply("Format: /reject [ID] [alasan]");
+  try {
+    const { resolveApproval, getRejectResponse } = require("./core/contacts/approval-workflow");
+    const approval = await resolveApproval(id, "rejected", alasan);
+    if (!approval) return ctx.reply(`❌ ID ${id} tidak ditemukan.`);
+    const { client: waClient } = require("./core/integrations/whatsapp");
+    try {
+      await waClient.sendMessage(`${approval.nomor}@c.us`, getRejectResponse(alasan));
+    } catch {}
+    await ctx.reply(`✅ Reject ${id} terkirim ke ${approval.nama}.`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+bot.command("tunda", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const id = ctx.message.text.replace("/tunda", "").trim();
+  if (!id) return ctx.reply("Format: /tunda [ID]");
+  try {
+    const { resolveApproval, getTundaResponse } = require("./core/contacts/approval-workflow");
+    const approval = await resolveApproval(id, "tunda", null);
+    if (!approval) return ctx.reply(`❌ ID ${id} tidak ditemukan.`);
+    const { client: waClient } = require("./core/integrations/whatsapp");
+    try {
+      await waClient.sendMessage(`${approval.nomor}@c.us`, getTundaResponse());
+    } catch {}
+    await ctx.reply(`✅ Tunda ${id} — sudah dibalas ke ${approval.nama}.`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+// ─── /wa_list, /wa_add via Telegram ───────────────────────
+bot.command("wa_list", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  try {
+    const { listContacts } = require("./core/contacts/contact-manager");
+    const list = await listContacts();
+    const valid = list.filter(c => !c.nomor.includes("XXXXXXX") && !c.nomor.startsWith("_"));
+    if (valid.length === 0) return ctx.reply("Belum ada kontak terdaftar.\nGunakan /wa_add untuk menambah.");
+    const text = valid.map((c, i) => `${i + 1}. ${c.nama || c.nomor} — ${c.kategori} (${c.nomor})`).join("\n");
+    await ctx.reply(`📋 KONTAK TERDAFTAR:\n\n${text}`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+bot.command("wa_add", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/wa_add", "").trim().split(/\s+/);
+  if (args.length < 3) return ctx.reply("Format: /wa_add [nomor] [kategori] [nama...]");
+  const [nomor, kategori, ...namaParts] = args;
+  const nama = nameParts.join(" ");
+  try {
+    const { addContact } = require("./core/contacts/contact-manager");
+    await addContact(nomor, { kategori, nama });
+    await ctx.reply(`✅ Kontak ditambahkan:\n📞 ${nomor}\n🏷️ ${kategori}\n👤 ${nama}`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+bot.command("followup", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  try {
+    const { listFollowUps } = require("./core/contacts/follow-up-engine");
+    const list = await listFollowUps("pending");
+    if (list.length === 0) return ctx.reply("✅ Tidak ada follow-up pending.");
+    const text = list.map((f, i) =>
+      `${i + 1}. ${f.nama} — ${f.konteks.substring(0, 60)}\n   Deadline: ${f.deadline} | ID: ${f.id}`
+    ).join("\n");
+    await ctx.reply(`⏰ FOLLOW-UP PENDING:\n\n${text}`);
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
 
 bot.launch({ dropPendingUpdates: true }).catch((err) => {
   console.error("[BOT_LAUNCH_ERROR]", err.message);
