@@ -10,7 +10,7 @@ const { addFileMemory, getLastFile, removeFileMemory } = require("./core/file-me
 const routeTask = require("./core/router/router");
 const { loadSession, addMessage } = require("./core/session");
 const { getSoul } = require("./core/identity/soul-guardian");
-const { autoExtract, searchMemory, addFact, forgetTopic, getMemorySummary } = require("./core/memory/long-term-memory");
+const { autoExtract, saveConversation, searchMemory, addFact, forgetTopic, getMemorySummary } = require("./core/memory/long-term-memory");
 
 // ─── Tools ─────────────────────────────────────────────
 const { runAHS } = require("./core/tools/ahs-tool");
@@ -561,6 +561,11 @@ bot.on("text", async (ctx) => {
 
     await addMessage(chatId, "user", originalText);
     await addMessage(chatId, "assistant", aiReply);
+
+    // Simpan percakapan ke semua domain memory yang relevan
+    saveConversation(originalText, aiReply).catch(err =>
+      console.error("[MEMORY] saveConversation error:", err.message)
+    );
 
     return sendLong(ctx, aiReply);
 

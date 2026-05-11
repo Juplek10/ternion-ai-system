@@ -19,6 +19,37 @@ function loadSoul() {
 }
 
 function loadRecentMemory() {
+  const lines = [];
+
+  // 1. Baca dari personal.json (data tetap Brian)
+  try {
+    const PERSONAL_PATH = path.join(path.dirname(MEMORY_PATH), "personal.json");
+    const personal = JSON.parse(fs.readFileSync(PERSONAL_PATH, "utf8"));
+    const entries = (personal.entries || []).slice(-5);
+    for (const e of entries) {
+      lines.push(`[personal] ${e.content || e}`);
+    }
+  } catch {}
+
+  // 2. Baca dari domain files — 3 entri terakhir per domain
+  const DOMAIN_FILES = ["bisnis", "proyek", "kontak", "keputusan", "percakapan"];
+  const memDir = path.dirname(MEMORY_PATH);
+  for (const domain of DOMAIN_FILES) {
+    try {
+      const domainPath = path.join(memDir, `${domain}.json`);
+      const data = JSON.parse(fs.readFileSync(domainPath, "utf8"));
+      const entries = (data.entries || []).slice(-3);
+      for (const e of entries) {
+        if (domain === "percakapan") {
+          if (e.user) lines.push(`[percakapan] User: ${e.user.substring(0, 150)}`);
+        } else {
+          lines.push(`[${domain}] ${(e.content || "").substring(0, 150)}`);
+        }
+      }
+    } catch {}
+  }
+
+  // 3. Baca dari long-term.json sebagai fallback
   try {
     const raw = fs.readFileSync(MEMORY_PATH, "utf8");
     const mem = JSON.parse(raw);
@@ -29,10 +60,11 @@ function loadRecentMemory() {
       }
     }
     allFacts.sort((a, b) => (b.added_at > a.added_at ? 1 : -1));
-    return allFacts.slice(0, 5).map(f => `[${f.cat}] ${f.content}`).join("\n");
-  } catch {
-    return "";
-  }
+    const topFacts = allFacts.slice(0, 5).map(f => `[${f.cat}] ${f.content}`);
+    lines.push(...topFacts);
+  } catch {}
+
+  return [...new Set(lines)].slice(0, 20).join("\n");
 }
 
 async function askClaude(prompt) {

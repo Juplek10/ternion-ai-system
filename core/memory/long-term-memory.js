@@ -166,6 +166,15 @@ async function forgetTopic(topic) {
 async function autoExtract(userMessage) {
   const msg = userMessage.toLowerCase();
 
+  // Ekstrak nama orang (pola: "nama saya X", "saya X", "panggil saya X", "aku X")
+  const namePattern = /(?:nama\s+saya|saya\s+bernama|panggil\s+saya|my\s+name\s+is|i\s+am|i'm)\s+([A-Za-z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi;
+  for (const m of userMessage.matchAll(namePattern)) {
+    const name = m[1]?.trim();
+    if (name && name.length > 1) {
+      await addFact("contacts", `Nama orang: ${name}`);
+    }
+  }
+
   const companyPattern = /(?:PT|CV|UD|firma|perusahaan|vendor|supplier|kontraktor)\s+([A-Z][^\s,]+(?:\s[A-Z][^\s,]+)*)/gi;
   for (const m of userMessage.matchAll(companyPattern)) {
     await addFact("contacts", `Perusahaan: ${m[0].trim()}`);
@@ -184,6 +193,84 @@ async function autoExtract(userMessage) {
   for (const m of userMessage.matchAll(deadlinePattern)) {
     await addFact("projects", `Deadline: ${m[0].trim()}`);
   }
+
+  // Simpan ke domain bisnis jika ada kata kunci bisnis
+  const bisnisKw = ["bisnis", "usaha", "omzet", "revenue", "pengadaan", "ekspor", "impor", "trading", "kafe", "konstruksi"];
+  if (bisnisKw.some(kw => msg.includes(kw))) {
+    await addFact("business", `[${new Date().toISOString().split("T")[0]}] ${userMessage.substring(0, 200)}`);
+  }
+}
+
+// ─── Simpan percakapan lengkap ke domain percakapan ──────
+async function saveConversation(userMsg, aiReply) {
+  const ts = new Date().toISOString();
+
+  // 1. Simpan ke percakapan.json domain
+  const convDomain = await loadDomainMemory("percakapan");
+  convDomain.entries.push({
+    timestamp: ts,
+    user: userMsg.substring(0, 500),
+    assistant: aiReply.substring(0, 500)
+  });
+  if (convDomain.entries.length > 100) {
+    convDomain.entries = convDomain.entries.slice(-100);
+  }
+  await saveDomainMemory("percakapan", convDomain);
+
+  // 2. Ekstrak nama orang → kontak.json
+  const namePattern = /(?:nama\s+saya|saya\s+bernama|panggil\s+saya|my\s+name\s+is|i\s+am|i'm|dari|asal)\s+([A-Za-z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi;
+  for (const m of userMsg.matchAll(namePattern)) {
+    const name = m[1]?.trim();
+    if (name && name.length > 1 && !/^(kupang|ntt|jakarta|indonesia)$/i.test(name)) {
+      const kontakDomain = await loadDomainMemory("kontak");
+      const isDup = kontakDomain.entries.some(e => e.content?.toLowerCase().includes(name.toLowerCase()));
+      if (!isDup) {
+        kontakDomain.entries.push({ content: `Nama: ${name}`, timestamp: ts });
+        await saveDomainMemory("kontak", kontakDomain);
+        await addFact("contacts", `Nama orang disebutkan: ${name}`);
+      }
+    }
+  }
+
+  // 3. Jika ada info bisnis → bisnis.json
+  const bisnisKw = ["bisnis", "usaha", "omzet", "revenue", "pengadaan", "ekspor", "impor", "trading", "kafe", "konstruksi", "proyek", "anggaran", "budget", "kontrak"];
+  if (bisnisKw.some(kw => userMsg.toLowerCase().includes(kw))) {
+    const bisnisDomain = await loadDomainMemory("bisnis");
+    bisnisDomain.entries.push({ content: userMsg.substring(0, 300), timestamp: ts });
+    if (bisnisDomain.entries.length > 100) bisnisDomain.entries = bisnisDomain.entries.slice(-100);
+    await saveDomainMemory("bisnis", bisnisDomain);
+  }
+
+  // 4. Jika ada info proyek → proyek.json
+  const proyekKw = ["proyek", "tender", "deadline", "progress", "pembangunan", "konstruksi", "pengadaan"];
+  if (proyekKw.some(kw => userMsg.toLowerCase().includes(kw))) {
+    const proyekDomain = await loadDomainMemory("proyek");
+    proyekDomain.entries.push({ content: userMsg.substring(0, 300), timestamp: ts });
+    if (proyekDomain.entries.length > 100) proyekDomain.entries = proyekDomain.entries.slice(-100);
+    await saveDomainMemory("proyek", proyekDomain);
+  }
+
+  // 5. Jika ada keputusan → keputusan.json
+  const keputusanKw = ["putuskan", "setuju", "deal", "sepakat", "keputusan", "konfirmasi", "approve"];
+  if (keputusanKw.some(kw => userMsg.toLowerCase().includes(kw))) {
+    const kepDomain = await loadDomainMemory("keputusan");
+    kepDomain.entries.push({ content: `[${ts.split("T")[0]}] ${userMsg.substring(0, 300)}`, timestamp: ts });
+    if (kepDomain.entries.length > 50) kepDomain.entries = kepDomain.entries.slice(-50);
+    await saveDomainMemory("keputusan", kepDomain);
+    await addFact("decisions", `[${ts.split("T")[0]}] ${userMsg.substring(0, 150)}`);
+  }
+
+  // 6. Simpan juga ke long-term conversations
+  const mem = await loadMemory();
+  mem.conversations.push({
+    timestamp: ts,
+    user: userMsg.substring(0, 300),
+    assistant: aiReply.substring(0, 300)
+  });
+  if (mem.conversations.length > 50) {
+    mem.conversations = mem.conversations.slice(-50);
+  }
+  await saveMemory(mem);
 }
 
 // ─── Cari konteks relevan di memory ─────────────────────
@@ -262,6 +349,7 @@ module.exports = {
   addFact,
   forgetTopic,
   autoExtract,
+  saveConversation,
   searchMemory,
   getMemorySummary,
   detectDomain,

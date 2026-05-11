@@ -4,18 +4,61 @@
       {
         "content": "Brian Kinayom, founder TERNION GROUP, Kupang NTT",
         "added_at": "2026-05-10T20:21:50.970Z"
+      },
+      {
+        "content": "Nama lengkap: Brian Kinayom, dipanggil Bry",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Role: Founder & Nexus Lead TERNION GROUP",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Lokasi: Kupang, NTT, Indonesia",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Email: bkinayom@gmail.com",
+        "added_at": "2026-05-11T00:00:00Z"
       }
     ],
     "business": [
       {
         "content": "Domain: procurement, konstruksi, trading komoditas",
         "added_at": "2026-05-10T20:21:50.971Z"
+      },
+      {
+        "content": "Bisnis utama TERNION GROUP: procurement, konstruksi, trading, ekspor-impor, kafe",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Pasar target: NTT, Timor Leste, Jakarta",
+        "added_at": "2026-05-11T00:00:00Z"
       }
     ],
     "decisions": [],
-    "contacts": [],
+    "contacts": [
+      {
+        "content": "Tim VECTOR: operasional lapangan TERNION GROUP",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Tim SCRIPTA: administrasi & dokumen TERNION GROUP",
+        "added_at": "2026-05-11T00:00:00Z"
+      },
+      {
+        "content": "Nama orang disebutkan: Brian dari Kupang",
+        "added_at": "2026-05-11T04:06:15.982Z"
+      }
+    ],
     "projects": []
   },
-  "conversations": [],
+  "conversations": [
+    {
+      "timestamp": "2026-05-11T04:06:15.140Z",
+      "user": "Nama saya Brian dari Kupang",
+      "assistant": "Halo Brian! Senang bertemu denganmu di Kupang, NTT."
+    }
+  ],
   "learnings": []
 }
