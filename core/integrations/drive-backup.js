@@ -94,4 +94,21 @@ async function uploadFile(localPath, driveFolderPath = "CORE-SYSTEM/memory") {
   }
 }
 
-module.exports = { uploadFile, findOrCreateFolder };
+// ─── Upload teks langsung sebagai file ke Drive ──────────
+async function uploadTextReport(content, fileName, driveFolderPath = "TERNION-AI/LAPORAN-AI") {
+  const drive = getDrive();
+  const folderId = await findOrCreateFolder(drive, driveFolderPath);
+
+  const { Readable } = require("stream");
+  const stream = Readable.from([content]);
+
+  const res = await drive.files.create({
+    resource: { name: fileName, parents: [folderId], mimeType: "text/plain" },
+    media: { mimeType: "text/plain", body: stream },
+    fields: "id,name,webViewLink"
+  });
+
+  return res.data;
+}
+
+module.exports = { uploadFile, findOrCreateFolder, uploadTextReport };
