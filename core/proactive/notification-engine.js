@@ -95,6 +95,22 @@ async function sendMorningBrief() {
 
   const ramPct = getRAMPct();
 
+  // Coba ambil jadwal Google Calendar hari ini
+  let calendarSection = "";
+  try {
+    const cal = require("../integrations/calendar");
+    const todayEvents = await cal.getTodayEvents();
+    if (todayEvents.length > 0) {
+      const eventList = todayEvents.map(e => {
+        const timeStr = e.start?.dateTime
+          ? new Date(e.start.dateTime).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Makassar" })
+          : "Sepanjang hari";
+        return `  🕐 ${timeStr} — ${e.summary}`;
+      }).join("\n");
+      calendarSection = `\n\n📅 <b>Jadwal Hari Ini:</b>\n${eventList}`;
+    }
+  } catch {}
+
   const msg =
 `🌅 <b>TERNION MORNING BRIEF</b>
 📅 ${dateStr}
@@ -103,7 +119,7 @@ async function sendMorningBrief() {
 ${proyekAktif}
 
 ⚠️ <b>Deadline &lt; 7 Hari:</b>
-${deadlineWarning}
+${deadlineWarning}${calendarSection}
 
 💻 <b>Sistem:</b> RAM ${ramPct}%
 ━━━━━━━━━━━━━━━━━━━━━

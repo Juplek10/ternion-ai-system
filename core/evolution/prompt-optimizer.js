@@ -137,7 +137,7 @@ PENTING: Output hanya teks system prompt saja, tanpa penjelasan atau komentar.`;
     const updated = await updateSystemPrompt(filePath, newPrompt);
     return updated ? newPrompt : null;
   } catch (err) {
-    console.error(`[OPTIMIZER] Claude gagal untuk ${agentName}:`, err.message);
+    console.error(`[OPTIMIZER] AI gagal untuk ${agentName}:`, err.message);
     return null;
   }
 }

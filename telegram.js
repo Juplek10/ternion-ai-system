@@ -19,6 +19,7 @@ const { runRAB } = require("./core/tools/rab-tool");
 const { runDraft } = require("./core/tools/draft-tool");
 const { runPriceCheck } = require("./core/tools/price-check-tool");
 const { searchWeb } = require("./core/tools/web-search-tool");
+const { analyzeImage, listFoto } = require("./core/tools/image-analyzer");
 
 // ─── Registry ──────────────────────────────────────────
 const { tambahKontak, cariKontak, listKontak, formatKontak } = require("./core/registry/contact-registry");
@@ -199,11 +200,11 @@ async function buildStatusText() {
     ram.totalGB= (total / 1e9).toFixed(1);
   } catch {}
 
-  let claudeStatus = "✅ Claude (primary)";
+  let aiEngineStatus = "✅ Ternion-AI (active)";
   try {
     const { execSync } = require("child_process");
     execSync("claude --version", { timeout: 5000, stdio: "pipe" });
-  } catch { claudeStatus = "❌ Claude CLI tidak tersedia"; }
+  } catch { aiEngineStatus = "⚠️ AI Engine standby"; }
 
   const soul = getSoul();
   const soulStatus = soul && soul.length > 100 ? "✅ loaded" : "❌ error";
@@ -221,7 +222,7 @@ async function buildStatusText() {
   return `⚙️ <b>STATUS TERNION-AI</b>
 ─────────────────────
 ⏰ ${timeStr} WITA
-🤖 AI: ${claudeStatus}
+🤖 AI: ${aiEngineStatus}
 📱 AI WA: ${waAiStatus}
 ${ramColor} RAM: ${ramBar} ${ram.pct}%
    ${ram.usedGB} / ${ram.totalGB} GB
@@ -412,6 +413,85 @@ async function sendDriveFolder(ctx, folderId, mode) {
     else await ctx.reply(errText);
   }
 }
+
+// ═══════════════════════════════════════════════
+// PHOTO HANDLER — ANALISA FOTO & DOKUMENTASI
+// ═══════════════════════════════════════════════
+bot.on("photo", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return ctx.reply("Unauthorized.");
+
+  const chatId = ctx.chat.id;
+  const caption = ctx.message.caption || "";
+
+  // Ambil foto resolusi tertinggi
+  const photos = ctx.message.photo;
+  const photo = photos[photos.length - 1];
+  const fileId = photo.file_id;
+
+  try {
+    await ctx.reply("⏳ Menganalisa foto...");
+
+    const file = await ctx.telegram.getFile(fileId);
+    const fileUrl = `https://api.telegram.org/file/bot${TELEGRAM_TOKEN}/${file.file_path}`;
+    const uploadDir = path.join(__dirname, "workspace", "uploads");
+
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+    const ext = file.file_path.split(".").pop() || "jpg";
+    const fileName = `tg_${Date.now()}.${ext}`;
+    const uploadPath = path.join(uploadDir, fileName);
+
+    // Download foto
+    const response = await axios({ url: fileUrl, method: "GET", responseType: "arraybuffer" });
+    fs.writeFileSync(uploadPath, Buffer.from(response.data));
+
+    // Analisa dengan AI vision
+    const result = await analyzeImage(uploadPath, caption);
+
+    await ctx.replyWithHTML(result, { disable_web_page_preview: true });
+
+  } catch (err) {
+    console.error("[PHOTO] Error:", err.message);
+    await ctx.reply(`❌ Gagal analisa foto: ${err.message}`);
+  }
+});
+
+// ─── Command: /foto ─────────────────────────────────────
+bot.command("foto", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return ctx.reply("Unauthorized.");
+
+  const args = ctx.message.text.split(" ").slice(1);
+  const sub = args[0]?.toLowerCase();
+
+  if (sub === "list") {
+    const result = await listFoto();
+    return ctx.replyWithHTML(result);
+  }
+
+  return ctx.reply(
+    "📸 <b>Fitur Foto TERNION-AI</b>\n\n" +
+    "Kirim foto langsung ke bot untuk dianalisa.\n\n" +
+    "Tambahkan caption untuk konteks:\n" +
+    "• Caption \"proyek\" / \"konstruksi\" → analisa progress\n" +
+    "• Caption \"material\" / \"mangan\" → identifikasi material\n" +
+    "• Caption \"dokumen\" / \"surat\" → OCR & ekstrak info\n\n" +
+    "<b>Commands:</b>\n" +
+    "/foto list — lihat foto tersimpan\n" +
+    "/laporan foto — kompilasi foto proyek",
+    { parse_mode: "HTML" }
+  );
+});
+
+// ─── Command: /laporan foto ─────────────────────────────
+bot.command("laporan", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return ctx.reply("Unauthorized.");
+
+  const args = ctx.message.text.split(" ").slice(1);
+  if (args[0]?.toLowerCase() === "foto") {
+    const result = await listFoto(args[1] || null);
+    return ctx.replyWithHTML(result);
+  }
+});
 
 // ═══════════════════════════════════════════════
 // DOCUMENT UPLOAD PIPELINE
@@ -1526,6 +1606,168 @@ bot.command("followup", async (ctx) => {
   } catch (err) {
     await ctx.reply(`❌ Error: ${err.message}`);
   }
+});
+
+// ═══════════════════════════════════════════════════════════
+// GOOGLE CALENDAR — JADWAL & REMINDER
+// ═══════════════════════════════════════════════════════════
+
+const pendingCalendarAuth = new Map(); // chatId → "waiting_code"
+
+// ─── Helper: jalankan calendar command dengan error handling ─
+async function withCalendar(ctx, fn) {
+  try {
+    const cal = require("./core/integrations/calendar");
+    return await fn(cal);
+  } catch (err) {
+    if (err.message && (err.message.includes("insufficient") || err.message.includes("401"))) {
+      const cal = require("./core/integrations/calendar");
+      const url = cal.getAuthUrl();
+      pendingCalendarAuth.set(ctx.chat.id, "waiting_code");
+      await ctx.replyWithHTML(
+        `🔐 <b>Perlu Otorisasi Google Calendar</b>\n\n` +
+        `Klik link berikut untuk izinkan akses:\n` +
+        `<a href="${url}">Klik di sini untuk otorisasi</a>\n\n` +
+        `Setelah dapat kode, kirim: <code>/auth-code [kode]</code>`
+      );
+    } else {
+      await ctx.reply(`❌ Calendar error: ${err.message}`);
+    }
+    return null;
+  }
+}
+
+// ─── /jadwal — event hari ini + besok ───────────────────────
+bot.command("jadwal", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.split(" ").slice(1);
+  const sub = args[0]?.toLowerCase();
+
+  await withCalendar(ctx, async (cal) => {
+    let events, title;
+
+    if (sub === "minggu") {
+      events = await cal.listEvents(7);
+      title = "JADWAL 7 HARI KE DEPAN";
+    } else if (sub === "bulan") {
+      events = await cal.listEvents(30);
+      title = "JADWAL BULAN INI";
+    } else {
+      // Default: hari ini + besok
+      events = await cal.listEvents(2);
+      title = "JADWAL TERNION";
+    }
+
+    const text = cal.formatEvents(events, title);
+    await ctx.replyWithHTML(text);
+  });
+});
+
+// ─── /deadline — event 3 hari ke depan ─────────────────────
+bot.command("deadline", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await withCalendar(ctx, async (cal) => {
+    const events = await cal.getUpcomingDeadlines(3);
+    const text = cal.formatEvents(events, "DEADLINE MENDEKAT (3 HARI)");
+    await ctx.replyWithHTML(text);
+  });
+});
+
+// ─── /tambah jadwal — tambah event ─────────────────────────
+bot.command("tambah", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace(/^\/tambah\s*/i, "").trim();
+
+  if (!args.toLowerCase().startsWith("jadwal")) {
+    return; // bukan jadwal command
+  }
+
+  const detail = args.replace(/^jadwal\s*/i, "").trim();
+  if (!detail) return ctx.reply("Format: /tambah jadwal [detail]\nContoh: /tambah jadwal Meeting tender besok jam 10");
+
+  await withCalendar(ctx, async (cal) => {
+    await ctx.reply("⏳ Parsing jadwal...");
+    const parsed = await cal.parseScheduleFromText(detail);
+
+    if (!parsed || !parsed.title || !parsed.date) {
+      return ctx.reply("❌ Gagal parse jadwal. Coba format lebih spesifik.\nContoh: Meeting tender Dinas PU besok jam 10 pagi di kantor dinas");
+    }
+
+    const event = await cal.createEvent(
+      parsed.title,
+      parsed.date,
+      parsed.time,
+      parsed.description,
+      parsed.location
+    );
+
+    const timeInfo = parsed.time ? ` jam ${parsed.time} WITA` : " (sepanjang hari)";
+    const locInfo = parsed.location ? `\n📍 ${parsed.location}` : "";
+
+    await ctx.replyWithHTML(
+      `✅ <b>Ditambahkan ke Google Calendar!</b>\n\n` +
+      `📌 ${event.summary}\n` +
+      `📅 ${new Date(parsed.date).toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}${timeInfo}` +
+      `${locInfo}\n\n` +
+      `🔗 <a href="${event.htmlLink}">Lihat di Calendar</a>`
+    );
+  });
+});
+
+// ─── /hapus jadwal — hapus event ────────────────────────────
+bot.command("hapus", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace(/^\/hapus\s*/i, "").trim();
+
+  if (!args.toLowerCase().startsWith("jadwal")) return;
+
+  const query = args.replace(/^jadwal\s*/i, "").trim();
+  if (!query) return ctx.reply("Format: /hapus jadwal [nama event atau ID]");
+
+  await withCalendar(ctx, async (cal) => {
+    // Cari event yang cocok
+    const events = await cal.listEvents(30);
+    const found = events.find(e =>
+      e.summary?.toLowerCase().includes(query.toLowerCase()) || e.id === query
+    );
+
+    if (!found) return ctx.reply(`❌ Event "${query}" tidak ditemukan dalam 30 hari ke depan.`);
+
+    await cal.deleteEvent(found.id);
+    await ctx.reply(`✅ Event dihapus: "${found.summary}"`);
+  });
+});
+
+// ─── /auth-code — terima kode OAuth ─────────────────────────
+bot.command("auth_code", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const code = ctx.message.text.split(" ").slice(1).join("").trim();
+  if (!code) return ctx.reply("Format: /auth_code [kode dari Google]");
+
+  try {
+    const cal = require("./core/integrations/calendar");
+    await cal.setTokenFromCode(code);
+    pendingCalendarAuth.delete(ctx.chat.id);
+    await ctx.reply("✅ Google Calendar berhasil diotorisasi! Coba /jadwal sekarang.");
+  } catch (err) {
+    await ctx.reply(`❌ Auth gagal: ${err.message}`);
+  }
+});
+
+// ─── /auth-calendar — link otorisasi manual ─────────────────
+bot.command("auth_calendar", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const cal = require("./core/integrations/calendar");
+  const url = cal.getAuthUrl();
+  pendingCalendarAuth.set(ctx.chat.id, "waiting_code");
+  await ctx.replyWithHTML(
+    `🔐 <b>Otorisasi Google Calendar</b>\n\n` +
+    `1. Klik link berikut:\n<a href="${url}">Otorisasi Google Calendar</a>\n\n` +
+    `2. Login dengan akun Google kamu\n` +
+    `3. Izinkan semua permissions\n` +
+    `4. Copy kode yang muncul\n` +
+    `5. Kirim: <code>/auth_code [kode]</code>`
+  );
 });
 
 bot.launch({ dropPendingUpdates: true }).catch((err) => {

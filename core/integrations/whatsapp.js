@@ -495,6 +495,26 @@ async function handleIncomingMessage(msg) {
       const filename = `wa_${Date.now()}_${senderName.replace(/\s+/g, "_")}.${ext}`;
       const localPath = path.join(UPLOADS_DIR, filename);
       await fs.writeFile(localPath, Buffer.from(media.data, "base64"));
+
+      // Analisa foto jika gambar (hanya untuk NEXUS/owner)
+      const isImage = media.mimetype.startsWith("image/");
+      if (isImage && isNexus(sender)) {
+        try {
+          const { analyzeImage } = require("../tools/image-analyzer");
+          const caption = body || "";
+          const analisa = await analyzeImage(localPath, caption);
+          // Hapus tag HTML untuk WhatsApp
+          const analisaPlain = analisa.replace(/<[^>]+>/g, "").trim();
+          await msg.reply(analisaPlain);
+          react(msg, "✅");
+        } catch (errAnalisa) {
+          console.error("[WA-VISION] Error analisa:", errAnalisa.message);
+          await msg.reply(`📸 Foto disimpan: ${filename}`);
+          react(msg, "✅");
+        }
+        return;
+      }
+
       try {
         const { uploadFile } = require("./drive-backup");
         await uploadFile(localPath, "UPLOADS");

@@ -64,9 +64,9 @@ async function checkOllama() {
   try {
     const { execSync } = require("child_process");
     execSync("claude --version", { timeout: 5000 });
-    return { ok: true, model: "Claude ✅ (primary)" };
+    return { ok: true, model: "Ternion-AI ✅ (active)" };
   } catch (err) {
-    return { ok: false, model: "Claude CLI tidak ditemukan ❌" };
+    return { ok: false, model: "AI Engine standby ⚠️" };
   }
 }
 
@@ -126,7 +126,7 @@ async function runHeartbeat() {
 
   console.log(`RAM: ${ram.usedGB}GB / ${ram.totalGB}GB (${ram.pct}%)`);
   console.log(`PM2: ${pm2.online}/${pm2.total} online`);
-  console.log(`Claude: ${ollama.model}`);
+  console.log(`AI: ${ollama.model}`);
   console.log(`Soul: ${soulOk ? "loaded" : "ERROR"}`);
   console.log("════════════════════════════════");
 
