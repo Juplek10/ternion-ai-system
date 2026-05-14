@@ -595,10 +595,11 @@ bot.on("text", async (ctx) => {
       pendingAction.delete(chatId);
       const { nomor, field } = action;
       const { updateContact } = require("./core/contacts/contact-manager");
-      const fieldMap = { nama: "nama", perusahaan: "konteks_bisnis", catatan: "konteks_bisnis" };
+      const fieldMap = { nama: "nama", perusahaan: "konteks_bisnis", catatan: "catatan" };
       const fieldKey = fieldMap[field] || field;
       await updateContact(nomor, { [fieldKey]: originalText });
-      await ctx.reply(`✅ ${field} diupdate untuk +${nomor}:\n"${originalText}"`);
+      const fieldLabel = { nama: "Nama", perusahaan: "Perusahaan", catatan: "Catatan" }[field] || field;
+      await ctx.reply(`✅ ${fieldLabel} diupdate untuk +${nomor}:\n"${originalText}"`);
       return;
     }
 
@@ -643,6 +644,30 @@ bot.on("text", async (ctx) => {
         await ctx.reply(`✅ Balasan dikirim ke ${nama}.`);
       } catch (err) {
         await ctx.reply(`❌ Gagal kirim: ${err.message}`);
+      }
+      return;
+    }
+
+    // ── Smart Suggestion: daftarkan kontak dengan nomor ──
+    if (action.action === "sg_phone") {
+      pendingAction.delete(chatId);
+      const { nama } = action;
+      const nomor = originalText.replace("+", "").replace(/\s/g, "");
+      if (!/^\d{8,15}$/.test(nomor)) {
+        await ctx.reply("❌ Nomor tidak valid. Format: 6281234567890 (tanpa +)");
+        return;
+      }
+      const { addContact, getContact } = require("./core/contacts/contact-manager");
+      const existing = await getContact(nomor).catch(() => null);
+      if (existing) {
+        await ctx.reply(`ℹ️ Nomor +${nomor} sudah terdaftar sebagai <b>${existing.nama || nomor}</b>.`, { parse_mode: "HTML" });
+      } else {
+        await addContact(nomor, { nama, kategori: "tidak_dikenal", gaya_bicara: "sopan, ramah" });
+        await ctx.replyWithHTML(
+          `✅ <b>${nama}</b> (+${nomor}) ditambahkan ke direktori.\n` +
+          `Lengkapi profil via tombol di bawah:`
+        );
+        await showWAEditDetail(ctx, nomor);
       }
       return;
     }
@@ -709,6 +734,37 @@ bot.on("text", async (ctx) => {
       await ctx.reply(`✅ Tersimpan sebagai knowledge baru:\n"${originalText.substring(0, 100)}"`);
       return;
     }
+  }
+
+  // ── Smart Contact Suggestion — deteksi nama dalam pesan ─
+  if (!text.startsWith("/") && !pendingAction.has(chatId) && !pendingFeedback.has(chatId)) {
+    try {
+      const namaRgx = /\b(?:pak|bu|bapak|ibu|bang|mas|kak)\s+([A-Za-z][a-zA-Z]+(?:\s+[A-Za-z][a-zA-Z]+)?)/gi;
+      const matches = [...originalText.matchAll(namaRgx)];
+      if (matches.length > 0) {
+        const { listContacts } = require("./core/contacts/contact-manager");
+        const allCtc = await listContacts().catch(() => []);
+        for (const m of matches.slice(0, 2)) {
+          const namaDisebut = m[1].trim();
+          const namaLower = namaDisebut.toLowerCase();
+          const found = allCtc.find(c => c.nama && c.nama.toLowerCase().includes(namaLower));
+          if (!found && namaLower.length >= 3) {
+            const encoded = namaDisebut.replace(/\s+/g, "_").substring(0, 20);
+            ctx.reply(
+              `💡 <b>"${namaDisebut}"</b> belum ada di direktori TERNION.\nMau didaftarkan?`,
+              {
+                parse_mode: "HTML",
+                reply_markup: { inline_keyboard: [[
+                  btn("✅ Daftarkan", `sg:yes:${encoded}`),
+                  btn("⏭️ Nanti", `sg:no:${encoded}`)
+                ]] }
+              }
+            ).catch(() => {});
+            break;
+          }
+        }
+      }
+    } catch {}
   }
 
   console.log("CMD:", text.substring(0, 60));
@@ -1546,6 +1602,27 @@ bot.on("callback_query", async (ctx) => {
   if (data === "wa:st") { await ctx.sendChatAction("typing").catch(()=>{}); await showWAStatus(ctx, "edit"); return; }
   if (data === "wa:ed:start") { await showWAEditMenu(ctx, "edit"); return; }
 
+  // WA Export via tombol
+  if (data === "wa:exp") {
+    await editMenu(ctx, "⏳ Mengekspor direktori kontak ke Drive...", []);
+    try {
+      const { listContacts } = require("./core/contacts/contact-manager");
+      const all = await listContacts();
+      const fsExtra = require("fs-extra");
+      const exportData = { exported_at: new Date().toISOString(), total: all.length, contacts: all };
+      const tmpFile = "/tmp/ternion-contacts-export.json";
+      await fsExtra.writeJson(tmpFile, exportData, { spaces: 2 });
+      const { uploadFile } = require("./core/integrations/drive-backup");
+      await uploadFile(tmpFile, "CORE-SYSTEM/contacts");
+      await editMenu(ctx,
+        `✅ <b>Direktori diexport ke Drive</b>\n📁 Folder: CORE-SYSTEM/contacts\n👥 Total: ${all.length} kontak`,
+        [[btnBack("wa:m")]]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Export gagal: ${err.message}`, [[btnBack("wa:m")]]);
+    }
+    return;
+  }
+
   // WA kirim ke kontak
   if (data === "wa:k:manual") {
     pendingAction.set(chatId, { action: "wa_kirim_manual" });
@@ -1869,6 +1946,25 @@ bot.on("callback_query", async (ctx) => {
       `💬 Ketik balasan manual untuk <b>${approval.nama}</b>:`,
       [[btn("❌ Batal", "wa:st")]]
     );
+    return;
+  }
+
+  // ── SMART CONTACT SUGGESTION CALLBACKS ────────────────
+  const sgYesMatch = data.match(/^sg:yes:(.+)$/);
+  if (sgYesMatch) {
+    const namaEncoded = sgYesMatch[1];
+    const namaSuggest = namaEncoded.replace(/_/g, " ");
+    pendingAction.set(chatId, { action: "sg_phone", nama: namaSuggest });
+    await editMenu(ctx,
+      `📱 Ketik nomor WA <b>${namaSuggest}</b>:\n<i>(contoh: 6281234567890, tanpa +)</i>`,
+      [[btn("❌ Batal", "h")]]);
+    return;
+  }
+
+  const sgNoMatch = data.match(/^sg:no:(.+)$/);
+  if (sgNoMatch) {
+    await ctx.answerCbQuery("Dilewati.").catch(() => {});
+    await editMenu(ctx, `⏭️ Dilewati. Ketik /wa_add kapan saja untuk mendaftarkan kontak baru.`, [[btnHome()]]);
     return;
   }
 
@@ -2236,6 +2332,7 @@ async function showWAEditDetail(ctx, nomor) {
     `📱 Nomor: +${c.nomor}\n` +
     `🏷️ Posisi: ${c.kategori}${c.sub_kategori ? "/" + c.sub_kategori : ""}\n` +
     `🏢 Perusahaan: ${c.konteks_bisnis || "—"}\n` +
+    `📝 Catatan: ${c.catatan || "—"}\n` +
     `💬 Interaksi: ${c.total_interactions || 0}x\n` +
     `📅 Terakhir: ${c.last_interaction ? c.last_interaction.split("T")[0] : "belum"}`;
 
@@ -2349,7 +2446,7 @@ async function showWAStatus(ctx, mode = "send") {
 // ─── /wa_export → Export direktori ke Drive ───────────────
 bot.command("wa_export", async (ctx) => {
   if (!isAuthorized(ctx.chat.id)) return;
-  await editMenu(ctx, "⏳ Mengekspor direktori kontak ke Drive...", []);
+  const msg = await ctx.reply("⏳ Mengekspor direktori kontak ke Drive...");
   try {
     const { listContacts } = require("./core/contacts/contact-manager");
     const all = await listContacts();
@@ -2363,7 +2460,7 @@ bot.command("wa_export", async (ctx) => {
     await fsExtra.writeJson(tmpFile, exportData, { spaces: 2 });
     const { uploadFile } = require("./core/integrations/drive-backup");
     await uploadFile(tmpFile, "CORE-SYSTEM/contacts");
-    await ctx.reply(`✅ Direktori diexport ke Drive\nFolder: CORE-SYSTEM/contacts\nTotal: ${all.length} kontak`);
+    await ctx.reply(`✅ <b>Direktori diexport ke Drive</b>\n📁 Folder: CORE-SYSTEM/contacts\n👥 Total: ${all.length} kontak`, { parse_mode: "HTML" });
   } catch (err) {
     await ctx.reply(`❌ Export gagal: ${err.message}`);
   }

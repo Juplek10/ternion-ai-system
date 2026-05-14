@@ -90,6 +90,10 @@ function getSystemPrompt(kontak) {
     prompt += `\n\nKonteks bisnis: ${kontak.konteks_bisnis}`;
   }
 
+  if (kontak?.catatan) {
+    prompt += `\n\nCatatan khusus tentang kontak ini: ${kontak.catatan}`;
+  }
+
   if (kontak?.history_proyek?.length > 0) {
     prompt += `\n\nProyek terkait: ${kontak.history_proyek.slice(-3).join(", ")}`;
   }
@@ -121,7 +125,10 @@ const POSITION_GREETINGS = {
     return `Halo ${nama || "Bapak/Ibu"}, ada update stok atau harga mangan hari ini?`;
   },
   relasi:       (nama) => `Halo ${nama || ""}${nama ? ", " : ""}apa kabar? Ada yang bisa saya bantu?`,
-  pemerintah:   (nama) => `Selamat datang, ada yang bisa kami bantu terkait kebutuhan Bapak/Ibu${nama ? " " + nama : ""}?`,
+  pemerintah:   (nama, sub) => {
+    if (sub === "tni_polri") return `Selamat datang${nama ? ", " + nama : ""}. Ada yang bisa kami bantu?`;
+    return `Selamat datang, ada yang bisa kami bantu terkait kebutuhan Bapak/Ibu${nama ? " " + nama : ""}?`;
+  },
   tidak_dikenal: () => `Halo! Selamat datang di TERNION GROUP. Boleh saya tahu nama dan keperluan Anda?`
 };
 
