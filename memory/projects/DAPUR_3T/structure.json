@@ -1,0 +1,1559 @@
+{
+  "nama": "DAPUR 3T",
+  "drive_id": "1gutDOR0jq9aMdcGgXp3BiT4XBcEQv4vP",
+  "files": {
+    "rab": {
+      "id": "1xe9dbqe-FBO8SDPMDXFJCzqyp36pCu_MEZVvrYWI8M0",
+      "nama": "RAB DAPUR 3T PER DESA",
+      "mimeType": "application/vnd.google-apps.spreadsheet"
+    },
+    "kontrak": null,
+    "lainnya": []
+  },
+  "kabupaten": [
+    {
+      "nama": "KABUPATEN BELU",
+      "drive_id": "1l9Mpb5IzPbEScCPFbyJ-0JZe8ThTLtIe",
+      "desa": [
+        {
+          "nama": "Aitoun",
+          "drive_id": "1OnKJyjxm91mw_j2aKoWTIrvoMVOnqzdY",
+          "foto": [
+            {
+              "id": "1P2GgN2SbG7wGlxC29oe2U6K0yV12zaeA",
+              "nama": "Drop Material.jpeg",
+              "tanggal": "2026-05-14T08:56:15.338Z",
+              "pengirim": null,
+              "drive_folder": "1OnKJyjxm91mw_j2aKoWTIrvoMVOnqzdY"
+            },
+            {
+              "id": "1wZKFpz-nXQZfoFALLIrau7t5-XzgysnN",
+              "nama": "Pembersian Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.627Z",
+              "pengirim": null,
+              "drive_folder": "1OnKJyjxm91mw_j2aKoWTIrvoMVOnqzdY"
+            },
+            {
+              "id": "1XNN7gCy8D21rSsGoIBLVOHJSfsRHmGOq",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.672Z",
+              "pengirim": null,
+              "drive_folder": "1OnKJyjxm91mw_j2aKoWTIrvoMVOnqzdY"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Asumanu",
+          "drive_id": "1uVBulorAWaMGhj-vQjWskpgY7Rw3BcMG",
+          "foto": [
+            {
+              "id": "11kLlV_k2t7D9RnqDTMa8Cs9kcAft3ilj",
+              "nama": "Pembuatan Kusen Pintu.jpeg",
+              "tanggal": "2026-05-14T08:56:15.133Z",
+              "pengirim": null,
+              "drive_folder": "1uVBulorAWaMGhj-vQjWskpgY7Rw3BcMG"
+            },
+            {
+              "id": "1LCEm0aa8-bw6pVJZlsBRoZ-RI1w6oUoy",
+              "nama": "Selesai penggalian dan sedang menunggu distribusi panel.jpeg",
+              "tanggal": "2026-05-14T08:56:15.756Z",
+              "pengirim": null,
+              "drive_folder": "1uVBulorAWaMGhj-vQjWskpgY7Rw3BcMG"
+            },
+            {
+              "id": "1xKoMGGa8GC1K9fv2NNxz6KqtDF_BZldr",
+              "nama": "Survey Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.404Z",
+              "pengirim": null,
+              "drive_folder": "1uVBulorAWaMGhj-vQjWskpgY7Rw3BcMG"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Dafala",
+          "drive_id": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp",
+          "foto": [
+            {
+              "id": "1QQvmIMhEd0YiVOesHUwq_29ZXP9oe8I7",
+              "nama": "Drop Kusen Pintu dan Jendela.jpeg",
+              "tanggal": "2026-05-14T08:56:06.629Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1aeNOLimHJO3dhKwO5DJnz5rdmEWafcF4",
+              "nama": "Lanjut Pemasangan Kusen Pintu dan Jendela.jpeg",
+              "tanggal": "2026-05-14T08:56:06.510Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1sNy6Xi1k4DfxAR3o5uO6HIf4uYgDVE0y",
+              "nama": "Lanjut pembuatan gewel dinding atap.jpeg",
+              "tanggal": "2026-05-14T08:56:08.114Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1oHHDQqXEtABQAioh12I9wklAXMj1Lc3e",
+              "nama": "Lanjutan pekerjaan dinding segitiga gewel atap.jpeg",
+              "tanggal": "2026-05-14T08:56:08.623Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "19LTO0uRFz3b0eSGsXPRKvqxVRKEQazd4",
+              "nama": "pekerjaaan kolom panel.jpeg",
+              "tanggal": "2026-05-14T08:56:08.808Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1rAacZ-UAbMh93LUoE5PgAHaZ-12NcMQh",
+              "nama": "Pekerjaan kuda-kuda gewel batu bagian belakang.jpeg",
+              "tanggal": "2026-05-14T08:56:10.960Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1aV2DVbQAdnyXiEtQEWX23wxkU3YWHbU9",
+              "nama": "Pekerjaan Pasangan dinding gewel atap dan acian.jpeg",
+              "tanggal": "2026-05-14T08:56:10.622Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1Idsk4co5h9BT1amCaWmNpfoQZGINorPH",
+              "nama": "Pekerjaan pemasangan Panel.jpeg",
+              "tanggal": "2026-05-14T08:56:10.498Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1nLHwkqzOJysa7M1KMz0FW3VUjseZl6Yb",
+              "nama": "pekerjaan pemasangan pondasi dan pemasangan risha.jpeg",
+              "tanggal": "2026-05-14T08:56:10.470Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "15AHHYt0rumi1bDFCnJfEPtEzcMj3Tc-G",
+              "nama": "Pemasangan Dinding Batako.jpeg",
+              "tanggal": "2026-05-14T08:56:10.798Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1GFKaeTUMbQaYWDmtYtcR0K2-v6O0n8p8",
+              "nama": "Pemasangan Kusen Pintu dan Jendela.jpeg",
+              "tanggal": "2026-05-14T08:56:11.031Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1Q8UN8iteHlWE-ARE8hJ7gLn5ipo5JeG_",
+              "nama": "Pematokan Lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:10.870Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "18F9jnQ3tXSnwmuSUvPEkgUdfCKRrSt2f",
+              "nama": "Selesai pekerjaan struktur.jpeg",
+              "tanggal": "2026-05-14T08:56:10.161Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            },
+            {
+              "id": "1VlA-_sJkFFGHF1nCoQMrPHvDoxlEqiJ0",
+              "nama": "Selesai Pemasangan Kusen.jpeg",
+              "tanggal": "2026-05-14T08:56:10.727Z",
+              "pengirim": null,
+              "drive_folder": "1E1zNnPw4cXpXthNeqgjyD9_Xgp0y1OWp"
+            }
+          ],
+          "total_foto": 14,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Dirun",
+          "drive_id": "1Wl5-RyAX8iGf4vqFALQjiHJi-a_IllMk",
+          "foto": [
+            {
+              "id": "13wu35UFQZvJDdGIhK5RFgMRUJTjzH9lf",
+              "nama": "Pembersian Lokasi.png",
+              "tanggal": "2026-05-14T08:56:05.750Z",
+              "pengirim": null,
+              "drive_folder": "1Wl5-RyAX8iGf4vqFALQjiHJi-a_IllMk"
+            },
+            {
+              "id": "1wbyYwIwz609NTl-TlaTUYYGHDxxTqLP6",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:06.648Z",
+              "pengirim": null,
+              "drive_folder": "1Wl5-RyAX8iGf4vqFALQjiHJi-a_IllMk"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Dualasi Rai Ulun",
+          "drive_id": "1a2EF0kxA3xLps2Ntr4MYIoqJFjjjED6g",
+          "foto": [
+            {
+              "id": "1qC9Yh04oSxuZXXe3IDRofP8j2xVmSF9J",
+              "nama": "Pematokan Lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:14.616Z",
+              "pengirim": null,
+              "drive_folder": "1a2EF0kxA3xLps2Ntr4MYIoqJFjjjED6g"
+            },
+            {
+              "id": "1G3kzmURHstb0HASznw2rvMuX1p3mX1dl",
+              "nama": "Pematokan Profil pondasi.jpeg",
+              "tanggal": "2026-05-14T08:56:14.745Z",
+              "pengirim": null,
+              "drive_folder": "1a2EF0kxA3xLps2Ntr4MYIoqJFjjjED6g"
+            },
+            {
+              "id": "1-S3zEdHjLm5JpRsk5EdZqilHQipIeMAc",
+              "nama": "Pembuatan Kusen Pintu.jpeg",
+              "tanggal": "2026-05-14T08:56:13.939Z",
+              "pengirim": null,
+              "drive_folder": "1a2EF0kxA3xLps2Ntr4MYIoqJFjjjED6g"
+            },
+            {
+              "id": "10lZKM9ftDcfOlWUqsIXk-oeP-4yM0NnN",
+              "nama": "Selesai Pemerataan Tanah.jpeg",
+              "tanggal": "2026-05-14T08:56:14.852Z",
+              "pengirim": null,
+              "drive_folder": "1a2EF0kxA3xLps2Ntr4MYIoqJFjjjED6g"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Dualaus",
+          "drive_id": "1yKHEtmypk-iabzCQm7V04uwTXW85x0aQ",
+          "foto": [
+            {
+              "id": "1ZG8CJhkJwO9fifKjnEcJWMXbM1xFC3Oo",
+              "nama": "Pekerjaan Galian Pondasi untuk selsar.jpeg",
+              "tanggal": "2026-05-14T08:56:11.318Z",
+              "pengirim": null,
+              "drive_folder": "1yKHEtmypk-iabzCQm7V04uwTXW85x0aQ"
+            },
+            {
+              "id": "1CRnhK-yF4koWzbodCBCLmf_-PxcU4qPX",
+              "nama": "Pengecoran Angkur Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:11.040Z",
+              "pengirim": null,
+              "drive_folder": "1yKHEtmypk-iabzCQm7V04uwTXW85x0aQ"
+            },
+            {
+              "id": "11GbBqoCPhS2HwoslTUf243-IT614EGlY",
+              "nama": "Pengurugan.jpeg",
+              "tanggal": "2026-05-14T08:56:10.743Z",
+              "pengirim": null,
+              "drive_folder": "1yKHEtmypk-iabzCQm7V04uwTXW85x0aQ"
+            },
+            {
+              "id": "19D8VNugNBc06g9cyCRMz3GOn9yziS6XY",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:10.885Z",
+              "pengirim": null,
+              "drive_folder": "1yKHEtmypk-iabzCQm7V04uwTXW85x0aQ"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Duarato",
+          "drive_id": "1D6TSKvXhwbK9YI7am1t7xZD8-EZF7PnE",
+          "foto": [
+            {
+              "id": "1kM2lbocGnJtBwyaJRCfkXSYAbYqvKwri",
+              "nama": "Pematokan profil Lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:11.285Z",
+              "pengirim": null,
+              "drive_folder": "1D6TSKvXhwbK9YI7am1t7xZD8-EZF7PnE"
+            },
+            {
+              "id": "1fjfNOBfUcIOa2-yoyCx0ivxP-VBf-V4N",
+              "nama": "Penurunan Material.jpeg",
+              "tanggal": "2026-05-14T08:56:11.589Z",
+              "pengirim": null,
+              "drive_folder": "1D6TSKvXhwbK9YI7am1t7xZD8-EZF7PnE"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Fatuketi",
+          "drive_id": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI",
+          "foto": [
+            {
+              "id": "1zj87uRg_P-_7EEqrufE2Fw0Pzwuv50Jh",
+              "nama": "Lanjut Pengecoran sambil menunggu Panel.jpeg",
+              "tanggal": "2026-05-14T08:56:06.582Z",
+              "pengirim": null,
+              "drive_folder": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI"
+            },
+            {
+              "id": "12tUm_O9yETiH4e1BAuN8dFaNM4r8YZQi",
+              "nama": "Menunggu Distribusi Panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:05.950Z",
+              "pengirim": null,
+              "drive_folder": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI"
+            },
+            {
+              "id": "1s8NGYtpkC9LP42y0vyMaoI0_RJYDlTFX",
+              "nama": "Menuunggu Tim teknisi untuk memasang Panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:06.602Z",
+              "pengirim": null,
+              "drive_folder": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI"
+            },
+            {
+              "id": "157W6ii18OoEqR_1v5VjlU3PujVHOiKdE",
+              "nama": "Selesai Pekerjaan Pondasi.jpeg",
+              "tanggal": "2026-05-14T08:57:37.939Z",
+              "pengirim": null,
+              "drive_folder": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI"
+            },
+            {
+              "id": "1rpZvDkol7Y3sgkUIunJXSAt6PiPRlpo-",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:05.857Z",
+              "pengirim": null,
+              "drive_folder": "1Ep3oz-ws7UFQ5gFYLwnWnr9Nj6XxbZHI"
+            }
+          ],
+          "total_foto": 5,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Fatulotu",
+          "drive_id": "1SYQ2pygniwPGvvkpPL5Z3AXi-D3xJoE3",
+          "foto": [
+            {
+              "id": "1b7H3y3QuZXecwD1kvvGtPNBSyxkOpiFo",
+              "nama": "Pematokan lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:15.473Z",
+              "pengirim": null,
+              "drive_folder": "1SYQ2pygniwPGvvkpPL5Z3AXi-D3xJoE3"
+            },
+            {
+              "id": "1F5ptGul6H5-IBLS3DHUj7Fe0PkzpXmEp",
+              "nama": "Pengerukkan dan pemerataan lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:15.225Z",
+              "pengirim": null,
+              "drive_folder": "1SYQ2pygniwPGvvkpPL5Z3AXi-D3xJoE3"
+            },
+            {
+              "id": "1Lt2R0ydqCDT7yfSWwJtaWo7hRSDFfco2",
+              "nama": "Penggalian Profil pondasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.013Z",
+              "pengirim": null,
+              "drive_folder": "1SYQ2pygniwPGvvkpPL5Z3AXi-D3xJoE3"
+            },
+            {
+              "id": "1rl3t15jv2NSKpjyio3zvUplYsCVqIrno",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.300Z",
+              "pengirim": null,
+              "drive_folder": "1SYQ2pygniwPGvvkpPL5Z3AXi-D3xJoE3"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Faturika",
+          "drive_id": "1ABuvlxUmg2LjwK0OXfgg2IGL9onj4hnB",
+          "foto": [
+            {
+              "id": "1auXfomwHG-APXzjmFgFlgUeu3Qcshw8Z",
+              "nama": "Mulai penggalian dan pemasangan selasar  Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:06.288Z",
+              "pengirim": null,
+              "drive_folder": "1ABuvlxUmg2LjwK0OXfgg2IGL9onj4hnB"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Fulur",
+          "drive_id": "1SGv2IO2vryWFyGdiqlk_y8xhlr-_8OHv",
+          "foto": [
+            {
+              "id": "1Ms-Jc_Pss3tP1yQQ3m8DheUYHiqHlAmG",
+              "nama": "Pembersihan persiapan penggalian.jpeg",
+              "tanggal": "2026-05-14T08:56:06.175Z",
+              "pengirim": null,
+              "drive_folder": "1SGv2IO2vryWFyGdiqlk_y8xhlr-_8OHv"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Kabuna",
+          "drive_id": "1e-DW1ZB5TW6VzqHTo4nWoviipMh5MoUv",
+          "foto": [
+            {
+              "id": "1WYcrvyF-xI3BzDHfGVeexRYSGp6MEL7G",
+              "nama": "Pembersihan dn pematokan Lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:11.493Z",
+              "pengirim": null,
+              "drive_folder": "1e-DW1ZB5TW6VzqHTo4nWoviipMh5MoUv"
+            },
+            {
+              "id": "1ss314vEAsooPXeHV-YFMxXCrvY1Q49gr",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:14.516Z",
+              "pengirim": null,
+              "drive_folder": "1e-DW1ZB5TW6VzqHTo4nWoviipMh5MoUv"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Kewar",
+          "drive_id": "10yqrkOSZ1lUFrkHItbHfraCByiFpDMI6",
+          "foto": [
+            {
+              "id": "1OtkTRX7LaUxNmahF4FP2kV468zKuTVpN",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:06.584Z",
+              "pengirim": null,
+              "drive_folder": "10yqrkOSZ1lUFrkHItbHfraCByiFpDMI6"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Lakan Mau",
+          "drive_id": "1Ew_lKo1Q8Ol5ogESGWkzk-HlkkPH-jyL",
+          "foto": [
+            {
+              "id": "14gWIveL2PiLiFQpzydAPZZEkLbZPhzQ6",
+              "nama": "Pembersihan Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:15.435Z",
+              "pengirim": null,
+              "drive_folder": "1Ew_lKo1Q8Ol5ogESGWkzk-HlkkPH-jyL"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Lamaksenulu",
+          "drive_id": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34",
+          "foto": [
+            {
+              "id": "1q-g0W6Eykr5pJcvJSxbod1E0wsxUvmxt",
+              "nama": "lanjutan Pematokan Profil galian pondasi.jpeg",
+              "tanggal": "2026-05-14T08:55:58.152Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1nBoirQM_FUQwEXsAH366t6jEHIeq48jz",
+              "nama": "Pekerjaan Pemerataan Lahan.jpeg",
+              "tanggal": "2026-05-14T08:55:58.386Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "12N0X2_JL9v4GTWm9vuUTWUeHY10ZOrW4",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T08:55:58.391Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1ZDl2aPRvZaU5e1KoxVyZ1tUbZxJeogOA",
+              "nama": "Pembersihan .jpeg",
+              "tanggal": "2026-05-14T08:55:57.868Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1G6XXLG3c0MqQ1-CE0f_9z7YbwT0B5fxC",
+              "nama": "Pembuasa Kusen Pintu dan Jendela .jpeg",
+              "tanggal": "2026-05-14T08:55:58.334Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1uN70zIVpWrhywI3y6CEvnJOY3tTU-4X3",
+              "nama": "Pembuatan penahan sekaliagus buat selasar.jpeg",
+              "tanggal": "2026-05-14T08:55:58.297Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1Ix4hLiWGFoT1wPQXQyJVxZ_-cW_ux2vO",
+              "nama": "Pertemuan dengan Kepala Daerah_Bupati.jpeg",
+              "tanggal": "2026-05-14T08:55:57.535Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            },
+            {
+              "id": "1s5Y_l7pO3LXtoaaL7xkp9gYLw8Duj1nj",
+              "nama": "Profil untuk penggalian pondasi.jpeg",
+              "tanggal": "2026-05-14T08:55:59.602Z",
+              "pengirim": null,
+              "drive_folder": "1URhdKnK8JxSk8wlKsjfVR47RqiNXfi34"
+            }
+          ],
+          "total_foto": 8,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Lawalutolus",
+          "drive_id": "1cn8GuVW07abFRzn5g1rRK9leNZkNVqok",
+          "foto": [
+            {
+              "id": "1i4go1cTuv7PmYshC4ykBDggETPVo3Lbs",
+              "nama": "Pematokan dan penggalian Profil Pondasi.jpeg",
+              "tanggal": "2026-05-14T08:56:03.144Z",
+              "pengirim": null,
+              "drive_folder": "1cn8GuVW07abFRzn5g1rRK9leNZkNVqok"
+            },
+            {
+              "id": "1I1bFY2N-qPCOxdyPFIR6YZOzXnBJ2yBS",
+              "nama": "Survey Lokasi profil pembangunan dapur.jpeg",
+              "tanggal": "2026-05-14T08:56:03.607Z",
+              "pengirim": null,
+              "drive_folder": "1cn8GuVW07abFRzn5g1rRK9leNZkNVqok"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Leuntolu",
+          "drive_id": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC",
+          "foto": [
+            {
+              "id": "118VtS52PcZffyAjFlk2D79304f9ST13X",
+              "nama": "Lanjut Pemasangan Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:02.508Z",
+              "pengirim": null,
+              "drive_folder": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC"
+            },
+            {
+              "id": "1iY-T1IG38acjk090vrb1xm2TjPVW3p_I",
+              "nama": "Lanjutan Pemasangan Rish oleh Teknisi.jpeg",
+              "tanggal": "2026-05-14T08:56:02.488Z",
+              "pengirim": null,
+              "drive_folder": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC"
+            },
+            {
+              "id": "1daKNyHWMsMCdsNEd4su1sUjbJejs2CG5",
+              "nama": "Pemasangan Risha Oleh Teknisi Risha .jpeg",
+              "tanggal": "2026-05-14T08:56:02.670Z",
+              "pengirim": null,
+              "drive_folder": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC"
+            },
+            {
+              "id": "1ZiLYNRR_EUNvF6vz0qX5LfCau8MBqXeM",
+              "nama": "Penurunan Material Batu kali dan pasir.jpeg",
+              "tanggal": "2026-05-14T08:56:02.245Z",
+              "pengirim": null,
+              "drive_folder": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC"
+            },
+            {
+              "id": "1JdQVE-hk3d_HBxAi_JCQT3WNKTSjKZ_g",
+              "nama": "Sudah profil dan sementara gali.jpeg",
+              "tanggal": "2026-05-14T08:56:02.619Z",
+              "pengirim": null,
+              "drive_folder": "1G3LV5rnzHwpCfg5HIov6KQzVCsYgIVYC"
+            }
+          ],
+          "total_foto": 5,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Makir",
+          "drive_id": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F",
+          "foto": [
+            {
+              "id": "14sgNT7doTU2Z2jExlxYf3BRJ_SzcPaMT",
+              "nama": "Menunggu Teknisi untuk pasang Panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:01.757Z",
+              "pengirim": null,
+              "drive_folder": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F"
+            },
+            {
+              "id": "1fmTTnWY7zQbVDmwbTacD49g2m24-ZQcT",
+              "nama": "Pemasangan pondasi selasar Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:01.898Z",
+              "pengirim": null,
+              "drive_folder": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F"
+            },
+            {
+              "id": "15Z6HMR2G4cGZfs5FlwLFBtJCOYxsq17F",
+              "nama": "Pembersihan Lahan.jpg",
+              "tanggal": "2026-05-14T08:56:02.514Z",
+              "pengirim": null,
+              "drive_folder": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F"
+            },
+            {
+              "id": "1lS6q8zqwBpVmqbAEc_kovVqeU4h4qL17",
+              "nama": "Penurunan Material.jpeg",
+              "tanggal": "2026-05-14T08:56:01.757Z",
+              "pengirim": null,
+              "drive_folder": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F"
+            },
+            {
+              "id": "14qhV1NT-rOo4H7_u-3jlDtglXqmEPKua",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:02.355Z",
+              "pengirim": null,
+              "drive_folder": "1Dan0jfUMvmfsogYXU1sDSjvYkuQUq79F"
+            }
+          ],
+          "total_foto": 5,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Mandeu Raimanus",
+          "drive_id": "1rJwXordo3T2UQ4FRV4w2Xlq63F2Ex1YY",
+          "foto": [
+            {
+              "id": "1dpJ8wooBUt0GEpltHg47HrCvVPb1f9uo",
+              "nama": "Pematokan Profil lahan.jpeg",
+              "tanggal": "2026-05-14T08:55:54.325Z",
+              "pengirim": null,
+              "drive_folder": "1rJwXordo3T2UQ4FRV4w2Xlq63F2Ex1YY"
+            },
+            {
+              "id": "1OdhAFwUuRqk21iHQheze8aDV5LC6usjG",
+              "nama": "Penggalian pondasi tiang pedestal.jpeg",
+              "tanggal": "2026-05-14T08:55:54.373Z",
+              "pengirim": null,
+              "drive_folder": "1rJwXordo3T2UQ4FRV4w2Xlq63F2Ex1YY"
+            },
+            {
+              "id": "1PB7FIAklN4sF8MqlP13VscN1H4sQ3mdX",
+              "nama": "Survey Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:54.176Z",
+              "pengirim": null,
+              "drive_folder": "1rJwXordo3T2UQ4FRV4w2Xlq63F2Ex1YY"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Maneikun",
+          "drive_id": "1CKgiJSpqn1YVlKjsenDiKxif1ES99Ne4",
+          "foto": [
+            {
+              "id": "10AO-pUNnjFbn83AdmlaobaMW0oWpa7x0",
+              "nama": "Pembersihan Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:54.329Z",
+              "pengirim": null,
+              "drive_folder": "1CKgiJSpqn1YVlKjsenDiKxif1ES99Ne4"
+            },
+            {
+              "id": "1m7TrHmOFxeXHvgxkkl3nKdvtO753QFbh",
+              "nama": "Penurunan Material Pasir.jpeg",
+              "tanggal": "2026-05-14T08:55:53.785Z",
+              "pengirim": null,
+              "drive_folder": "1CKgiJSpqn1YVlKjsenDiKxif1ES99Ne4"
+            },
+            {
+              "id": "1eG6clEkMCHYRquFfA4rvCEshFeCXQ6Wi",
+              "nama": "Survey Lokasi .jpeg",
+              "tanggal": "2026-05-14T08:55:54.348Z",
+              "pengirim": null,
+              "drive_folder": "1CKgiJSpqn1YVlKjsenDiKxif1ES99Ne4"
+            },
+            {
+              "id": "1sYWlvlWMupKmkHbqdAKXqaZRaO0IMnwB",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:54.296Z",
+              "pengirim": null,
+              "drive_folder": "1CKgiJSpqn1YVlKjsenDiKxif1ES99Ne4"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Maudemu",
+          "drive_id": "1wJ5L1Kw5wqljR1Z2fhJk3eqyEM5dbEvY",
+          "foto": [
+            {
+              "id": "1TP7dvxRdrd-FiiR5Ifl7E4348GoUuWCf",
+              "nama": "Profil Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:58.312Z",
+              "pengirim": null,
+              "drive_folder": "1wJ5L1Kw5wqljR1Z2fhJk3eqyEM5dbEvY"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Maumutin",
+          "drive_id": "1BBLtkkFC9KbYF_W8Niao3zZ0nhe7ph-H",
+          "foto": [
+            {
+              "id": "17mpIdQQB-GU6zQ2HUfn6zg0XHKkFhlPI",
+              "nama": "Drop material pasir dan panel risha.jpeg",
+              "tanggal": "2026-05-14T08:56:01.551Z",
+              "pengirim": null,
+              "drive_folder": "1BBLtkkFC9KbYF_W8Niao3zZ0nhe7ph-H"
+            },
+            {
+              "id": "1Yyi8UQKS5otKIhwPIwwgnmWsknMutZo8",
+              "nama": "Lanjut pemasangan selasar Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:02.330Z",
+              "pengirim": null,
+              "drive_folder": "1BBLtkkFC9KbYF_W8Niao3zZ0nhe7ph-H"
+            },
+            {
+              "id": "1YnbSj9J86PnAOMz5QKW5dqMQciaUsw-Q",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:01.899Z",
+              "pengirim": null,
+              "drive_folder": "1BBLtkkFC9KbYF_W8Niao3zZ0nhe7ph-H"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Raifatus",
+          "drive_id": "1fNwXt41cQ8ZAS4Twv7r12cu41XZ2t1F_",
+          "foto": [
+            {
+              "id": "1AoaoYxZlrilrd9EwliRrp_XTi373Pqfj",
+              "nama": "Penggalian pondasi kolom.jpeg",
+              "tanggal": "2026-05-14T08:55:54.321Z",
+              "pengirim": null,
+              "drive_folder": "1fNwXt41cQ8ZAS4Twv7r12cu41XZ2t1F_"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Renrua",
+          "drive_id": "1pMP6hfUkpqEHewrnTT6A36anLgqv3DyJ",
+          "foto": [
+            {
+              "id": "1jaSwoiS7RusMyoT4rp-FXaSQ7cBZJUxP",
+              "nama": "Pekerjaan Pondasi.jpeg",
+              "tanggal": "2026-05-14T08:56:00.086Z",
+              "pengirim": null,
+              "drive_folder": "1pMP6hfUkpqEHewrnTT6A36anLgqv3DyJ"
+            },
+            {
+              "id": "1xWCfFVRNcoJk2s6whco6PB3IRJgFngYt",
+              "nama": "pemasangan pondasi Salazar dengan  pengecoran Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:00.246Z",
+              "pengirim": null,
+              "drive_folder": "1pMP6hfUkpqEHewrnTT6A36anLgqv3DyJ"
+            },
+            {
+              "id": "1FWmBgR26BqsTE7zVU1cLYXOC0LznQSs6",
+              "nama": "Survey Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:00.408Z",
+              "pengirim": null,
+              "drive_folder": "1pMP6hfUkpqEHewrnTT6A36anLgqv3DyJ"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Sadi",
+          "drive_id": "1bwgIDFEZKAWz1Gk5QyQEUb4ZnYF8qE-z",
+          "foto": [
+            {
+              "id": "1pYhbqASddLpfi8CegouGIjWOIrKkCGvI",
+              "nama": "Drop material panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:56:05.993Z",
+              "pengirim": null,
+              "drive_folder": "1bwgIDFEZKAWz1Gk5QyQEUb4ZnYF8qE-z"
+            },
+            {
+              "id": "1gixaNW9dpSnmlSffyJAuCI5INknlC15G",
+              "nama": "Penggalian Profil pondasi.jpeg",
+              "tanggal": "2026-05-14T08:56:05.847Z",
+              "pengirim": null,
+              "drive_folder": "1bwgIDFEZKAWz1Gk5QyQEUb4ZnYF8qE-z"
+            },
+            {
+              "id": "15wJsAxIYdDjEeKHqB_-ddU5aCmNm5-ot",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:56:05.645Z",
+              "pengirim": null,
+              "drive_folder": "1bwgIDFEZKAWz1Gk5QyQEUb4ZnYF8qE-z"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Silawan",
+          "drive_id": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol",
+          "foto": [
+            {
+              "id": "10Hemb_SPNPU3HD1eKvNvFPxf40z6akQO",
+              "nama": "Pembuatan Kusen Pintu.jpeg",
+              "tanggal": "2026-05-14T08:55:53.948Z",
+              "pengirim": null,
+              "drive_folder": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol"
+            },
+            {
+              "id": "1OcMeXmxTDf9MyLKygs1F2ZMma6lUQPSG",
+              "nama": "Penggalian pondasi sudah di lakukan menunggu baut untuk pasang Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:54.296Z",
+              "pengirim": null,
+              "drive_folder": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol"
+            },
+            {
+              "id": "1PsdyienlzPUR6qd3fEVJ3MvMR1xkyZ9n",
+              "nama": "Pengukuran profil dan penempatan panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:54.294Z",
+              "pengirim": null,
+              "drive_folder": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol"
+            },
+            {
+              "id": "1TMm6SiGX4mZcTI-4loYrEtPWSZIbCT_M",
+              "nama": "penurunan panel risha.jpeg",
+              "tanggal": "2026-05-14T08:55:54.181Z",
+              "pengirim": null,
+              "drive_folder": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol"
+            },
+            {
+              "id": "1lCYDbLCBySzx7eP7Z2CeMlrdM3NvRtXn",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:54.059Z",
+              "pengirim": null,
+              "drive_folder": "156z6rnCgFMpq5LmzHwVpJwijdKF2_6Ol"
+            }
+          ],
+          "total_foto": 5,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Takirin",
+          "drive_id": "1Bv3B18K9qSz0m9kUmjImTVyRT8D8uuWd",
+          "foto": [
+            {
+              "id": "1mbZUwp5hAKSuwYR3Zz7grIPVv6pnLt_U",
+              "nama": "Sudah Ada Pondasi menunggu pemasangan Panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:58.239Z",
+              "pengirim": null,
+              "drive_folder": "1Bv3B18K9qSz0m9kUmjImTVyRT8D8uuWd"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Tasin",
+          "drive_id": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r",
+          "foto": [
+            {
+              "id": "1KKfGXTz5_x_lSTMsxhG0ovMYSUcZdnNc",
+              "nama": "Lanjutan Pekerjaan Pemasangan Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:54.221Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1yPW73mPaPSo_KVw_ovSN5-qUY_UHOSaS",
+              "nama": "Lanjutan Pemasangan Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:56.844Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1ctAzYmWjxUCNSYEnOIcCLIQ8CsYsBP4c",
+              "nama": "Pemasangan dan pengecoran Risha bagian bawah _.jpg",
+              "tanggal": "2026-05-14T08:55:57.026Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1c1QW8RQ51_JbPuTVC_CyBu3o1ucJ5Slr",
+              "nama": "Pemasangan Panel Risha.jpeg",
+              "tanggal": "2026-05-14T08:55:57.312Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1x47OqZe0sXBD08xTyuAjCYEdzFXDiiuf",
+              "nama": "pemasangan pondasi Salasar dengan pengecoran tiang risha.jpeg",
+              "tanggal": "2026-05-14T08:55:57.432Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1BaBfenLklovGxvX2ecc78TipfjT7JdbO",
+              "nama": "Penggalian untuk pemasangan pondasi risha.jpeg",
+              "tanggal": "2026-05-14T08:55:58.478Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "1bRztiziUBfxChLjfdUERBNEC5FLc1LYl",
+              "nama": "penurunan material risha di lokasi.jpeg",
+              "tanggal": "2026-05-14T08:55:58.075Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            },
+            {
+              "id": "17UcZ_0qwKlu3i539YBqed69nJ-W6EYB3",
+              "nama": "Proses penggalian untuk pemasangan risha.jpeg",
+              "tanggal": "2026-05-14T08:55:57.868Z",
+              "pengirim": null,
+              "drive_folder": "1eHe0KdGlrewOB3Q9BWIRD7IwH7dNEK_r"
+            }
+          ],
+          "total_foto": 8,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Tulakadi",
+          "drive_id": "15tz7Q7ohkosx6PGkpLMgyDs1cbjOcN9Y",
+          "foto": [
+            {
+              "id": "1NzaFiStNI4CVXjrcElXlqTPwm7ybvLHT",
+              "nama": "Pengukuran luas lahan.jpeg",
+              "tanggal": "2026-05-14T08:56:03.535Z",
+              "pengirim": null,
+              "drive_folder": "15tz7Q7ohkosx6PGkpLMgyDs1cbjOcN9Y"
+            }
+          ],
+          "total_foto": 1,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Umaklaran",
+          "drive_id": "1RYkXqmI7h36ANAKpCO4M0IV2c2miG6hK",
+          "foto": [
+            {
+              "id": "1gs06yigVQUAPhx76EKE3ZW2cSUsE-_IE",
+              "nama": "Pembuatn Kusen Pintu.jpeg",
+              "tanggal": "2026-05-14T08:55:54.049Z",
+              "pengirim": null,
+              "drive_folder": "1RYkXqmI7h36ANAKpCO4M0IV2c2miG6hK"
+            },
+            {
+              "id": "1FgzFyS-2lSOzqHKfLxcIATaC3dclszxV",
+              "nama": "Survey lokasi dan enunggu tukang dan material untuk pengerjaan pondasi.jpeg",
+              "tanggal": "2026-05-14T08:55:54.435Z",
+              "pengirim": null,
+              "drive_folder": "1RYkXqmI7h36ANAKpCO4M0IV2c2miG6hK"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        }
+      ]
+    },
+    {
+      "nama": "KABUPATEN TTS",
+      "drive_id": "1rxSdB8Uw7IO9L7gWzqOtqUi8lv2c1Hgd",
+      "desa": [
+        {
+          "nama": "Bonleu",
+          "drive_id": "1piZpktthxRJGLEdhDXX6R8_qg0nyeR7R",
+          "foto": [
+            {
+              "id": "1pcUv8tMfp8IawqAxND3ulmt110HYk0EC",
+              "nama": "Penentuan Titik Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.262Z",
+              "pengirim": null,
+              "drive_folder": "1piZpktthxRJGLEdhDXX6R8_qg0nyeR7R"
+            },
+            {
+              "id": "1i-vIEyL4oziiCAdqNZ0FVaKDiImU71Fj",
+              "nama": "Penggalian Profil Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.167Z",
+              "pengirim": null,
+              "drive_folder": "1piZpktthxRJGLEdhDXX6R8_qg0nyeR7R"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Enoneontes",
+          "drive_id": "1tE7pcMlQ95PafPBWPuyHiBCHpE-k8KUY",
+          "foto": [
+            {
+              "id": "1yJc8W6hAln9DxYwkM9lDeUmDjsqIbFO3",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T09:10:57.800Z",
+              "pengirim": null,
+              "drive_folder": "1tE7pcMlQ95PafPBWPuyHiBCHpE-k8KUY"
+            },
+            {
+              "id": "1Y_NV6cNlGB0YGJ_r1l523TfRIwGY9Hpj",
+              "nama": "Penurunan material.jpeg",
+              "tanggal": "2026-05-14T09:10:57.786Z",
+              "pengirim": null,
+              "drive_folder": "1tE7pcMlQ95PafPBWPuyHiBCHpE-k8KUY"
+            },
+            {
+              "id": "1cIHUJ-_iIrxCYpcRuRqFE14q37USwXnx",
+              "nama": "persiapan lahan.jpeg",
+              "tanggal": "2026-05-14T09:10:58.397Z",
+              "pengirim": null,
+              "drive_folder": "1tE7pcMlQ95PafPBWPuyHiBCHpE-k8KUY"
+            },
+            {
+              "id": "1hPn9rpaEUcxdZDFJz205okMjbDzhxhgE",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.417Z",
+              "pengirim": null,
+              "drive_folder": "1tE7pcMlQ95PafPBWPuyHiBCHpE-k8KUY"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Fatukopa",
+          "drive_id": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR",
+          "foto": [
+            {
+              "id": "1vHh1IFJbM9c-Djy6H2QUgBbkiCc2T0Dt",
+              "nama": "Lanjutan Penggalian Profil Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.364Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1iddajYD-VU2ifAl0RsuaACRpFqcxSlYt",
+              "nama": "Material I turun lokasi.jpeg",
+              "tanggal": "2026-05-14T09:11:00.509Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1gS7JQ3Z0lBD8ROUk9WLLYACy_5x_sIK4",
+              "nama": "Pekerjaan pondasi .jpeg",
+              "tanggal": "2026-05-14T09:11:00.445Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "13QkWvpwdqcsS9GIuoS3vRQY9U9Ah6pzF",
+              "nama": "Pemasangan Batu Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:11:00.699Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1wNuylwLlrg7F_rrIIJbmE4Ok_jSgjQX7",
+              "nama": "Pemasangan Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:11:01.334Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1qCtsIaITfT-HYNhEJMLSuPWKPUe8Z7OX",
+              "nama": "pematokan Lahan.jpeg",
+              "tanggal": "2026-05-14T09:11:01.304Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "12cbWTQtc4JO0QMLW1Z7iGqpK_ex1KR4S",
+              "nama": "Penggalian.jpeg",
+              "tanggal": "2026-05-14T09:11:01.459Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1WonqOnVH2rRsaL2snpJ9CLoNeemiNlyG",
+              "nama": "Selesai Pekerjaan Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:11:01.203Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            },
+            {
+              "id": "1BHxWa5lFbvcppNbGwbYBmTPfaJ_g6eKz",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:11:01.263Z",
+              "pengirim": null,
+              "drive_folder": "1CMR_odOqemTbj8KYbY9lmIp6DmncXkvR"
+            }
+          ],
+          "total_foto": 9,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Naukae",
+          "drive_id": "1NhllNlTtipT4H9eO_4aLVioRCCCeR_Cv",
+          "foto": [
+            {
+              "id": "1P_9lYqOTmhqr3Ot_ndHyU0fkukQ77esl",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T09:10:55.259Z",
+              "pengirim": null,
+              "drive_folder": "1NhllNlTtipT4H9eO_4aLVioRCCCeR_Cv"
+            },
+            {
+              "id": "1EnE4TG7M4UZ-unpHaEFpZRFKaQGSez2V",
+              "nama": "Penurunan Material.jpeg",
+              "tanggal": "2026-05-14T09:10:55.189Z",
+              "pengirim": null,
+              "drive_folder": "1NhllNlTtipT4H9eO_4aLVioRCCCeR_Cv"
+            },
+            {
+              "id": "1fo4sRqNQK5bzuh-f_zjD5MV3C3x5RhUr",
+              "nama": "Pertemuan dengan Kepala Desa.jpeg",
+              "tanggal": "2026-05-14T09:10:55.004Z",
+              "pengirim": null,
+              "drive_folder": "1NhllNlTtipT4H9eO_4aLVioRCCCeR_Cv"
+            },
+            {
+              "id": "1N3R7kGHv9UAD43tfkfK2cpiwXGwIoyQL",
+              "nama": "Selesai Penggalian Profil Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:10:55.033Z",
+              "pengirim": null,
+              "drive_folder": "1NhllNlTtipT4H9eO_4aLVioRCCCeR_Cv"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Nekemonifeto",
+          "drive_id": "1hhhDSb_IBL9SL232M173EKI19S87Fo9Q",
+          "foto": [
+            {
+              "id": "1wSCqRqMB5kg4zsPbdzP3e4VF6ik2Kigc",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T09:10:55.348Z",
+              "pengirim": null,
+              "drive_folder": "1hhhDSb_IBL9SL232M173EKI19S87Fo9Q"
+            },
+            {
+              "id": "1KZkFnCAH1O5ZNMRN1VzywlabFTNFiofU",
+              "nama": "Penurunan Material.jpeg",
+              "tanggal": "2026-05-14T09:10:55.207Z",
+              "pengirim": null,
+              "drive_folder": "1hhhDSb_IBL9SL232M173EKI19S87Fo9Q"
+            },
+            {
+              "id": "15jruopcCsw_T9PhThJULm_ON22uVAzoS",
+              "nama": "Selesai Penggalian Pondasi.jpeg",
+              "tanggal": "2026-05-14T09:10:55.071Z",
+              "pengirim": null,
+              "drive_folder": "1hhhDSb_IBL9SL232M173EKI19S87Fo9Q"
+            }
+          ],
+          "total_foto": 3,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Noebesi",
+          "drive_id": "1HHtFaoKTlSPl84qiX_jTQbhlC6dNdpm7",
+          "foto": [
+            {
+              "id": "1xjZg8XMMZovMwA-IW845a2oc1YtDh4kJ",
+              "nama": "pekerjaan pondasi.jpeg",
+              "tanggal": "2026-05-14T09:10:55.168Z",
+              "pengirim": null,
+              "drive_folder": "1HHtFaoKTlSPl84qiX_jTQbhlC6dNdpm7"
+            },
+            {
+              "id": "1lfYtwAVnbZHE567R1N8I-w0aUCheLbdj",
+              "nama": "Penurunan Material Pasir.jpeg",
+              "tanggal": "2026-05-14T09:10:54.963Z",
+              "pengirim": null,
+              "drive_folder": "1HHtFaoKTlSPl84qiX_jTQbhlC6dNdpm7"
+            },
+            {
+              "id": "1PwYdWst4A5-cnVnUWG2EuIZ-xtqrTsZ6",
+              "nama": "Penurunan material.jpeg",
+              "tanggal": "2026-05-14T09:10:55.014Z",
+              "pengirim": null,
+              "drive_folder": "1HHtFaoKTlSPl84qiX_jTQbhlC6dNdpm7"
+            },
+            {
+              "id": "1lYPW-uGjB3EhYZuFdnnWUa9-RQeavn1N",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:55.133Z",
+              "pengirim": null,
+              "drive_folder": "1HHtFaoKTlSPl84qiX_jTQbhlC6dNdpm7"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Nunfutu",
+          "drive_id": "1THo-ZplvhOPQsad1bAaKrDKbdKSHyAAI",
+          "foto": [
+            {
+              "id": "12lescwQzVSBpcIjAqfwX3sxASE82i9Dt",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T09:10:58.470Z",
+              "pengirim": null,
+              "drive_folder": "1THo-ZplvhOPQsad1bAaKrDKbdKSHyAAI"
+            },
+            {
+              "id": "1l0kOwb-UD1QNd-h0ziQc1YUWAhp4mgS_",
+              "nama": "Pertemuan dengan Pokcam untuk bahas soal teknis dan nonteknis.jpeg",
+              "tanggal": "2026-05-14T09:10:58.148Z",
+              "pengirim": null,
+              "drive_folder": "1THo-ZplvhOPQsad1bAaKrDKbdKSHyAAI"
+            },
+            {
+              "id": "1W7NB9O2T0m21EQTktSah10T7CZO-6YiF",
+              "nama": "Survey Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.343Z",
+              "pengirim": null,
+              "drive_folder": "1THo-ZplvhOPQsad1bAaKrDKbdKSHyAAI"
+            },
+            {
+              "id": "1FYRuaHOCGWU2WGMZRBSgfwv0mVj7vV4J",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:58.397Z",
+              "pengirim": null,
+              "drive_folder": "1THo-ZplvhOPQsad1bAaKrDKbdKSHyAAI"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Nunukhniti",
+          "drive_id": "1geOH9f4jalAj1nbd4r7jM_oGyvIfTR2i",
+          "foto": [
+            {
+              "id": "1TxJE6FykJUSzqCAciHSdMoeFHgAFy3y7",
+              "nama": "Penurunan Material.jpeg",
+              "tanggal": "2026-05-14T09:10:55.064Z",
+              "pengirim": null,
+              "drive_folder": "1geOH9f4jalAj1nbd4r7jM_oGyvIfTR2i"
+            },
+            {
+              "id": "1iyd1T0R_Uiw4BRPIkIi9zVEve6TGYEa4",
+              "nama": "Pertemuan dengan kepala desa bahas lahan.jpeg",
+              "tanggal": "2026-05-14T09:10:54.964Z",
+              "pengirim": null,
+              "drive_folder": "1geOH9f4jalAj1nbd4r7jM_oGyvIfTR2i"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Taebone",
+          "drive_id": "1Y-W-HygS3h2pNqcHi5COIqKoJaSEHlPM",
+          "foto": [
+            {
+              "id": "1nuZAAYDvE-b33r4_Y0Wb1IYB5-aKXvF0",
+              "nama": "Material I di lokasi.jpg",
+              "tanggal": "2026-05-14T09:11:01.558Z",
+              "pengirim": null,
+              "drive_folder": "1Y-W-HygS3h2pNqcHi5COIqKoJaSEHlPM"
+            },
+            {
+              "id": "14TGwYHg3q_qmZRBQZSm-4QmjioOLTYei",
+              "nama": "Pematokan Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:11:01.653Z",
+              "pengirim": null,
+              "drive_folder": "1Y-W-HygS3h2pNqcHi5COIqKoJaSEHlPM"
+            },
+            {
+              "id": "1kpQw_B8qcD0YdgpevG__kJWZSun2AY21",
+              "nama": "Pembersian.jpeg",
+              "tanggal": "2026-05-14T09:11:01.485Z",
+              "pengirim": null,
+              "drive_folder": "1Y-W-HygS3h2pNqcHi5COIqKoJaSEHlPM"
+            },
+            {
+              "id": "1ROlCIY5xJNc1AmIFQGFLAztudxg4eOwc",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:11:01.481Z",
+              "pengirim": null,
+              "drive_folder": "1Y-W-HygS3h2pNqcHi5COIqKoJaSEHlPM"
+            }
+          ],
+          "total_foto": 4,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Taneotob",
+          "drive_id": "16w886Zh_Uo1vXDbwsuAqgACR2RCZZxqq",
+          "foto": [
+            {
+              "id": "1UE1lfJ6Yl5gjgfrFScSmcx_rW5WKhGq9",
+              "nama": "Material On Site.jpeg",
+              "tanggal": "2026-05-14T09:10:55.131Z",
+              "pengirim": null,
+              "drive_folder": "16w886Zh_Uo1vXDbwsuAqgACR2RCZZxqq"
+            },
+            {
+              "id": "1PtT1YMsipHXxIz36KuZ8BJI88sUfRcdz",
+              "nama": "Tinjau Awal Lokasi.jpeg",
+              "tanggal": "2026-05-14T09:10:55.177Z",
+              "pengirim": null,
+              "drive_folder": "16w886Zh_Uo1vXDbwsuAqgACR2RCZZxqq"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        },
+        {
+          "nama": "Tubmonas",
+          "drive_id": "12xbCaFpstJG7iCN1xgwp7J3tnVUSK0ec",
+          "foto": [
+            {
+              "id": "15IXVC_SDBTqFwv9pwVpuF-VuBbx8OWe7",
+              "nama": "Koordinasi dengan Kades Penentuan TITIK.jpeg",
+              "tanggal": "2026-05-14T09:10:55.154Z",
+              "pengirim": null,
+              "drive_folder": "12xbCaFpstJG7iCN1xgwp7J3tnVUSK0ec"
+            },
+            {
+              "id": "1bU70Gtv1fhGnKy5f9-qwzHLuuqwlyQR9",
+              "nama": "Pematokan.jpeg",
+              "tanggal": "2026-05-14T09:10:57.955Z",
+              "pengirim": null,
+              "drive_folder": "12xbCaFpstJG7iCN1xgwp7J3tnVUSK0ec"
+            }
+          ],
+          "total_foto": 2,
+          "progress": {
+            "last_update": null,
+            "bobot_terealisasi": 0,
+            "nilai_terealisasi": 0,
+            "items": {}
+          }
+        }
+      ]
+    }
+  ],
+  "rab_parsed": null,
+  "total_nilai": 0,
+  "total_desa": 41,
+  "total_foto": 142,
+  "last_scan": "2026-05-14T09:38:51.160Z"
+}

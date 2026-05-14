@@ -499,23 +499,39 @@ async function handleIncomingMessage(msg) {
       const localPath = path.join(UPLOADS_DIR, filename);
       await fs.writeFile(localPath, Buffer.from(media.data, "base64"));
 
-      // Analisa foto jika gambar (hanya untuk NEXUS/owner)
       const isImage = media.mimetype.startsWith("image/");
-      if (isImage && isNexus(sender)) {
+
+      // ── PROJECT PHOTO HANDLER — foto lapangan dari tim ────
+      if (isImage) {
         try {
-          const { analyzeImage } = require("../tools/image-analyzer");
-          const caption = body || "";
-          const analisa = await analyzeImage(localPath, caption);
-          // Hapus tag HTML untuk WhatsApp
-          const analisaPlain = analisa.replace(/<[^>]+>/g, "").trim();
-          await msg.reply(analisaPlain);
+          const { handleIncomingPhoto } = require("../projects/photo-placer");
+          const caption = body || msg.caption || "";
+          const result = await handleIncomingPhoto(localPath, caption, senderName, "whatsapp");
+          if (result.placed) {
+            await msg.reply(
+              `✅ Foto laporan diterima dan disimpan ke sistem TERNION.\nTerima kasih ${senderName.split(" ")[0]}!`
+            );
+          } else if (result.pending) {
+            await msg.reply(
+              `Foto diterima. Mohon sebutkan nama desa lokasi pekerjaan di caption foto agar bisa disimpan dengan benar.\n` +
+              `Contoh caption: "Foto progress Desa Bauho kolom lt1"`
+            );
+          }
           react(msg, "✅");
-        } catch (errAnalisa) {
-          console.error("[WA-VISION] Error analisa:", errAnalisa.message);
-          await msg.reply(`📸 Foto disimpan: ${filename}`);
-          react(msg, "✅");
+          return;
+        } catch (errProj) {
+          console.error("[WA-PROJ] Photo handler error:", errProj.message);
+          // Fallback ke analisa biasa untuk NEXUS
+          if (isNexus(sender)) {
+            try {
+              const { analyzeImage } = require("../tools/image-analyzer");
+              const analisa = await analyzeImage(localPath, body || "");
+              await msg.reply(analisa.replace(/<[^>]+>/g, "").trim());
+              react(msg, "✅");
+              return;
+            } catch {}
+          }
         }
-        return;
       }
 
       try {

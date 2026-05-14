@@ -429,30 +429,40 @@ bot.on("photo", async (ctx) => {
   const fileId = photo.file_id;
 
   try {
-    await ctx.reply("⏳ Menganalisa foto...");
-
     const file = await ctx.telegram.getFile(fileId);
     const fileUrl = `https://api.telegram.org/file/bot${TELEGRAM_TOKEN}/${file.file_path}`;
     const uploadDir = path.join(__dirname, "workspace", "uploads");
-
     if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-
-    const ext = file.file_path.split(".").pop() || "jpg";
+    const ext = (file.file_path.split(".").pop() || "jpg").toLowerCase();
     const fileName = `tg_${Date.now()}.${ext}`;
     const uploadPath = path.join(uploadDir, fileName);
-
-    // Download foto
     const response = await axios({ url: fileUrl, method: "GET", responseType: "arraybuffer" });
     fs.writeFileSync(uploadPath, Buffer.from(response.data));
 
-    // Analisa dengan AI vision
-    const result = await analyzeImage(uploadPath, caption);
+    // Cek apakah ini foto lapangan proyek (ada kata kunci konstruksi/desa/proyek di caption)
+    const isProjectPhoto = caption && /desa|proyek|progress|laporan|pekerjaan|kolom|pondasi|dinding|atap|plester|cor|beton/i.test(caption);
 
-    await ctx.replyWithHTML(result, { disable_web_page_preview: true });
+    if (isProjectPhoto) {
+      await ctx.reply("⏳ Memproses foto lapangan...");
+      const { handleIncomingPhoto } = require("./core/projects/photo-placer");
+      const result = await handleIncomingPhoto(uploadPath, caption, "Brian", "telegram");
+      if (result.placed) {
+        await ctx.replyWithHTML(
+          `✅ <b>Foto lapangan disimpan!</b>\n📍 Desa: ${result.desa}\n📁 ${result.project}\n💬 Caption: ${caption || "(tidak ada)"}`
+        );
+      } else {
+        await ctx.reply("⏳ Menunggu konfirmasi penempatan desa...");
+      }
+    } else {
+      // Analisa biasa
+      await ctx.reply("⏳ Menganalisa foto...");
+      const result = await analyzeImage(uploadPath, caption);
+      await ctx.replyWithHTML(result, { disable_web_page_preview: true });
+    }
 
   } catch (err) {
     console.error("[PHOTO] Error:", err.message);
-    await ctx.reply(`❌ Gagal analisa foto: ${err.message}`);
+    await ctx.reply(`❌ Gagal proses foto: ${err.message}`);
   }
 });
 
@@ -1949,6 +1959,85 @@ bot.on("callback_query", async (ctx) => {
     return;
   }
 
+  // ── PROJECT PHOTO PLACEMENT CALLBACKS ─────────────────
+  const paAnaMatch = data.match(/^pa:ana:(.+)$/);
+  if (paAnaMatch) {
+    const photoId = paAnaMatch[1];
+    await editMenu(ctx, "⏳ Menganalisa foto progress...", []);
+    try {
+      const { getPendingPhoto } = require("./core/projects/photo-placer");
+      const pending = await getPendingPhoto(photoId);
+      if (!pending) { await editMenu(ctx, "❌ Foto tidak ditemukan.", []); return; }
+      const { analyzeProgressPhoto, formatAnalysisForTelegram } = require("./core/projects/image-analyzer");
+      const result = await analyzeProgressPhoto(
+        pending.localPath, pending.desaNama, pending.projectName, pending.caption, pending.pengirim
+      );
+      const text = formatAnalysisForTelegram(result, pending.desaNama, pending.projectName, pending.pengirim);
+      await editMenu(ctx, text, [[btn("📊 Lihat Progress", `proj:lap:${pending.projectName.substring(0,30)}`)]]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Analisa gagal: ${err.message}`, []);
+    }
+    return;
+  }
+
+  const paPlaceMatch = data.match(/^pa:place:([^:]+):([^:]+):(.+)$/);
+  if (paPlaceMatch) {
+    const [, photoId, desaDriveId, desaNamaEnc] = paPlaceMatch;
+    const desaNama = decodeURIComponent(desaNamaEnc);
+    try {
+      const { confirmPhotoPlacement, getPendingPhoto } = require("./core/projects/photo-placer");
+      const pending = await getPendingPhoto(photoId);
+      const projectName = pending?.projectName || "DAPUR 3T";
+      const placed = await confirmPhotoPlacement(photoId, desaDriveId, desaNama, projectName);
+      const link = placed?.drive_link ? `\n🔗 <a href="${placed.drive_link}">Lihat Drive</a>` : "";
+      await editMenu(ctx,
+        `✅ Foto disimpan ke Drive!\n📍 ${desaNama}\nMau dianalisa progressnya?`,
+        [[btn("✅ Analisa", `pa:ana:${photoId}`), btn("⏭️ Tidak", "h")]]
+      );
+    } catch (err) {
+      await editMenu(ctx, `❌ Gagal simpan: ${err.message}`, [[btnHome()]]);
+    }
+    return;
+  }
+
+  if (data.startsWith("pa:skip:")) {
+    await editMenu(ctx, "⏭️ Foto dilewati.", [[btnHome()]]);
+    return;
+  }
+
+  // ── PROJECT CALLBACKS ──────────────────────────────────
+  if (data === "proj:all") {
+    await ctx.sendChatAction("typing").catch(() => {});
+    const { getAllProjects } = require("./core/projects/drive-scanner");
+    const { getAllProgress } = require("./core/projects/progress-manager");
+    const { buildProgressDashboard } = require("./core/projects/report-generator");
+    const projects = await getAllProjects();
+    for (const proj of projects.slice(0, 3)) {
+      const allProg = await getAllProgress(proj.nama);
+      const text = buildProgressDashboard(proj.nama, allProg);
+      await ctx.reply(text, { parse_mode: "HTML" });
+    }
+    return;
+  }
+
+  const projLapMatch = data.match(/^proj:lap:(.+)$/);
+  if (projLapMatch) {
+    const projectName = projLapMatch[1];
+    await editMenu(ctx, `⏳ Membuat master laporan ${projectName}...`, []);
+    try {
+      const { generateMasterReport } = require("./core/projects/report-generator");
+      const master = await generateMasterReport(projectName);
+      const link = master.drive_link ? `\n🔗 <a href="${master.drive_link}">Download</a>` : "";
+      await editMenu(ctx,
+        `✅ <b>Laporan Master: ${projectName}</b>\n📊 ${master.total_desa} desa, rata-rata ${master.avg_progress}%${link}`,
+        [[btnHome()]]
+      );
+    } catch (err) {
+      await editMenu(ctx, `❌ Error: ${err.message}`, [[btnHome()]]);
+    }
+    return;
+  }
+
   // ── SMART CONTACT SUGGESTION CALLBACKS ────────────────
   const sgYesMatch = data.match(/^sg:yes:(.+)$/);
   if (sgYesMatch) {
@@ -2672,6 +2761,171 @@ bot.command("auth_calendar", async (ctx) => {
     `5. Kirim: <code>/auth_code [kode]</code>`
   );
 });
+
+// ═══════════════════════════════════════════════════════════
+// PROJECT DOCUMENTATION SYSTEM
+// ═══════════════════════════════════════════════════════════
+
+// ─── /laporan [nama desa] ──────────────────────────────────
+bot.command("laporan", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace(/^\/laporan\s*/i, "").trim();
+  if (!args) return ctx.reply("Format: /laporan [nama desa]\nContoh: /laporan Desa Bauho");
+
+  const isSemua = args.toLowerCase().startsWith("semua");
+  const projectArg = isSemua ? args.replace(/^semua\s*/i, "").trim() : null;
+
+  await ctx.reply("⏳ Membuat laporan...");
+  try {
+    const { generateDesaReport, generateMasterReport } = require("./core/projects/report-generator");
+    const { getAllProjects } = require("./core/projects/drive-scanner");
+    const projects = await getAllProjects();
+    const projectName = projectArg || projects[0]?.nama || "DAPUR 3T";
+
+    if (isSemua) {
+      const master = await generateMasterReport(projectName);
+      const link = master.drive_link ? `\n🔗 <a href="${master.drive_link}">Download</a>` : "";
+      await ctx.replyWithHTML(
+        `✅ <b>LAPORAN MASTER SELESAI</b>\n━━━━━━━━━━━━━━━\n` +
+        `📁 ${projectName}\n📊 ${master.total_desa} desa\n` +
+        `📈 Rata-rata: ${master.avg_progress}%\n` +
+        `💰 Total Terealisasi: Rp ${(master.total_nilai_real || 0).toLocaleString("id-ID")}\n` +
+        `📸 Total foto: ${master.total_foto}\n` +
+        `📄 ${master.file_name}${link}`
+      );
+    } else {
+      const result = await generateDesaReport(projectName, args);
+      const link = result.drive_link ? `\n🔗 <a href="${result.drive_link}">Download</a>` : "";
+      await ctx.replyWithHTML(
+        `✅ <b>LAPORAN SELESAI</b>\n━━━━━━━━━━━━━━━\n` +
+        `📍 ${args} — ${projectName}\n` +
+        `📊 Progress: ${result.progress_pct}%\n` +
+        `💰 Nilai Terealisasi: Rp ${(result.nilai_terealisasi || 0).toLocaleString("id-ID")}\n` +
+        `📝 Nilai Kontrak: Rp ${(result.total_nilai || 0).toLocaleString("id-ID")}\n` +
+        `📄 ${result.file_name}${link}`
+      );
+    }
+  } catch (err) {
+    await ctx.reply(`❌ Error laporan: ${err.message}`);
+  }
+});
+
+// ─── /progress [nama proyek] ───────────────────────────────
+bot.command("progress", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace(/^\/progress\s*/i, "").trim();
+
+  await ctx.sendChatAction("typing");
+  try {
+    const { getAllProjects } = require("./core/projects/drive-scanner");
+    const { getAllProgress } = require("./core/projects/progress-manager");
+    const { buildProgressDashboard } = require("./core/projects/report-generator");
+
+    const projects = await getAllProjects();
+    let projectName = args || projects[0]?.nama || "DAPUR 3T";
+
+    if (args) {
+      const Fuse = require("fuse.js");
+      const fuse = new Fuse(projects, { keys: ["nama"], threshold: 0.5 });
+      const match = fuse.search(args);
+      if (match.length > 0) projectName = match[0].item.nama;
+    }
+
+    const allProgress = await getAllProgress(projectName);
+    const text = buildProgressDashboard(projectName, allProgress);
+
+    await ctx.replyWithHTML(text, {
+      reply_markup: { inline_keyboard: [
+        [btn("📊 Laporan Lengkap", "proj:lap:" + projectName.substring(0, 30)),
+         btn("📁 Buka Drive", "proj:drive:" + projectName.substring(0, 30))]
+      ]}
+    });
+  } catch (err) {
+    await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+// ─── /scan-proyek ──────────────────────────────────────────
+bot.command("scan_proyek", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.reply("⏳ Scan proyek di Google Drive...");
+  try {
+    const { autoDetectAllProjects } = require("./core/projects/drive-scanner");
+    const { downloadAndParseRAB } = require("./core/projects/rab-reader");
+    const { loadProjectStructure } = require("./core/projects/drive-scanner");
+
+    const projects = await autoDetectAllProjects();
+    let summary = `✅ <b>SCAN SELESAI</b>\n━━━━━━━━━━━━━━━\n<b>${projects.length} proyek ditemukan:</b>\n\n`;
+
+    for (const proj of projects) {
+      summary += `📁 <b>${proj.nama}</b>\n`;
+      summary += `   📍 ${proj.total_desa} desa, 📸 ${proj.total_foto} foto\n`;
+      if (proj.kabupaten) {
+        for (const kab of proj.kabupaten) {
+          summary += `   └ ${kab.nama}: ${kab.total_desa} desa\n`;
+        }
+      }
+
+      // Parse RAB jika ada
+      if (proj.has_rab) {
+        try {
+          const fullProj = await loadProjectStructure(proj.nama);
+          if (fullProj?.files?.rab) {
+            await downloadAndParseRAB(fullProj.files.rab.id, proj.nama, fullProj.files.rab.mimeType);
+            summary += `   📊 RAB ter-parse: ${proj.rab_name}\n`;
+          }
+        } catch (rabErr) {
+          summary += `   ⚠️ RAB gagal parse: ${rabErr.message.substring(0, 50)}\n`;
+        }
+      }
+      summary += "\n";
+    }
+
+    await ctx.replyWithHTML(summary, {
+      reply_markup: { inline_keyboard: [[btn("📊 Lihat Progress", "proj:all")]] }
+    });
+  } catch (err) {
+    await ctx.reply(`❌ Error scan: ${err.message}`);
+  }
+});
+
+// ─── /update_progress [desa] [item] [persen] ──────────────
+bot.command("update_progress", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const raw = ctx.message.text.replace(/^\/update_progress\s*/i, "").trim();
+
+  // Parse: "Desa Bauho" "Pondasi" 85
+  const match = raw.match(/^"([^"]+)"\s+"([^"]+)"\s+(\d+)$/) ||
+                raw.match(/^(.+?)\s+(.+?)\s+(\d+)$/);
+  if (!match) {
+    return ctx.reply('Format: /update_progress "Nama Desa" "Item Pekerjaan" Persentase\nContoh: /update_progress "Desa Bauho" "Pondasi" 85');
+  }
+
+  const [, desaArg, itemArg, pctStr] = match;
+  const pct = Math.min(100, Math.max(0, parseInt(pctStr)));
+
+  await ctx.reply(`⏳ Mengupdate progress ${desaArg}...`);
+  try {
+    const { updateRABProgress } = require("./core/projects/spreadsheet-updater");
+    const { getAllProjects } = require("./core/projects/drive-scanner");
+    const projects = await getAllProjects();
+    const projectName = projects[0]?.nama || "DAPUR 3T";
+
+    await updateRABProgress(projectName, desaArg, itemArg, pct);
+    await ctx.replyWithHTML(
+      `✅ <b>Progress diupdate!</b>\n` +
+      `📍 ${desaArg}\n` +
+      `🔧 ${itemArg}: <b>${pct}%</b>\n` +
+      `Spreadsheet Drive sudah diperbarui.`
+    );
+  } catch (err) {
+    await ctx.reply(`❌ Gagal update: ${err.message}`);
+  }
+});
+
+// ─── Callback handlers proyek ──────────────────────────────
+// Ditambahkan di dalam callback_query handler yang sudah ada
+// Lihat section "proj:" di bawah
 
 bot.launch({ dropPendingUpdates: true }).catch((err) => {
   console.error("[BOT_LAUNCH_ERROR]", err.message);

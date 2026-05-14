@@ -254,6 +254,106 @@ async function checkRAMAlert() {
   }
 }
 
+// ─── Weekly Project Report (Jumat 16.00 WITA) ──────────
+const WEEKLY_PROJ_SNAPSHOT = "/root/ai-system/memory/projects/weekly-snapshot.json";
+
+async function sendWeeklyProjectReport() {
+  const key = `weekly_proj_${todayKey()}`;
+  if (sentToday[key]) return;
+  sentToday[key] = true;
+
+  try {
+    const { getAllProjects } = require("../projects/drive-scanner");
+    const { getAllProgress } = require("../projects/progress-manager");
+    const { generateMasterReport } = require("../projects/report-generator");
+
+    const projects = await getAllProjects();
+    if (!projects || projects.length === 0) {
+      await send("📊 <b>Weekly Project Report</b>\n\nBelum ada proyek aktif yang terdeteksi.");
+      return;
+    }
+
+    // Load snapshot minggu lalu
+    let lastSnapshot = {};
+    try {
+      lastSnapshot = await fs.readJson(WEEKLY_PROJ_SNAPSHOT);
+    } catch {}
+
+    const newSnapshot = {};
+    const now = new Date();
+    const periodeAkhir = now.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+    const periodeAwal = new Date(now - 7 * 24 * 60 * 60 * 1000)
+      .toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+
+    let reportParts = [
+      `📊 <b>LAPORAN MINGGUAN PROYEK</b>`,
+      `━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📅 Periode: ${periodeAwal} – ${periodeAkhir}`,
+      ``
+    ];
+
+    for (const proj of projects) {
+      try {
+        const allProgress = await getAllProgress(proj.nama);
+        if (!allProgress || allProgress.length === 0) continue;
+
+        const totalBobotReal = allProgress.reduce((s, p) => s + (p.bobot_terealisasi || 0), 0);
+        const avgProgress = (totalBobotReal / allProgress.length).toFixed(1);
+        const totalNilaiReal = allProgress.reduce((s, p) => s + (p.nilai_terealisasi || 0), 0);
+        const totalFoto = allProgress.reduce((s, p) => s + (p.foto_log?.length || 0), 0);
+
+        // Perbandingan dengan snapshot minggu lalu
+        const lastAvg = lastSnapshot[proj.nama]?.avg_progress || 0;
+        const delta = (parseFloat(avgProgress) - parseFloat(lastAvg)).toFixed(1);
+        const deltaStr = delta > 0 ? `▲ +${delta}%` : delta < 0 ? `▼ ${delta}%` : `→ 0%`;
+
+        newSnapshot[proj.nama] = { avg_progress: avgProgress, total_nilai: totalNilaiReal };
+
+        // Top performer dan yang perlu perhatian
+        const sorted = [...allProgress].sort((a, b) => (b.bobot_terealisasi || 0) - (a.bobot_terealisasi || 0));
+        const topDesa = sorted[0];
+        const laggingDesa = sorted[sorted.length - 1];
+
+        reportParts.push(`🏗️ <b>${proj.nama.toUpperCase()}</b>`);
+        reportParts.push(`   📈 Progress: <b>${avgProgress}%</b> ${deltaStr}`);
+        reportParts.push(`   💰 Nilai Real: Rp ${totalNilaiReal.toLocaleString("id-ID")}`);
+        reportParts.push(`   📸 Foto masuk: ${totalFoto} | Desa: ${allProgress.length}`);
+        if (topDesa) reportParts.push(`   🥇 Terbaik: ${topDesa.desa} (${(topDesa.bobot_terealisasi || 0).toFixed(1)}%)`);
+        if (laggingDesa && laggingDesa.desa !== topDesa?.desa)
+          reportParts.push(`   ⚠️ Perlu perhatian: ${laggingDesa.desa} (${(laggingDesa.bobot_terealisasi || 0).toFixed(1)}%)`);
+        reportParts.push(``);
+
+        // Generate master report Excel dan upload Drive
+        try {
+          const result = await generateMasterReport(proj.nama);
+          if (result?.drive_link) {
+            reportParts.push(`   📁 <a href="${result.drive_link}">Unduh Laporan Excel</a>`);
+          }
+        } catch (err) {
+          console.error(`[NOTIF] Master report ${proj.nama} gagal:`, err.message);
+        }
+
+        reportParts.push(`━━━━━━━━━━━━━━━━━━━━━━━`);
+      } catch (err) {
+        console.error(`[NOTIF] Skip proyek ${proj.nama}:`, err.message);
+      }
+    }
+
+    reportParts.push(`🤖 TERNION-AI | ${now.toLocaleString("id-ID", { timeZone: "Asia/Makassar" })} WITA`);
+
+    await send(reportParts.join("\n"));
+
+    // Simpan snapshot baru
+    await fs.ensureDir(require("path").dirname(WEEKLY_PROJ_SNAPSHOT));
+    await fs.writeJson(WEEKLY_PROJ_SNAPSHOT, newSnapshot, { spaces: 2 });
+
+    console.log("[NOTIF] Weekly project report terkirim");
+  } catch (err) {
+    console.error("[NOTIF] Weekly project report error:", err.message);
+    await send(`⚠️ Weekly project report gagal: ${err.message}`);
+  }
+}
+
 // ─── Helper: cek Jumat ──────────────────────────────────
 function isFriday() {
   const d = new Date();
@@ -267,6 +367,9 @@ async function tick() {
 
   // Morning brief: 06.00 WITA
   if (h === 6 && m < 5) await sendMorningBrief();
+
+  // Weekly Project Report: Jumat 16.00 WITA
+  if (h === 16 && m < 5 && isFriday()) await sendWeeklyProjectReport();
 
   // Weekly Consolidation Report: Jumat 17.00 WITA
   if (h === 17 && m < 5 && isFriday()) await sendWeeklyReport();
