@@ -19,7 +19,8 @@ const { detectFlowTrigger, processStep, startFlow, generateFromFlow, loadState, 
 const { routeAndDelegate, setupDelegasi } = require("../contacts/delegation-engine");
 const { detectFollowUpTrigger, setFollowUp, listFollowUps, cancelFollowUp,
         completeFollowUp, startFollowUpLoop } = require("../contacts/follow-up-engine");
-const { getSystemPrompt, getSalutation } = require("../contacts/language-style");
+const { getSystemPrompt, getSalutation, injectGreetingToPrompt } = require("../contacts/language-style");
+const { startRegistration } = require("../contacts/identity-manager");
 const { isNexus, isActive, isDarurat, deactivateAI, activateAI, pauseAI,
         getStatus, handleNexusSwitch, notifyBrianIncomingWhenOff,
         KEYWORDS_OFF, KEYWORDS_ON } = require("../contacts/master-switch");
@@ -468,13 +469,10 @@ async function handleIncomingMessage(msg) {
   // Update interaksi
   await updateInteraction(sender, body);
 
-  // Notif Brian jika kontak tidak dikenal (pertama kali)
+  // Notif Brian jika kontak tidak dikenal (pertama kali) + trigger identity registration
   if (kontak.kategori === "tidak_dikenal" && kontak.total_interactions <= 1) {
-    await notifyTelegram(
-      `🔔 <b>KONTAK BARU (tidak terdaftar)</b>\n` +
-      `👤 ${senderName} (${sender.replace("@c.us", "")})\n` +
-      `💬 ${body.substring(0, 200)}\n\n` +
-      `Tambah: /wa-add ${sender.replace("@c.us", "")} [kategori] ${senderName}`
+    startRegistration(sender, body).catch(err =>
+      console.error("[WA] Identity registration error:", err.message)
     );
   }
 
@@ -613,15 +611,20 @@ async function handleIncomingMessage(msg) {
 
   // ── Generate AI reply dengan style ────────────────────
   try {
-    const systemPrompt = getSystemPrompt(kontak);
-    const salutation = getSalutation(kontak);
+    let systemPrompt = getSystemPrompt(kontak);
+
+    // Inject greeting sesuai posisi jika interaksi awal (baru terdaftar)
+    const isFirstInteraction = kontak.total_interactions <= 2 && kontak.kategori !== "tidak_dikenal" && kontak.kategori !== "nexus";
+    if (isFirstInteraction) {
+      systemPrompt = injectGreetingToPrompt(systemPrompt, kontak);
+    }
 
     const aiReply = await askClaude(
       `[Pesan WhatsApp dari ${senderName} — kategori: ${kontak.kategori}]\n\n${body}`,
       { systemContext: systemPrompt }
     );
 
-    const finalReply = salutation && !aiReply.startsWith(salutation) ? aiReply : aiReply;
+    const finalReply = aiReply;
 
     // Cek perlu approval atau langsung kirim
     if (kontak.perlu_approval) {

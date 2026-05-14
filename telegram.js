@@ -546,8 +546,124 @@ bot.on("text", async (ctx) => {
   // ── Intercept pending interactive actions ─────────
   if (pendingAction.has(chatId)) {
     const action = pendingAction.get(chatId);
-    pendingAction.delete(chatId);
+
+    // ── WA Kirim: manual nomor ─────────────────────
+    if (action.action === "wa_kirim_manual") {
+      pendingAction.delete(chatId);
+      const nomor = originalText.replace("+", "").replace(/\s/g, "");
+      if (!/^\d{8,15}$/.test(nomor)) {
+        await ctx.reply("❌ Nomor tidak valid. Kirim nomor tanpa +, contoh: 6281234567890");
+        return;
+      }
+      pendingAction.set(chatId, { action: "wa_kirim_msg", nomor, nama: nomor });
+      await ctx.reply(`💬 Ketik pesan untuk nomor +${nomor}:`);
+      return;
+    }
+
+    // ── WA Kirim: pesan ke kontak ─────────────────
+    if (action.action === "wa_kirim_msg") {
+      pendingAction.delete(chatId);
+      const { nomor, nama } = action;
+      pendingAction.set(chatId, { action: "wa_kirim_confirm", nomor, nama, pesan: originalText });
+      await sendMenu(ctx,
+        `📤 <b>Preview Pesan</b>\n━━━━━━━━━━━━━━━\nKe: <b>${nama}</b>\n\n"${originalText.substring(0, 300)}"`,
+        [[btn("✅ Kirim", `wa:ks:${nomor}`), btn("❌ Batal", "wa:k:start")]]
+      );
+      return;
+    }
+
+    // ── WA Broadcast: pesan ke kategori ──────────
+    if (action.action === "wa_bc_msg") {
+      pendingAction.delete(chatId);
+      const { kategori } = action;
+      pendingAction.set(chatId, { action: "wa_bc_confirm", kategori, pesan: originalText });
+      await sendMenu(ctx,
+        `📣 <b>Preview Broadcast</b>\n━━━━━━━━━━━━━━━\nKe: <b>${kategori.toUpperCase()}</b>\n\n"${originalText.substring(0, 300)}"`,
+        [[btn("✅ Kirim", "wa:bcs:confirm"), btn("❌ Batal", "wa:bc")]]
+      );
+      return;
+    }
+
+    // ── WA Broadcast: konfirmasi kirim ────────────
+    if (action.action === "wa_bc_confirm") {
+      // Handled by button callback, ini fallback
+      pendingAction.delete(chatId);
+    }
+
+    // ── WA Edit field ────────────────────────────
+    if (action.action === "wa_edit_field") {
+      pendingAction.delete(chatId);
+      const { nomor, field } = action;
+      const { updateContact } = require("./core/contacts/contact-manager");
+      const fieldMap = { nama: "nama", perusahaan: "konteks_bisnis", catatan: "konteks_bisnis" };
+      const fieldKey = fieldMap[field] || field;
+      await updateContact(nomor, { [fieldKey]: originalText });
+      await ctx.reply(`✅ ${field} diupdate untuk +${nomor}:\n"${originalText}"`);
+      return;
+    }
+
+    // ── Identity Manager: nama kontak ──────────────
+    if (action.action === "imr_name") {
+      pendingAction.delete(chatId);
+      const { nomor } = action;
+      const { handleNameInput, buildConfirmKeyboard } = require("./core/contacts/identity-manager");
+      const result = await handleNameInput(nomor, originalText);
+      if (!result) { await ctx.reply("❌ Error registrasi. Coba lagi."); return; }
+      if (typeof result === "string") {
+        // Perlu detail tambahan
+        pendingAction.set(chatId, { action: "imr_detail", nomor });
+        await ctx.reply(result, { parse_mode: "HTML" });
+      } else {
+        // Langsung ke konfirmasi
+        await sendMenu(ctx, result.text, result.keyboard);
+      }
+      return;
+    }
+
+    // ── Identity Manager: detail (perusahaan/dinas/pangkat) ─
+    if (action.action === "imr_detail") {
+      pendingAction.delete(chatId);
+      const { nomor } = action;
+      const { handleDetailInput, buildConfirmKeyboard } = require("./core/contacts/identity-manager");
+      const result = await handleDetailInput(nomor, originalText);
+      if (!result) { await ctx.reply("❌ Error registrasi. Coba lagi."); return; }
+      await sendMenu(ctx, result.text, result.keyboard);
+      return;
+    }
+
+    // ── Approval: manual reply ────────────────────
+    if (action.action === "apv_reply") {
+      pendingAction.delete(chatId);
+      const { nomor, nama, id } = action;
+      const { resolveApproval } = require("./core/contacts/approval-workflow");
+      try {
+        const { client: waClient } = require("./core/integrations/whatsapp");
+        await waClient.sendMessage(`${nomor}@c.us`, originalText);
+        await resolveApproval(id, "replied", "manual reply");
+        await ctx.reply(`✅ Balasan dikirim ke ${nama}.`);
+      } catch (err) {
+        await ctx.reply(`❌ Gagal kirim: ${err.message}`);
+      }
+      return;
+    }
+
+    // ── Template baru ─────────────────────────────
+    if (action.action === "wa_tmpl_new") {
+      pendingAction.delete(chatId);
+      const parts = originalText.split("|");
+      if (parts.length < 2) {
+        await ctx.reply("❌ Format: nama|teks\nContoh: Terima kasih|Terima kasih atas pesanannya!");
+        return;
+      }
+      const { addTemplate } = require("./core/contacts/contact-templates");
+      const id = await addTemplate(parts[0].trim(), parts.slice(1).join("|").trim());
+      await ctx.reply(`✅ Template "${parts[0].trim()}" tersimpan dengan ID: ${id}`);
+      return;
+    }
+
+    // ── Proyek update ─────────────────────────────
     if (action.action === "proyek_update") {
+      pendingAction.delete(chatId);
       const idx = action.idx;
       try {
         const fsExtra = require("fs-extra");
@@ -1104,15 +1220,18 @@ bot.on("callback_query", async (ctx) => {
   }
   if (data === "h:w") {
     await editMenu(ctx,
-`📱 <b>WHATSAPP</b>
+`📱 <b>WHATSAPP CONTROL CENTER</b>
 ━━━━━━━━━━━━━━━━━
-/wa_list — Daftar kontak WA terdaftar
-/wa_add [nomor] [kat] [nama] — Tambah kontak
-/ai_status — Status AI WhatsApp
-/ai_off — Matikan AI WA
-/ai_on — Aktifkan AI WA
-/ai_pause [menit] — Pause sementara`,
-      [[btn("👥 Kontak WA", "kn:0"), btnBack("h")], [btnHome()]]);
+/wa — Menu utama WA Control
+/wa_kirim — Kirim pesan WA
+/wa_terbaru — Chat terbaru
+/wa_direktori — Direktori kontak
+/wa_broadcast — Broadcast pesan
+/wa_edit — Edit data kontak
+/wa_template — Template pesan
+/wa_status — Dashboard WA
+/wa_export — Export ke Drive`,
+      [[btn("📱 Buka WA Control", "wa:m"), btnBack("h")], [btnHome()]]);
     return;
   }
   if (data === "h:chat") {
@@ -1376,6 +1495,383 @@ bot.on("callback_query", async (ctx) => {
     return;
   }
 
+  // ── WA Kirim Send Execute ─────────────────────────────────
+  const waKsSendMatch = data.match(/^wa:ks:(\d{8,15})$/);
+  if (waKsSendMatch) {
+    const nomor = waKsSendMatch[1];
+    // Ambil pesan dari pendingAction jika ada
+    const stored = pendingAction.get(chatId);
+    if (stored && stored.action === "wa_kirim_confirm" && stored.nomor === nomor) {
+      pendingAction.delete(chatId);
+      const { sendToContact } = require("./core/wa-control/wa-controller");
+      try {
+        await sendToContact(nomor, stored.pesan);
+        await editMenu(ctx, `✅ Pesan terkirim ke <b>${stored.nama}</b>!`, [[btn("📱 WA Menu", "wa:m")]]);
+      } catch (err) {
+        await editMenu(ctx, `❌ Gagal kirim: ${err.message}`, [[btnBack("wa:k:start")]]);
+      }
+    } else {
+      await editMenu(ctx, "❌ Pesan tidak ditemukan. Mulai ulang.", [[btn("💬 Kirim Pesan", "wa:k:start")]]);
+    }
+    return;
+  }
+
+  // ── WA Broadcast Send ────────────────────────────────────
+  if (data === "wa:bcs:confirm") {
+    const stored = pendingAction.get(chatId);
+    if (stored && stored.action === "wa_bc_confirm") {
+      pendingAction.delete(chatId);
+      const { broadcastToCategory } = require("./core/wa-control/wa-controller");
+      await editMenu(ctx, `📣 Mengirim broadcast ke <b>${stored.kategori}</b>...`, []);
+      try {
+        const result = await broadcastToCategory(stored.kategori, stored.pesan);
+        await ctx.reply(
+          `✅ Broadcast selesai!\n✅ Terkirim: ${result.sent.length} kontak\n❌ Gagal: ${result.failed.length} kontak` +
+          (result.failed.length > 0 ? `\nGagal: ${result.failed.join(", ")}` : "")
+        );
+      } catch (err) {
+        await ctx.reply(`❌ Broadcast gagal: ${err.message}`);
+      }
+    }
+    return;
+  }
+
+  // ── WA CONTROL CENTER ──────────────────────────────────────
+  if (data === "wa:m") { await sendWAMenu(ctx, "edit"); return; }
+  if (data === "wa:k:start") { await startWAKirimMenu(ctx, "edit"); return; }
+  if (data === "wa:bc") { await sendWABroadcastMenu(ctx, "edit"); return; }
+  if (data === "wa:tb") { await ctx.sendChatAction("typing").catch(()=>{}); await showWATerbaru(ctx, "edit"); return; }
+  if (data === "wa:dir") { await sendWADirektori(ctx, "edit"); return; }
+  if (data === "wa:tmpl") { await sendWATemplateMenu(ctx, "edit"); return; }
+  if (data === "wa:st") { await ctx.sendChatAction("typing").catch(()=>{}); await showWAStatus(ctx, "edit"); return; }
+  if (data === "wa:ed:start") { await showWAEditMenu(ctx, "edit"); return; }
+
+  // WA kirim ke kontak
+  if (data === "wa:k:manual") {
+    pendingAction.set(chatId, { action: "wa_kirim_manual" });
+    await editMenu(ctx, "✏️ Ketik nomor WA tujuan:\n(contoh: 6281234567890)", [[btn("❌ Batal", "wa:k:start")]]);
+    return;
+  }
+
+  const waKirimMatch = data.match(/^wa:k:(\d{8,15})$/);
+  if (waKirimMatch) {
+    const nomor = waKirimMatch[1];
+    const { getContact } = require("./core/contacts/contact-manager");
+    const c = await getContact(nomor).catch(() => null);
+    const nama = c?.nama || nomor;
+    pendingAction.set(chatId, { action: "wa_kirim_msg", nomor, nama });
+    await editMenu(ctx, `💬 Ketik pesan untuk <b>${nama}</b>:`, [[btn("❌ Batal", "wa:k:start")]]);
+    return;
+  }
+
+  const waKirimConfirm = data.match(/^wa:kc:(.+)$/);
+  if (waKirimConfirm) {
+    const [nomor, ...pesanParts] = waKirimConfirm[1].split(":");
+    // Handled via pendingAction flow
+    return;
+  }
+
+  // WA chat history
+  const waChMatch = data.match(/^wa:ch:(\d{8,15})$/);
+  if (waChMatch) {
+    const nomor = waChMatch[1];
+    await showWAChatHistory(ctx, nomor, "edit");
+    return;
+  }
+
+  // WA directory by category
+  const waDirCatMatch = data.match(/^wa:dir:(.+)$/);
+  if (waDirCatMatch) {
+    const kategori = waDirCatMatch[1];
+    const { listContacts } = require("./core/contacts/contact-manager");
+    const all = (await listContacts(kategori)).filter(c => !c.nomor.includes("XXXXXXX") && !c.nomor.startsWith("_"));
+    const icon = CAT_ICONS_WA[kategori] || "👤";
+    const text = `${icon} <b>DIREKTORI: ${kategori.toUpperCase()}</b>\n━━━━━━━━━━━━━━━━━\n${all.length} kontak`;
+    const rows = all.slice(0, 20).map(c => {
+      const label = `${icon} ${(c.nama || c.nomor).substring(0, 28)}`;
+      return [btn(label, `wa:dc:${c.nomor}`.substring(0, 64))];
+    });
+    rows.push([btnBack("wa:dir")]);
+    await editMenu(ctx, text, rows);
+    return;
+  }
+
+  // WA directory contact detail
+  const waDcMatch = data.match(/^wa:dc:(\d{8,15})$/);
+  if (waDcMatch) {
+    await sendKontakDetail(ctx, waDcMatch[1], "edit");
+    return;
+  }
+
+  // WA edit contact detail
+  const waEdMatch = data.match(/^wa:ed:(\d{8,15})$/);
+  if (waEdMatch) {
+    await showWAEditDetail(ctx, waEdMatch[1]);
+    return;
+  }
+
+  // WA edit field
+  const waEfMatch = data.match(/^wa:ef:(\d{8,15}):(.+)$/);
+  if (waEfMatch) {
+    const [, nomor, field] = waEfMatch;
+    const { getContact } = require("./core/contacts/contact-manager");
+    const c = await getContact(nomor).catch(() => null);
+    const nama = c?.nama || nomor;
+    const fieldLabels = { nama: "nama", perusahaan: "perusahaan/konteks", catatan: "catatan" };
+    pendingAction.set(chatId, { action: "wa_edit_field", nomor, field });
+    await editMenu(ctx,
+      `✏️ Ketik ${fieldLabels[field] || field} baru untuk <b>${nama}</b>:`,
+      [[btn("❌ Batal", `wa:ed:${nomor}`.substring(0, 64))]]);
+    return;
+  }
+
+  // WA edit posisi
+  const waEpMatch = data.match(/^wa:ep:(\d{8,15})$/);
+  if (waEpMatch) {
+    const nomor = waEpMatch[1];
+    const { buildCategoryKeyboard } = require("./core/contacts/identity-manager");
+    await editMenu(ctx,
+      `🏷️ Pilih posisi baru:`,
+      buildCategoryKeyboard(nomor).map(row => row.map(b => ({
+        ...b,
+        callback_data: b.callback_data.replace("imr:cat:", "wa:epc:").substring(0, 64)
+      })))
+    );
+    return;
+  }
+
+  // WA edit posisi confirm
+  const waEpcMatch = data.match(/^wa:epc:(\d{8,15}):(.+)$/);
+  if (waEpcMatch) {
+    const [, nomor, katKey] = waEpcMatch;
+    const { KATEGORI_MAP } = require("./core/contacts/identity-manager");
+    const { updateContact } = require("./core/contacts/contact-manager");
+    const katInfo = KATEGORI_MAP[katKey];
+    if (katInfo) {
+      await updateContact(nomor, { kategori: katInfo.kategori, sub_kategori: katInfo.sub || null });
+      await editMenu(ctx, `✅ Posisi diupdate ke <b>${katInfo.label}</b>.\nAI akan sesuaikan gaya respons.`,
+        [[btn("⬅️ Kembali", `wa:ed:${nomor}`.substring(0, 64))]]);
+    }
+    return;
+  }
+
+  // WA broadcast category
+  const waBcCatMatch = data.match(/^wa:bc:(.+)$/);
+  if (waBcCatMatch) {
+    const kategori = waBcCatMatch[1];
+    if (kategori === "manual") {
+      pendingAction.set(chatId, { action: "wa_bc_manual" });
+      await editMenu(ctx, "✏️ Ketik pesan broadcast:\n(akan dikirim ke semua kontak manual)", [[btn("❌ Batal", "wa:bc")]]);
+      return;
+    }
+    pendingAction.set(chatId, { action: "wa_bc_msg", kategori });
+    await editMenu(ctx, `📣 Ketik pesan untuk <b>${kategori}</b>:`, [[btn("❌ Batal", "wa:bc")]]);
+    return;
+  }
+
+  // WA template select
+  const waTmplMatch = data.match(/^wa:tmpl:(.+)$/);
+  if (waTmplMatch) {
+    const tmplId = waTmplMatch[1];
+    if (tmplId === "new") {
+      pendingAction.set(chatId, { action: "wa_tmpl_new" });
+      await editMenu(ctx, "📝 Ketik template baru (format: nama|teks):\nContoh: Terima kasih|Terima kasih atas pesanannya!", [[btn("❌ Batal", "wa:tmpl")]]);
+      return;
+    }
+    const { getTemplate } = require("./core/contacts/contact-templates");
+    const tmpl = await getTemplate(tmplId);
+    if (!tmpl) { await editMenu(ctx, "❌ Template tidak ditemukan.", [[btnBack("wa:tmpl")]]); return; }
+    // Tampil template + pilih kontak untuk kirim
+    const { getContactList } = require("./core/wa-control/wa-controller");
+    const contacts = await getContactList().catch(() => []);
+    const text = `📝 <b>${tmpl.icon} ${tmpl.nama}</b>\n━━━━━━━━━━━━━━━\n"${tmpl.teks.substring(0, 200)}"\n\nKirim ke:`;
+    const rows = contacts.slice(0, 15).map(c => {
+      const icon = CAT_ICONS_WA[c.kategori] || "👤";
+      return [btn(`${icon} ${(c.nama || c.nomor).substring(0, 28)}`, `wa:tsc:${c.nomor}:${tmplId}`.substring(0, 64))];
+    });
+    rows.push([btnBack("wa:tmpl")]);
+    await editMenu(ctx, text, rows);
+    return;
+  }
+
+  // WA template send confirm
+  const waTscMatch = data.match(/^wa:tsc:(\d{8,15}):(.+)$/);
+  if (waTscMatch) {
+    const [, nomor, tmplId] = waTscMatch;
+    const { getTemplate } = require("./core/contacts/contact-templates");
+    const { getContact } = require("./core/contacts/contact-manager");
+    const [tmpl, kontak] = await Promise.all([getTemplate(tmplId), getContact(nomor)]);
+    if (!tmpl) { await editMenu(ctx, "❌ Template tidak ditemukan.", [[btnBack("wa:tmpl")]]); return; }
+    const nama = kontak?.nama || nomor;
+    const teks = tmpl.teks.replace(/\[nama\]/gi, nama);
+    await editMenu(ctx,
+      `📤 <b>Konfirmasi Kirim</b>\n━━━━━━━━━━━━━━━\nKe: <b>${nama}</b>\n\n"${teks}"`,
+      [[btn("✅ Kirim", `wa:tss:${nomor}:${tmplId}`.substring(0, 64)), btn("❌ Batal", "wa:tmpl")]]
+    );
+    return;
+  }
+
+  // WA template send execute
+  const waTssMatch = data.match(/^wa:tss:(\d{8,15}):(.+)$/);
+  if (waTssMatch) {
+    const [, nomor, tmplId] = waTssMatch;
+    const { getTemplate } = require("./core/contacts/contact-templates");
+    const { getContact } = require("./core/contacts/contact-manager");
+    const { sendToContact } = require("./core/wa-control/wa-controller");
+    const [tmpl, kontak] = await Promise.all([getTemplate(tmplId), getContact(nomor)]);
+    const nama = kontak?.nama || nomor;
+    const teks = tmpl.teks.replace(/\[nama\]/gi, nama);
+    try {
+      await sendToContact(nomor, teks);
+      await editMenu(ctx, `✅ Template "${tmpl.nama}" terkirim ke <b>${nama}</b>!`, [[btnBack("wa:tmpl")]]);
+    } catch (err) {
+      await editMenu(ctx, `❌ Gagal kirim: ${err.message}`, [[btnBack("wa:tmpl")]]);
+    }
+    return;
+  }
+
+  // WA approval list
+  if (data === "wa:apv") {
+    const { listPendingApprovals } = require("./core/contacts/approval-workflow");
+    const list = await listPendingApprovals();
+    if (list.length === 0) {
+      await editMenu(ctx, "✅ Tidak ada approval pending.", [[btnBack("wa:st")]]);
+      return;
+    }
+    const text = `📋 <b>APPROVAL PENDING</b>\n━━━━━━━━━━━━━━━\n` +
+      list.map((a, i) => `${i+1}. ${a.nama} — ${a.konteks.substring(0,60)}\nID: ${a.id}`).join("\n\n");
+    await editMenu(ctx, text, [[btnBack("wa:st")]]);
+    return;
+  }
+
+  // WA follow-up list
+  if (data === "wa:fu") {
+    const { listFollowUps } = require("./core/contacts/follow-up-engine");
+    const list = await listFollowUps("pending");
+    if (list.length === 0) {
+      await editMenu(ctx, "✅ Tidak ada follow-up pending.", [[btnBack("wa:st")]]);
+      return;
+    }
+    const text = `⏰ <b>FOLLOW-UP PENDING</b>\n━━━━━━━━━━━━━━━\n` +
+      list.map((f, i) => `${i+1}. ${f.nama} — ${f.konteks.substring(0,60)}\nDeadline: ${f.deadline}`).join("\n\n");
+    await editMenu(ctx, text, [[btnBack("wa:st")]]);
+    return;
+  }
+
+  // ── IDENTITY MANAGER CALLBACKS ─────────────────────────
+  const imrCatMatch = data.match(/^imr:cat:(\d{8,15}):(.+)$/);
+  if (imrCatMatch) {
+    const [, nomor, katKey] = imrCatMatch;
+    const { handleCategorySelected } = require("./core/contacts/identity-manager");
+    const result = await handleCategorySelected(nomor, katKey);
+    if (!result) { await editMenu(ctx, "❌ Error registrasi.", []); return; }
+    pendingAction.set(chatId, { action: "imr_name", nomor });
+    await editMenu(ctx, result, [[btn("❌ Batal", `imr:skip:${nomor}`)]]);
+    return;
+  }
+
+  const imrSkipMatch = data.match(/^imr:skip:(\d{8,15})$/);
+  if (imrSkipMatch) {
+    const nomor = imrSkipMatch[1];
+    const { skipRegistration } = require("./core/contacts/identity-manager");
+    await skipRegistration(nomor);
+    await editMenu(ctx, `⏭️ Registrasi kontak +${nomor} dilewati.`, [[btn("📱 WA Menu", "wa:m")]]);
+    return;
+  }
+
+  const imrConfirmMatch = data.match(/^imr:confirm:(\d{8,15})$/);
+  if (imrConfirmMatch) {
+    const nomor = imrConfirmMatch[1];
+    const { confirmRegistration } = require("./core/contacts/identity-manager");
+    const result = await confirmRegistration(nomor);
+    await editMenu(ctx, result || "✅ Kontak disimpan.", [[btn("📱 WA Menu", "wa:m")]]);
+    return;
+  }
+
+  const imrEditMatch = data.match(/^imr:edit:(\d{8,15})$/);
+  if (imrEditMatch) {
+    const nomor = imrEditMatch[1];
+    const { resetToCategory, buildCategoryKeyboard } = require("./core/contacts/identity-manager");
+    await resetToCategory(nomor);
+    await editMenu(ctx, `🔄 <b>Pilih posisi ulang:</b>`, buildCategoryKeyboard(nomor));
+    return;
+  }
+
+  // ── APPROVAL WORKFLOW INLINE BUTTONS ──────────────────
+  const apvOkMatch = data.match(/^apv:ok:(.+)$/);
+  if (apvOkMatch) {
+    const id = apvOkMatch[1];
+    if (id.startsWith("c:")) {
+      // Confirm approve
+      const realId = id.substring(2);
+      const { resolveApproval, getApproveResponse } = require("./core/contacts/approval-workflow");
+      const approval = await resolveApproval(realId, "approved", null);
+      if (!approval) { await editMenu(ctx, "❌ ID tidak ditemukan.", []); return; }
+      try {
+        const { client: waClient } = require("./core/integrations/whatsapp");
+        await waClient.sendMessage(`${approval.nomor}@c.us`, getApproveResponse());
+      } catch {}
+      await editMenu(ctx, `✅ Disetujui dan dikonfirmasi ke ${approval.nama}.`, []);
+      return;
+    }
+    await editMenu(ctx, `✅ <b>Konfirmasi Setuju?</b>`, [
+      [btn("✅ Ya, Setuju", `apv:ok:c:${id}`.substring(0, 64)), btn("❌ Batal", `wa:st`)]
+    ]);
+    return;
+  }
+
+  const apvRejMatch = data.match(/^apv:rej:(.+)$/);
+  if (apvRejMatch) {
+    const id = apvRejMatch[1];
+    if (id.startsWith("s:")) {
+      const realId = id.substring(2);
+      const { resolveApproval, getRejectResponse } = require("./core/contacts/approval-workflow");
+      const approval = await resolveApproval(realId, "rejected", null);
+      if (!approval) { await editMenu(ctx, "❌ ID tidak ditemukan.", []); return; }
+      try {
+        const { client: waClient } = require("./core/integrations/whatsapp");
+        await waClient.sendMessage(`${approval.nomor}@c.us`, getRejectResponse(null));
+      } catch {}
+      await editMenu(ctx, `❌ Ditolak, balasan dikirim ke ${approval.nama}.`, []);
+      return;
+    }
+    await editMenu(ctx,
+      `❌ <b>Tolak permintaan ini?</b>`,
+      [[btn("Kirim tanpa alasan", `apv:rej:s:${id}`.substring(0, 64)),
+        btn("Ketik alasan", `apv:rply:${id}`.substring(0, 64))],
+       [btn("❌ Batal", "wa:st")]]
+    );
+    return;
+  }
+
+  const apvTndMatch = data.match(/^apv:tnd:(.+)$/);
+  if (apvTndMatch) {
+    const id = apvTndMatch[1];
+    const { resolveApproval, getTundaResponse } = require("./core/contacts/approval-workflow");
+    const approval = await resolveApproval(id, "tunda", null);
+    if (!approval) { await editMenu(ctx, "❌ ID tidak ditemukan.", []); return; }
+    try {
+      const { client: waClient } = require("./core/integrations/whatsapp");
+      await waClient.sendMessage(`${approval.nomor}@c.us`, getTundaResponse());
+    } catch {}
+    await editMenu(ctx, `⏸️ Ditunda, balasan dikirim ke ${approval.nama}.`, []);
+    return;
+  }
+
+  const apvRplyMatch = data.match(/^apv:rply:(.+)$/);
+  if (apvRplyMatch) {
+    const id = apvRplyMatch[1];
+    const { getApproval } = require("./core/contacts/approval-workflow");
+    const approval = await getApproval(id);
+    if (!approval) { await editMenu(ctx, "❌ ID tidak ditemukan.", []); return; }
+    pendingAction.set(chatId, { action: "apv_reply", id, nomor: approval.nomor, nama: approval.nama });
+    await editMenu(ctx,
+      `💬 Ketik balasan manual untuk <b>${approval.nama}</b>:`,
+      [[btn("❌ Batal", "wa:st")]]
+    );
+    return;
+  }
+
   // ── Fallback ────────────────────────────────────────────
   await ctx.answerCbQuery("Memproses...").catch(() => {});
 });
@@ -1560,6 +2056,316 @@ bot.command("tunda", async (ctx) => {
     await ctx.reply(`✅ Tunda ${id} — sudah dibalas ke ${approval.nama}.`);
   } catch (err) {
     await ctx.reply(`❌ Error: ${err.message}`);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// WA CONTROL CENTER — Semua command /wa_*
+// ═══════════════════════════════════════════════════════════
+
+const CAT_ICONS_WA = {
+  nexus: "👑", internal: "🏢", kontraktor: "🏗️", supplier: "🚛",
+  pengepul: "⛏️", relasi: "🤝", pemerintah: "🏛️", tidak_dikenal: "❓"
+};
+
+// ─── /wa → Menu utama WA Control ──────────────────────────
+bot.command("wa", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await sendWAMenu(ctx, "send");
+});
+
+async function sendWAMenu(ctx, mode = "send") {
+  const text =
+`📱 <b>WHATSAPP CONTROL CENTER</b>
+━━━━━━━━━━━━━━━━━━━━━━━━
+Kelola WhatsApp TERNION via Telegram:`;
+
+  const rows = [
+    [btn("📋 Direktori", "wa:dir"),      btn("💬 Kirim Pesan", "wa:k:start")],
+    [btn("📊 Chat Terbaru", "wa:tb"),    btn("📣 Broadcast", "wa:bc")],
+    [btn("✏️ Edit Kontak", "wa:ed:start"), btn("📝 Template", "wa:tmpl")],
+    [btn("📊 Status WA", "wa:st"),       btn("📤 Export", "wa:exp")],
+    [btn("🟢 AI On", "st:wa:on"),        btn("🔴 AI Off", "st:wa:off")]
+  ];
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_kirim → Mulai flow kirim pesan ───────────────────
+bot.command("wa_kirim", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await startWAKirimMenu(ctx, "send");
+});
+
+async function startWAKirimMenu(ctx, mode = "send") {
+  const { getContactList } = require("./core/wa-control/wa-controller");
+  let contacts = [];
+  try { contacts = await getContactList(); } catch {}
+  const valid = contacts.filter(c => c.kategori !== "tidak_dikenal").slice(0, 20);
+
+  const text = `💬 <b>KIRIM PESAN WA</b>\n━━━━━━━━━━━━━━━━━\nPilih kontak tujuan:`;
+  const rows = valid.map(c => {
+    const icon = CAT_ICONS_WA[c.kategori] || "👤";
+    const label = `${icon} ${(c.nama || c.nomor).substring(0, 22)} (${c.kategori})`;
+    return [btn(label, `wa:k:${c.nomor}`.substring(0, 64))];
+  });
+  rows.push([btn("✏️ Ketik Nomor Manual", "wa:k:manual"), btnBack("wa:m")]);
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_broadcast ─────────────────────────────────────────
+bot.command("wa_broadcast", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await sendWABroadcastMenu(ctx, "send");
+});
+
+async function sendWABroadcastMenu(ctx, mode = "send") {
+  const text = `📣 <b>BROADCAST PESAN WA</b>\n━━━━━━━━━━━━━━━━━\nKirim ke kategori:`;
+  const rows = [
+    [btn("👥 Semua Internal", "wa:bc:internal"),   btn("🏗️ Kontraktor", "wa:bc:kontraktor")],
+    [btn("🚛 Supplier",       "wa:bc:supplier"),    btn("⛏️ Pengepul", "wa:bc:pengepul")],
+    [btn("🤝 Relasi",         "wa:bc:relasi"),      btn("🏛️ Pemerintah", "wa:bc:pemerintah")],
+    [btn("✏️ Pilih Manual",   "wa:bc:manual"),      btnBack("wa:m")]
+  ];
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_chat [nomor/nama] → history chat ─────────────────
+bot.command("wa_chat", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const args = ctx.message.text.replace("/wa_chat", "").trim();
+  if (!args) {
+    await ctx.reply("Format: /wa_chat [nomor]\nContoh: /wa_chat 6281234567890");
+    return;
+  }
+  const nomor = args.replace("+", "").replace(/\s/g, "");
+  await showWAChatHistory(ctx, nomor, "send");
+});
+
+async function showWAChatHistory(ctx, nomor, mode = "edit") {
+  const { getMessages } = require("./core/wa-control/wa-controller");
+  const { getContact } = require("./core/contacts/contact-manager");
+  const kontak = await getContact(nomor).catch(() => null);
+  const nama = kontak?.nama || nomor;
+
+  await (mode === "edit"
+    ? editMenu(ctx, `⏳ Memuat chat ${nama}...`, [])
+    : ctx.reply(`⏳ Memuat chat ${nama}...`));
+
+  const messages = await getMessages(nomor, 10).catch(() => []);
+
+  if (messages.length === 0) {
+    await editMenu(ctx, `💬 <b>Chat: ${nama}</b>\n\nBelum ada pesan.`,
+      [[btn("⬅️ Kembali", "wa:tb"), btn("💬 Kirim", `wa:k:${nomor}`.substring(0, 64))]]);
+    return;
+  }
+
+  const lines = messages.map(m =>
+    `${m.timeStr} ${m.fromMe ? "🤖" : "👤"}: ${(m.body || "").substring(0, 100)}`
+  ).join("\n");
+
+  const text =
+    `💬 <b>CHAT DENGAN ${nama.toUpperCase()}</b>\n` +
+    `━━━━━━━━━━━━━━━━━━\n${lines}`;
+
+  await editMenu(ctx, text, [
+    [btn("💬 Balas", `wa:k:${nomor}`.substring(0, 64)), btn("⬅️ Kembali", "wa:tb")]
+  ]);
+}
+
+// ─── /wa_terbaru → 10 chat terbaru ─────────────────────────
+bot.command("wa_terbaru", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.sendChatAction("typing");
+  await showWATerbaru(ctx, "send");
+});
+
+async function showWATerbaru(ctx, mode = "send") {
+  const { getRecentChats } = require("./core/wa-control/wa-controller");
+  const chats = await getRecentChats(10).catch(() => []);
+
+  const text = `📊 <b>CHAT TERBARU</b>\n━━━━━━━━━━━━━━━━━`;
+  if (chats.length === 0) {
+    const noChat = text + "\n\nBelum ada chat atau WA belum terhubung.";
+    if (mode === "edit") await editMenu(ctx, noChat, [[btnBack("wa:m")]]);
+    else await sendMenu(ctx, noChat, [[btnBack("wa:m")]]);
+    return;
+  }
+
+  const rows = chats.map(c => {
+    const icon = CAT_ICONS_WA[c.kategori] || "👤";
+    const label = `${icon} ${c.name.substring(0, 18)} — ${c.lastMessage.substring(0, 20)} (${c.timeStr})`;
+    return [btn(label, `wa:ch:${c.nomor}`.substring(0, 64))];
+  });
+  rows.push([btn("🔄 Refresh", "wa:tb"), btnBack("wa:m")]);
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_edit → Edit kontak ────────────────────────────────
+bot.command("wa_edit", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await showWAEditMenu(ctx, "send");
+});
+
+async function showWAEditMenu(ctx, mode = "send") {
+  const { listContacts } = require("./core/contacts/contact-manager");
+  const all = (await listContacts()).filter(c => !c.nomor.includes("XXXXXXX") && !c.nomor.startsWith("_"));
+  const text = `✏️ <b>EDIT KONTAK WA</b>\n━━━━━━━━━━━━━━━━━\nPilih kontak:`;
+  const rows = all.slice(0, 20).map(c => {
+    const icon = CAT_ICONS_WA[c.kategori] || "👤";
+    return [btn(`${icon} ${(c.nama || c.nomor).substring(0, 25)} — ${c.kategori}`, `wa:ed:${c.nomor}`.substring(0, 64))];
+  });
+  rows.push([btnBack("wa:m")]);
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+async function showWAEditDetail(ctx, nomor) {
+  const { getContact } = require("./core/contacts/contact-manager");
+  const c = await getContact(nomor);
+  if (!c) { await editMenu(ctx, "❌ Kontak tidak ditemukan.", [[btnBack("wa:ed:start")]]); return; }
+  const icon = CAT_ICONS_WA[c.kategori] || "👤";
+  const text =
+    `📋 <b>DETAIL KONTAK</b>\n━━━━━━━━━━━━━━\n` +
+    `${icon} Nama: <b>${c.nama || "(belum ada)"}</b>\n` +
+    `📱 Nomor: +${c.nomor}\n` +
+    `🏷️ Posisi: ${c.kategori}${c.sub_kategori ? "/" + c.sub_kategori : ""}\n` +
+    `🏢 Perusahaan: ${c.konteks_bisnis || "—"}\n` +
+    `💬 Interaksi: ${c.total_interactions || 0}x\n` +
+    `📅 Terakhir: ${c.last_interaction ? c.last_interaction.split("T")[0] : "belum"}`;
+
+  const n = nomor.substring(0, 13);
+  await editMenu(ctx, text, [
+    [btn("✏️ Ganti Nama",    `wa:ef:${n}:nama`),      btn("🏷️ Ganti Posisi",   `wa:ep:${n}`)],
+    [btn("🏢 Edit Perusahaan",`wa:ef:${n}:perusahaan`),btn("📝 Tambah Catatan", `wa:ef:${n}:catatan`)],
+    [btn("🗑️ Hapus Kontak",  `kn:del:${n}`),          btnBack("wa:ed:start")]
+  ]);
+}
+
+// ─── /wa_direktori → Direktori kontak ─────────────────────
+bot.command("wa_direktori", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await sendWADirektori(ctx, "send");
+});
+
+async function sendWADirektori(ctx, mode = "send") {
+  const { listContacts } = require("./core/contacts/contact-manager");
+  const all = await listContacts();
+  const counts = {};
+  for (const c of all) {
+    if (c.nomor.includes("XXXXXXX") || c.nomor.startsWith("_")) continue;
+    counts[c.kategori] = (counts[c.kategori] || 0) + 1;
+  }
+
+  const text =
+    `📱 <b>DIREKTORI TERNION</b>\n` +
+    `━━━━━━━━━━━━━━━━━━\n` +
+    `Total: ${Object.values(counts).reduce((a, b) => a + b, 0)} kontak`;
+
+  const rows = [
+    [btn(`🔺 Ternion (${counts.nexus || 0})`,        "wa:dir:nexus"),
+     btn(`🏢 Internal (${counts.internal || 0})`,    "wa:dir:internal")],
+    [btn(`🏗️ Kontraktor (${counts.kontraktor || 0})`, "wa:dir:kontraktor"),
+     btn(`🚛 Supplier (${counts.supplier || 0})`,    "wa:dir:supplier")],
+    [btn(`⛏️ Pengepul (${counts.pengepul || 0})`,    "wa:dir:pengepul"),
+     btn(`🤝 Relasi (${counts.relasi || 0})`,        "wa:dir:relasi")],
+    [btn(`🏛️ Pemerintah (${counts.pemerintah || 0})`, "wa:dir:pemerintah"),
+     btn(`❓ Belum terdaftar (${counts.tidak_dikenal || 0})`, "wa:dir:tidak_dikenal")],
+    [btnHome()]
+  ];
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_template → Quick reply templates ─────────────────
+bot.command("wa_template", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await sendWATemplateMenu(ctx, "send");
+});
+
+async function sendWATemplateMenu(ctx, mode = "send") {
+  const { getTemplates } = require("./core/contacts/contact-templates");
+  const templates = await getTemplates();
+  const text = `📝 <b>TEMPLATE PESAN</b>\n━━━━━━━━━━━━━━━\nPilih template:`;
+  const rows = templates.map(t => [btn(`${t.icon} ${t.nama}`, `wa:tmpl:${t.id}`)]);
+  rows.push([btn("✏️ Buat Template Baru", "wa:tmpl:new"), btnBack("wa:m")]);
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_status → Dashboard status WA ─────────────────────
+bot.command("wa_status", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.sendChatAction("typing");
+  await showWAStatus(ctx, "send");
+});
+
+async function showWAStatus(ctx, mode = "send") {
+  const { getStatus: getWAStatus } = require("./core/contacts/master-switch");
+  const { listContacts } = require("./core/contacts/contact-manager");
+  const { listFollowUps } = require("./core/contacts/follow-up-engine");
+  const { listPendingApprovals } = require("./core/contacts/approval-workflow");
+  const { isClientReady } = require("./core/wa-control/wa-controller");
+
+  const [waStatus, allContacts, followups, approvals, waReady] = await Promise.all([
+    getWAStatus().catch(() => "❓"),
+    listContacts().catch(() => []),
+    listFollowUps("pending").catch(() => []),
+    listPendingApprovals().catch(() => []),
+    isClientReady().catch(() => false)
+  ]);
+
+  const valid = allContacts.filter(c => !c.nomor.includes("XXXXXXX") && !c.nomor.startsWith("_"));
+  const belumDaftar = valid.filter(c => c.kategori === "tidak_dikenal").length;
+  const terdaftar = valid.length - belumDaftar;
+
+  const text =
+    `📱 <b>WHATSAPP STATUS</b>\n` +
+    `━━━━━━━━━━━━━━━━━\n` +
+    `🤖 AI WA: ${waStatus}\n` +
+    `📡 Koneksi WA: ${waReady ? "🟢 Terhubung" : "🔴 Tidak terhubung"}\n` +
+    `👥 Kontak terdaftar: ${terdaftar}\n` +
+    `❓ Belum terdaftar: ${belumDaftar}\n` +
+    `📋 Approval pending: ${approvals.length}\n` +
+    `⏰ Follow-up pending: ${followups.length}`;
+
+  const rows = [
+    [btn("📋 Lihat Approval",  "wa:apv"),    btn("⏰ Follow-up",   "wa:fu")],
+    [btn("👤 Kontak Baru",     "wa:dir:tidak_dikenal"), btn("💬 Chat Terbaru", "wa:tb")],
+    [btn("🟢 AI On",           "st:wa:on"),  btn("🔴 AI Off",     "st:wa:off")],
+    [btn("🔄 Refresh",         "wa:st"),     btnBack("wa:m")]
+  ];
+
+  if (mode === "edit") await editMenu(ctx, text, rows);
+  else await sendMenu(ctx, text, rows);
+}
+
+// ─── /wa_export → Export direktori ke Drive ───────────────
+bot.command("wa_export", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await editMenu(ctx, "⏳ Mengekspor direktori kontak ke Drive...", []);
+  try {
+    const { listContacts } = require("./core/contacts/contact-manager");
+    const all = await listContacts();
+    const fsExtra = require("fs-extra");
+    const exportData = {
+      exported_at: new Date().toISOString(),
+      total: all.length,
+      contacts: all
+    };
+    const tmpFile = "/tmp/ternion-contacts-export.json";
+    await fsExtra.writeJson(tmpFile, exportData, { spaces: 2 });
+    const { uploadFile } = require("./core/integrations/drive-backup");
+    await uploadFile(tmpFile, "CORE-SYSTEM/contacts");
+    await ctx.reply(`✅ Direktori diexport ke Drive\nFolder: CORE-SYSTEM/contacts\nTotal: ${all.length} kontak`);
+  } catch (err) {
+    await ctx.reply(`❌ Export gagal: ${err.message}`);
   }
 });
 

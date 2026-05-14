@@ -110,4 +110,33 @@ function getTone(kontak) {
   return (STYLES[kategori] || STYLES.tidak_dikenal).tone;
 }
 
-module.exports = { getSystemPrompt, getSalutation, getTone, STYLES };
+const POSITION_GREETINGS = {
+  nexus:        (nama) => `Halo ${nama || "Bry"}, ada yang perlu dibantu?`,
+  internal:     (nama) => `Halo ${nama || ""}${nama ? ", " : ""}ada yang bisa dibantu?`,
+  kontraktor:   (nama) => `Halo ${nama || "Bapak/Ibu"}, ada yang bisa TERNION bantu terkait proyek atau konstruksi?`,
+  supplier:     (nama) => `Halo ${nama || "Bapak/Ibu"}, ada penawaran material atau info stok yang ingin disampaikan?`,
+  pengepul:     (nama, sub) => {
+    if (sub === "mutiara") return `Halo ${nama || "Bapak/Ibu"}, ada kabar terbaru soal mutiara?`;
+    if (sub === "agrikultur") return `Halo ${nama || "Bapak/Ibu"}, ada update produk pertanian hari ini?`;
+    return `Halo ${nama || "Bapak/Ibu"}, ada update stok atau harga mangan hari ini?`;
+  },
+  relasi:       (nama) => `Halo ${nama || ""}${nama ? ", " : ""}apa kabar? Ada yang bisa saya bantu?`,
+  pemerintah:   (nama) => `Selamat datang, ada yang bisa kami bantu terkait kebutuhan Bapak/Ibu${nama ? " " + nama : ""}?`,
+  tidak_dikenal: () => `Halo! Selamat datang di TERNION GROUP. Boleh saya tahu nama dan keperluan Anda?`
+};
+
+function getPositionGreeting(kontak) {
+  const nama = kontak?.panggilan || kontak?.nama || null;
+  const kategori = kontak?.kategori || "tidak_dikenal";
+  const sub = kontak?.sub_kategori || null;
+  const fn = POSITION_GREETINGS[kategori] || POSITION_GREETINGS.tidak_dikenal;
+  return fn(nama, sub);
+}
+
+function injectGreetingToPrompt(systemPrompt, kontak) {
+  if (!kontak || kontak.kategori === "nexus") return systemPrompt;
+  const greeting = getPositionGreeting(kontak);
+  return systemPrompt + `\n\nPenting: Ini mungkin interaksi pertama atau kontak baru terdaftar. Awali respons dengan: "${greeting}"`;
+}
+
+module.exports = { getSystemPrompt, getSalutation, getTone, getPositionGreeting, injectGreetingToPrompt, STYLES };

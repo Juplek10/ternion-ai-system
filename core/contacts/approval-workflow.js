@@ -75,22 +75,37 @@ async function createApproval(nomor, nama, konteks, pertanyaan) {
 }
 
 async function notifyBrianApproval(approval) {
+  const { getContact } = require("./contact-manager");
+  const kontak = await getContact(approval.nomor).catch(() => null);
+  const posisi = kontak?.kategori ? `(${kontak.kategori})` : "";
+
   const msg =
-    `⚡ <b>PERLU APPROVAL BRIAN</b>\n` +
+    `⚡ <b>PERLU KEPUTUSAN</b>\n` +
     `━━━━━━━━━━━━━━━━━━━━\n` +
-    `👤 Dari: ${approval.nama} (${approval.nomor})\n` +
-    `💬 Konteks: ${approval.konteks.substring(0, 300)}\n` +
-    `❓ Yang perlu diputuskan: ${approval.pertanyaan}\n\n` +
-    `Balas dengan:\n` +
-    `✅ /approve ${approval.id}\n` +
-    `❌ /reject ${approval.id} [alasan]\n` +
-    `📋 /tunda ${approval.id}`;
+    `👤 Dari: <b>${approval.nama}</b> ${posisi}\n` +
+    `📱 +${approval.nomor}\n` +
+    `💬 Konteks: ${approval.konteks.substring(0, 250)}\n` +
+    `❓ Yang diputuskan: ${approval.pertanyaan}`;
+
+  const keyboard = {
+    inline_keyboard: [
+      [
+        { text: "✅ Setuju",       callback_data: `apv:ok:${approval.id}` },
+        { text: "❌ Tolak",        callback_data: `apv:rej:${approval.id}` }
+      ],
+      [
+        { text: "⏸️ Tunda",       callback_data: `apv:tnd:${approval.id}` },
+        { text: "💬 Balas Manual", callback_data: `apv:rply:${approval.id}` }
+      ]
+    ]
+  };
 
   try {
     await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       chat_id: BRIAN_CHAT_ID,
       text: msg,
-      parse_mode: "HTML"
+      parse_mode: "HTML",
+      reply_markup: keyboard
     });
   } catch (err) {
     console.error("[APPROVAL] Gagal notif Brian:", err.message);
