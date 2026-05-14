@@ -4,6 +4,14 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const { getSoul, loadSoul } = require("./core/identity/soul-guardian");
 
+// Global error guards — cegah crash dari unhandled rejection
+process.on("uncaughtException", (err) => {
+  console.error("[HEARTBEAT] uncaughtException:", err.message);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[HEARTBEAT] unhandledRejection:", reason instanceof Error ? reason.message : String(reason));
+});
+
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
 const CHAT_ID = 6935073123;
 const HEARTBEAT_LOG = "/root/ai-system/memory/heartbeat-log.json";

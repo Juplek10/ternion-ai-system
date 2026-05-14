@@ -4,15 +4,10 @@ const APPROVAL_FILE =
   "/root/ai-system/approvals/pending.json";
 
 async function loadApprovals() {
-
   try {
-
-    return await fs.readJson(
-      APPROVAL_FILE
-    );
-
+    const data = await fs.readJson(APPROVAL_FILE);
+    return Array.isArray(data) ? data : [];
   } catch(err) {
-
     return [];
   }
 }

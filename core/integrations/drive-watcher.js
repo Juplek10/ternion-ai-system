@@ -10,20 +10,37 @@ const REGISTRY_PATH = "/root/ai-system/memory/file-registry.json";
 const TERNION_FOLDER_ID = "1uhQqVyEqgCXHxA_ElyCqwbxO-1nwzb1p";
 
 // -------------------------------------------------------
+// Global error guards — cegah crash dari unhandled error
+// -------------------------------------------------------
+
+process.on("uncaughtException", (err) => {
+  console.error("[DRIVE-WATCHER] uncaughtException:", err.message);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[DRIVE-WATCHER] unhandledRejection:", reason instanceof Error ? reason.message : String(reason));
+});
+
+// -------------------------------------------------------
 // Registry helpers
 // -------------------------------------------------------
 
 function loadRegistry() {
   if (!fs.existsSync(REGISTRY_PATH)) return [];
   try {
-    return JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf8"));
+    const data = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf8"));
+    return Array.isArray(data) ? data : [];
   } catch {
     return [];
   }
 }
 
 function saveRegistry(registry) {
-  fs.writeFileSync(REGISTRY_PATH, JSON.stringify(registry, null, 2));
+  try {
+    fs.writeFileSync(REGISTRY_PATH, JSON.stringify(registry, null, 2));
+  } catch (err) {
+    console.error("[DRIVE-WATCHER] Gagal simpan registry:", err.message);
+  }
 }
 
 function isAlreadyUploaded(registry, fileName) {
@@ -31,30 +48,59 @@ function isAlreadyUploaded(registry, fileName) {
 }
 
 // -------------------------------------------------------
+// Upload dengan exponential backoff
+// -------------------------------------------------------
+
+async function uploadWithRetry(filePath, folderId, maxRetries = 3) {
+  let delay = 5000;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await uploadFile(filePath, folderId);
+      return result;
+    } catch (err) {
+      const isRateLimit = err.message && (
+        err.message.includes("rate") ||
+        err.message.includes("quota") ||
+        err.message.includes("429")
+      );
+      console.error(`[DRIVE-WATCHER] Upload gagal (attempt ${attempt}/${maxRetries}): ${err.message}`);
+      if (attempt < maxRetries) {
+        const waitMs = isRateLimit ? delay * 3 : delay;
+        console.log(`[DRIVE-WATCHER] Retry dalam ${waitMs / 1000}s...`);
+        await new Promise(r => setTimeout(r, waitMs));
+        delay *= 2;
+      }
+    }
+  }
+  return null;
+}
+
+// -------------------------------------------------------
 // Upload handler
 // -------------------------------------------------------
 
 async function handleNewFile(fileName) {
-  const filePath = path.join(WATCH_DIR, fileName);
-
-  // Abaikan file sementara / hidden
-  if (fileName.startsWith(".") || fileName.startsWith("~")) return;
-  if (!fs.existsSync(filePath)) return;
-
-  const registry = loadRegistry();
-  if (isAlreadyUploaded(registry, fileName)) {
-    console.log(`[DRIVE-WATCHER] Sudah terupload, skip: ${fileName}`);
-    return;
-  }
-
-  console.log(`[DRIVE-WATCHER] File baru terdeteksi: ${fileName}`);
-  console.log(`[DRIVE-WATCHER] Mengupload ke folder TERNION-AI...`);
-
   try {
-    const result = await uploadFile(filePath, TERNION_FOLDER_ID);
+    const filePath = path.join(WATCH_DIR, fileName);
+
+    // Abaikan file sementara / hidden / direktori
+    if (fileName.startsWith(".") || fileName.startsWith("~")) return;
+    if (!fs.existsSync(filePath)) return;
+    if (fs.statSync(filePath).isDirectory()) return;
+
+    const registry = loadRegistry();
+    if (isAlreadyUploaded(registry, fileName)) {
+      console.log(`[DRIVE-WATCHER] Sudah terupload, skip: ${fileName}`);
+      return;
+    }
+
+    console.log(`[DRIVE-WATCHER] File baru terdeteksi: ${fileName}`);
+    console.log(`[DRIVE-WATCHER] Mengupload ke folder TERNION-AI...`);
+
+    const result = await uploadWithRetry(filePath, TERNION_FOLDER_ID);
 
     if (!result) {
-      console.log(`[DRIVE-WATCHER] Upload gagal untuk: ${fileName}`);
+      console.error(`[DRIVE-WATCHER] Upload gagal setelah semua retry: ${fileName}`);
       return;
     }
 
@@ -73,10 +119,9 @@ async function handleNewFile(fileName) {
     console.log(`[DRIVE-WATCHER] Upload berhasil!`);
     console.log(`[DRIVE-WATCHER]   Drive ID : ${result.id}`);
     console.log(`[DRIVE-WATCHER]   File     : ${result.name}`);
-    console.log(`[DRIVE-WATCHER]   Registry : ${REGISTRY_PATH}`);
 
   } catch (err) {
-    console.log(`[DRIVE-WATCHER] Error saat upload: ${err.message}`);
+    console.error(`[DRIVE-WATCHER] Error tidak terduga di handleNewFile: ${err.message}`);
   }
 }
 
@@ -85,20 +130,38 @@ async function handleNewFile(fileName) {
 // -------------------------------------------------------
 
 async function scanExistingFiles() {
-  if (!fs.existsSync(WATCH_DIR)) {
-    fs.mkdirSync(WATCH_DIR, { recursive: true });
-    return;
-  }
-
-  const registry = loadRegistry();
-  const files    = fs.readdirSync(WATCH_DIR);
-
-  for (const fileName of files) {
-    if (!isAlreadyUploaded(registry, fileName)) {
-      await handleNewFile(fileName);
+  try {
+    if (!fs.existsSync(WATCH_DIR)) {
+      fs.mkdirSync(WATCH_DIR, { recursive: true });
+      return;
     }
+
+    const registry = loadRegistry();
+    const files    = fs.readdirSync(WATCH_DIR);
+
+    for (const fileName of files) {
+      if (!isAlreadyUploaded(registry, fileName)) {
+        await handleNewFile(fileName);
+      }
+    }
+  } catch (err) {
+    console.error("[DRIVE-WATCHER] Error saat scan awal:", err.message);
   }
 }
+
+// -------------------------------------------------------
+// Health check setiap 10 menit — pastikan watcher masih aktif
+// -------------------------------------------------------
+
+let watcherActive = false;
+
+setInterval(() => {
+  if (watcherActive) {
+    console.log(`[DRIVE-WATCHER] Health OK — watcher aktif @ ${new Date().toISOString()}`);
+  } else {
+    console.error("[DRIVE-WATCHER] ALERT: watcher tidak aktif!");
+  }
+}, 10 * 60 * 1000);
 
 // -------------------------------------------------------
 // Watcher utama
@@ -108,15 +171,21 @@ console.log(`[DRIVE-WATCHER] Memulai pemantauan: ${WATCH_DIR}`);
 console.log(`[DRIVE-WATCHER] Target Drive: TERNION-AI (${TERNION_FOLDER_ID})`);
 
 scanExistingFiles().then(() => {
-  fs.watch(WATCH_DIR, async (event, fileName) => {
-    if (event === "rename" && fileName) {
-      // Tunggu singkat agar file selesai ditulis sebelum diupload
-      setTimeout(() => handleNewFile(fileName), 1500);
-    }
-  });
+  try {
+    fs.watch(WATCH_DIR, async (event, fileName) => {
+      if (event === "rename" && fileName) {
+        setTimeout(() => handleNewFile(fileName), 1500);
+      }
+    });
 
-  console.log(`[DRIVE-WATCHER] Watcher aktif. Menunggu file baru...`);
+    watcherActive = true;
+    console.log(`[DRIVE-WATCHER] Watcher aktif. Menunggu file baru...`);
+  } catch (err) {
+    console.error("[DRIVE-WATCHER] Gagal start watcher:", err.message);
+  }
+}).catch(err => {
+  console.error("[DRIVE-WATCHER] Error saat scan awal:", err.message);
 });
 
-process.on("SIGINT",  () => { console.log("[DRIVE-WATCHER] Berhenti."); process.exit(0); });
-process.on("SIGTERM", () => { console.log("[DRIVE-WATCHER] Berhenti."); process.exit(0); });
+process.on("SIGINT",  () => { console.log("[DRIVE-WATCHER] Berhenti (SIGINT)."); process.exit(0); });
+process.on("SIGTERM", () => { console.log("[DRIVE-WATCHER] Berhenti (SIGTERM)."); process.exit(0); });

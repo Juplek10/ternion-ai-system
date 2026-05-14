@@ -6,6 +6,14 @@ const {
   "./core/approval-engine"
 );
 
+// Global error guards — cegah crash dari unhandled error
+process.on("uncaughtException", (err) => {
+  console.error("[BG-WORKER] uncaughtException:", err.message);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[BG-WORKER] unhandledRejection:", reason instanceof Error ? reason.message : String(reason));
+});
+
 async function backgroundLoop() {
 
   console.log(
