@@ -71,10 +71,15 @@ async function sendQRToTelegram(qrString) {
 }
 
 async function notifyOwner(text) {
+  // Notifikasi sistem dialihkan ke Telegram. WA 6282266130808 tidak menerima forward/notif dari sistem.
   try {
-    await client.sendMessage(OWNER_WA, text);
+    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      chat_id: BRIAN_CHAT_ID,
+      text,
+      parse_mode: "Markdown"
+    });
   } catch (err) {
-    console.error("[WA] Gagal notif owner:", err.message);
+    console.error("[WA→TG] Gagal notif owner via Telegram:", err.message);
   }
 }
 
@@ -742,17 +747,8 @@ client.on("ready", async () => {
     "Master Switch: 🟢\n" +
     "Firewall: 🟢\n" +
     "Approval Workflow: 🟢\n" +
-    "Follow-up Engine: 🟢"
-  );
-  await notifyOwner(
-    "✅ *TERNION-AI WhatsApp Aktif*\n\n" +
-    "Semua sistem online:\n" +
-    "• Contact Intelligence ✅\n" +
-    "• Info Firewall ✅\n" +
-    "• Approval Workflow ✅\n" +
-    "• Multi-step Flow ✅\n" +
-    "• Master Switch ✅\n\n" +
-    "Kirim /wa-setup untuk panduan."
+    "Follow-up Engine: 🟢\n\n" +
+    "Semua sistem online. Gunakan /wa-setup untuk panduan."
   );
   startFollowUpLoop(client);
 });
