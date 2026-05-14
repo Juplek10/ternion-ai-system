@@ -8,49 +8,78 @@ const { loadProgress, saveProgress } = require("./progress-manager");
 
 const UPLOADS_DIR = "/root/ai-system/workspace/uploads";
 
-// Gunakan claude CLI (tidak perlu API key terpisah)
+// Gunakan claude CLI stream-json (mendukung vision/gambar)
 async function callClaudeVision(base64Image, mimeType, systemPrompt, userPrompt) {
   return new Promise((resolve) => {
-    const fullPrompt = systemPrompt + "\n\n" + userPrompt +
-      "\n\n[Foto dilampirkan: " + mimeType + ", " + Math.round(base64Image.length * 0.75 / 1024) + "KB]";
-
-    const child = spawn("claude", ["-p", "--output-format", "text"], {
-      env: process.env,
-      stdio: ["pipe", "pipe", "pipe"]
+    const payload = JSON.stringify({
+      type: "user",
+      message: {
+        role: "user",
+        content: [
+          { type: "image", source: { type: "base64", media_type: mimeType, data: base64Image } },
+          { type: "text", text: systemPrompt + "\n\n" + userPrompt }
+        ]
+      }
     });
 
+    const child = spawn("claude", [
+      "-p",
+      "--output-format", "stream-json",
+      "--input-format", "stream-json",
+      "--verbose"
+    ], { env: process.env, stdio: ["pipe", "pipe", "pipe"] });
+
     let stdout = "";
-    let stderr = "";
     let settled = false;
     const done = (r) => { if (!settled) { settled = true; resolve(r); } };
 
     child.stdout.on("data", d => { stdout += d.toString(); });
-    child.stderr.on("data", d => { stderr += d.toString(); });
+    child.stderr.on("data", d => {}); // suppress stderr noise
     child.on("close", code => {
-      if (code === 0 && stdout.trim()) done(stdout.trim());
-      else {
-        console.error("[IMG-ANALYZER] claude exit:", code, stderr.substring(0, 200));
-        done(null);
+      // Parse stream-json — cari baris dengan type "result"
+      const lines = stdout.split("\n").filter(l => l.trim());
+      for (const line of lines) {
+        try {
+          const parsed = JSON.parse(line);
+          if (parsed.type === "result" && parsed.result) {
+            done(parsed.result);
+            return;
+          }
+          // Fallback: baris assistant message
+          if (parsed.type === "assistant") {
+            const content = parsed.message?.content;
+            if (Array.isArray(content)) {
+              const text = content.find(c => c.type === "text")?.text;
+              if (text) { done(text); return; }
+            }
+          }
+        } catch {}
       }
+      console.error("[IMG-ANALYZER] claude exit:", code, "no result found");
+      done(null);
     });
     child.on("error", err => { console.error("[IMG-ANALYZER] spawn error:", err.message); done(null); });
 
-    const timer = setTimeout(() => { child.kill("SIGTERM"); done(null); }, 90000);
+    const timer = setTimeout(() => { child.kill("SIGTERM"); done(null); }, 120000);
     child.on("close", () => clearTimeout(timer));
-    child.stdin.write(fullPrompt, "utf8");
+
+    child.stdin.write(payload, "utf8");
     child.stdin.end();
   });
 }
 
 function formatRABForPrompt(rab) {
   if (!rab || !rab.items) return "RAB tidak tersedia";
-  const lines = [];
-  let total = 0;
-  for (const item of rab.items.filter(i => !i.is_kategori).slice(0, 30)) {
-    total += item.bobot || 0;
-    lines.push(`- ${item.uraian}: Volume ${item.volume} ${item.satuan}, Bobot ${item.bobot?.toFixed(2) || 0}%`);
-  }
-  return lines.join("\n") + `\nTotal bobot: ${total.toFixed(2)}%`;
+  // Hanya item dengan bobot > 0, sorted by bobot desc, max 25 item
+  const items = rab.items
+    .filter(i => !i.is_kategori && (i.bobot || 0) > 0)
+    .sort((a, b) => (b.bobot || 0) - (a.bobot || 0))
+    .slice(0, 25);
+  const lines = items.map(item =>
+    `- ${item.uraian_sub || item.uraian}: Bobot ${(item.bobot||0).toFixed(2)}%, Jumlah Rp${(item.jumlah||0).toLocaleString("id-ID")}`
+  );
+  return lines.join("\n") +
+    `\nNilai Kontrak Total: Rp ${(rab.total_nilai||0).toLocaleString("id-ID")}`;
 }
 
 function formatProgressForPrompt(progress) {
@@ -95,17 +124,19 @@ ${rabText}
 Progress sebelumnya:
 ${progressText}
 
-Analisa foto ini dan kembalikan HANYA JSON berikut (tanpa teks lain):
+Analisa foto ini secara visual dan kembalikan HANYA JSON berikut (tanpa teks lain, tanpa markdown):
 {
   "pekerjaan_teridentifikasi": ["nama pekerjaan yang terlihat di foto"],
-  "progress_per_item": {"nama item RAB persis": persentase_angka_0_100},
-  "bobot_terealisasi": angka_desimal,
-  "nilai_terealisasi": angka_rupiah,
+  "progress_per_item": {"nama item RAB persis sesuai daftar di atas": persentase_angka_0_100},
+  "bobot_terealisasi": hitung_dari_sum(bobot_item * progress_item / 100),
+  "nilai_terealisasi": hitung_dari_sum(jumlah_item_RAB * progress_item / 100),
   "kondisi_kualitas": "baik/cukup/kurang",
-  "temuan_lapangan": ["temuan 1", "temuan 2"],
-  "rekomendasi": ["aksi 1", "aksi 2"],
+  "temuan_lapangan": ["temuan visual konkret 1", "temuan 2"],
+  "rekomendasi": ["aksi spesifik 1", "aksi 2"],
   "catatan_khusus": "catatan penting jika ada"
-}`;
+}
+
+PENTING: bobot_terealisasi dan nilai_terealisasi harus dihitung dari data RAB yang disertakan, bukan perkiraan.`;
 
   let analysisResult = null;
 
