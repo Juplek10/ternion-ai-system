@@ -48,8 +48,55 @@ async function detectDesaFromCaption(caption, projectName) {
   return confidence >= 60 ? { ...best.item, confidence } : null;
 }
 
+// Keyword mapping untuk DAPUR MANDIRI MBG per kecamatan
+const DAPUR_MANDIRI_KEYWORD_MAP = {
+  alak: {
+    folder_id: "1YYcFTF_Er1kPVu9RorIZdUvvveXLWl_j",
+    kecamatan: "ALAK",
+    keywords: ["alak", "penkase", "penkase oeleta", "imanuel", "atiballe", "sri dariasih", "kasman", "alak 2", "alak 1"]
+  },
+  kelapa_lima: {
+    folder_id: "1ak_GUtpPnTtsoOVbjUDHli4kIWPWu1dc",
+    kecamatan: "KELAPA LIMA",
+    keywords: ["kelapa lima", "oesapa", "oesapa barat", "jhon caine", "pello", "kelapa lima 1"]
+  },
+  kota_raja: {
+    folder_id: "1GHrtulHgYSFMQtoMDry22fnT-3l4j1Ft",
+    kecamatan: "KOTA RAJA",
+    keywords: ["kota raja", "naikoten", "batuplat", "bintang", "paschariella", "sodai", "hilda", "azmi", "karima", "kota raja 4", "kota raja 5", "kota raja 6"]
+  },
+  kota_oebobo: {
+    folder_id: "171opWYPfX9xXjz0qKpxilbK5LVpah5Oy",
+    kecamatan: "KOTA OEBOBO",
+    keywords: ["oebobo", "oetete", "laurensia", "yuwono", "oebobo 5"]
+  }
+};
+
+// Keyword mapping untuk DAPUR 3T
+const DAPUR_3T_KEYWORDS = ["dapur 3t", "3t", "dapur tiga t", "tiga t"];
+
+function detectDapurMandiriKecamatan(caption) {
+  if (!caption) return null;
+  const lower = caption.toLowerCase();
+  for (const [key, data] of Object.entries(DAPUR_MANDIRI_KEYWORD_MAP)) {
+    if (data.keywords.some(kw => lower.includes(kw))) {
+      return { kecamatan: data.kecamatan, folder_id: data.folder_id, key };
+    }
+  }
+  return null;
+}
+
 async function detectProjectFromCaption(caption) {
   if (!caption) return null;
+  const lower = caption.toLowerCase();
+
+  // Cek DAPUR MANDIRI keywords dulu (lebih spesifik)
+  const dapurMandiriMatch = detectDapurMandiriKecamatan(caption);
+  if (dapurMandiriMatch) return { nama: "DAPUR MANDIRI - MBG", kecamatan: dapurMandiriMatch };
+
+  // Cek DAPUR 3T keywords
+  if (DAPUR_3T_KEYWORDS.some(kw => lower.includes(kw))) return { nama: "DAPUR 3T" };
+
   const projects = await getAllProjects();
   if (projects.length === 0) return null;
 
@@ -137,6 +184,25 @@ async function handleIncomingPhoto(localPath, caption, pengirim, platform = "wha
   // Coba detect proyek dari caption
   const detectedProject = await detectProjectFromCaption(caption);
   if (detectedProject) projectName = detectedProject.nama;
+
+  // Jika DAPUR MANDIRI terdeteksi dengan kecamatan → auto-place ke folder kecamatan
+  if (detectedProject?.kecamatan) {
+    const kec = detectedProject.kecamatan;
+    try {
+      const placed = await placePhotoToDrive(
+        localPath, projectName, kec.kecamatan, kec.folder_id, pengirim, caption
+      );
+      const timeStr = new Date().toLocaleString("id-ID", { timeZone: "Asia/Makassar", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      await notifyTelegram(
+        `📸 <b>FOTO DAPUR MANDIRI MASUK</b>\n━━━━━━━━━━━━━━━━━━━━\n` +
+        `👤 Dari: ${pengirim}\n📍 <b>${kec.kecamatan}</b>\n💬 ${caption || "(tidak ada)"}\n⏰ ${timeStr} WITA\n✅ Tersimpan ke Drive`,
+        [[{ text: "📁 Lihat Drive", url: placed.drive_link }, { text: "📋 Laporan", callback_data: "dm:lap:" + kec.key }]]
+      );
+      return { placed: true, desa: kec.kecamatan, project: projectName, drive_link: placed.drive_link };
+    } catch (err) {
+      console.error("[PHOTO-PLACER] MANDIRI upload gagal:", err.message);
+    }
+  }
 
   // Coba deteksi desa dari caption
   const detectedDesa = await detectDesaFromCaption(caption, projectName);

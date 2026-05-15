@@ -2005,6 +2005,126 @@ bot.on("callback_query", async (ctx) => {
     return;
   }
 
+  // ── DAPUR CALLBACKS ────────────────────────────────────
+  if (data === "dapur:3t") {
+    const fs = require("fs-extra");
+    let d3t = {};
+    try { d3t = await fs.readJson("/root/ai-system/memory/projects/dapur-3t.json"); } catch(e) {}
+    const driveUrl = `https://drive.google.com/drive/folders/${d3t.drive_folder || "1WkP0rtbSaEzulM9LpcfXevHxR5XsmmAu"}`;
+    const rabUrl = `https://docs.google.com/spreadsheets/d/${d3t.rab_file || "1xe9dbqe-FBO8SDPMDXFJCzqyp36pCu_MEZVvrYWI8M0"}`;
+    await ctx.editMessageText(
+      `🏗️ <b>DAPUR 3T</b>\n━━━━━━━━━━━━━━━━━━━━\n💰 Nilai RAB: <b>Rp 629.820.594</b> per lokasi\n📊 Progress: -\n🗺️ Kab. TTS (11 desa) + Kab. Belu (30 desa)\n📁 Drive: PROYEK AKTIF/DAPUR 3T/`,
+      { parse_mode: "HTML", reply_markup: { inline_keyboard: [
+        [{ text: "📊 Lihat RAB", url: rabUrl }, { text: "📁 Buka Drive", url: driveUrl }],
+        [{ text: "📋 Generate Laporan", callback_data: "proj:lap:DAPUR 3T" }],
+        [{ text: "🔙 Kembali", callback_data: "dapur:menu" }]
+      ]}}
+    ).catch(() => ctx.replyWithHTML(`🏗️ <b>DAPUR 3T</b>\n━━━━━━━\n💰 RAB: Rp 629.820.594\n<a href="${rabUrl}">Lihat RAB</a> | <a href="${driveUrl}">Drive</a>`, { disable_web_page_preview: true }));
+    return;
+  }
+
+  if (data === "dapur:mandiri") {
+    const fs = require("fs-extra");
+    let dm = {};
+    try { dm = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json"); } catch(e) {}
+    const driveUrl = `https://drive.google.com/drive/folders/${dm.drive_folder || "1UC3-WpIJnrCbIFP8AmLS2YcTkjlpj3MV"}`;
+    await ctx.editMessageText(
+      `🍽️ <b>DAPUR MANDIRI - MBG</b>\n━━━━━━━━━━━━━━━━━━━━\n📍 Kecamatan aktif: 4\n🏠 Total dapur: 6 lokasi\n🤝 Yayasan: Gaharu Global Mandiri\n🔵 Program: Makan Bergizi Gratis\n\n<b>Pilih kecamatan:</b>`,
+      { parse_mode: "HTML", reply_markup: { inline_keyboard: [
+        [{ text: "🏘️ Alak (2 dapur)", callback_data: "dm:kec:alak" }, { text: "🏘️ Kelapa Lima (1 dapur)", callback_data: "dm:kec:kelapa_lima" }],
+        [{ text: "🏘️ Kota Raja (2 dapur)", callback_data: "dm:kec:kota_raja" }, { text: "🏘️ Kota Oebobo (1 dapur)", callback_data: "dm:kec:kota_oebobo" }],
+        [{ text: "📋 Rekap Semua Kecamatan", callback_data: "dm:rekap" }, { text: "👥 Semua PIC", callback_data: "dm:pic:all" }],
+        [{ text: "📁 Buka Drive", url: driveUrl }],
+        [{ text: "🔙 Menu Dapur", callback_data: "dapur:menu" }]
+      ]}}
+    ).catch(() => {});
+    return;
+  }
+
+  if (data === "dapur:menu") {
+    await ctx.editMessageText(
+      `🍳 <b>PROYEK DAPUR TERNION</b>\n━━━━━━━━━━━━━━━━━━━━`,
+      { parse_mode: "HTML", reply_markup: { inline_keyboard: [
+        [{ text: "🏗️ Dapur 3T", callback_data: "dapur:3t" }, { text: "🍽️ Dapur Mandiri MBG", callback_data: "dapur:mandiri" }],
+        [{ text: "📊 Rekap Semua", callback_data: "dapur:rekap" }]
+      ]}}
+    ).catch(() => {});
+    return;
+  }
+
+  if (data === "dapur:rekap") {
+    const fs = require("fs-extra");
+    let d3t = {}, dm = {};
+    try { d3t = await fs.readJson("/root/ai-system/memory/projects/dapur-3t.json"); } catch(e) {}
+    try { dm = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json"); } catch(e) {}
+    const totalDesa = (d3t.kabupaten || []).reduce((a,k) => a + (k.total_desa||0), 0);
+    await ctx.editMessageText(
+      `📊 <b>REKAP PROYEK DAPUR TERNION</b>\n━━━━━━━━━━━━━━━━━━━━\n\n🏗️ <b>DAPUR 3T</b>\n💰 RAB: Rp 629.820.594/lokasi\n🗺️ ${totalDesa} desa (Belu + TTS)\n\n🍽️ <b>DAPUR MANDIRI - MBG</b>\n📍 4 kecamatan, 6 lokasi aktif\n🤝 Yayasan Gaharu Global Mandiri\n👥 6 PIC terdaftar`,
+      { parse_mode: "HTML", reply_markup: { inline_keyboard: [[{ text: "🔙 Kembali", callback_data: "dapur:menu" }]] }}
+    ).catch(() => {});
+    return;
+  }
+
+  const dmKecMatch = data.match(/^dm:kec:(.+)$/);
+  if (dmKecMatch) {
+    const key = dmKecMatch[1];
+    const fs = require("fs-extra");
+    let dm = {};
+    try { dm = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json"); } catch(e) {}
+    const pic = (dm.pic_dapur || []).filter(p => {
+      const kw = key.replace(/_/g, " ").toLowerCase();
+      return p.kecamatan.toLowerCase().includes(kw) || p.dapur_label?.toLowerCase().includes(kw.split(" ")[0]);
+    });
+    const kecNama = key.replace(/_/g, " ").toUpperCase();
+    const subfolderData = dm.subfolder?.[key] || {};
+    const driveUrl = subfolderData.folder_id ? `https://drive.google.com/drive/folders/${subfolderData.folder_id}` : null;
+    let text = `📍 <b>${kecNama} - DAPUR MANDIRI</b>\n━━━━━━━━━━━━━━━━━━━━\n`;
+    const picButtons = [];
+    pic.forEach((p, i) => {
+      text += `\n<b>${i+1}. ${p.nama}</b>\n📱 ${p.hp || "-"}\n📍 ${p.kelurahan}\n📊 Progress: -\n`;
+      picButtons.push([{ text: `📋 Laporan ${p.nama.split(" ")[0]}`, callback_data: `dm:lap:${key}` }]);
+    });
+    const kb = [...picButtons];
+    if (driveUrl) kb.push([{ text: "📁 Buka Drive", url: driveUrl }]);
+    kb.push([{ text: "🔙 Kembali", callback_data: "dapur:mandiri" }]);
+    await ctx.editMessageText(text, { parse_mode: "HTML", reply_markup: { inline_keyboard: kb } }).catch(() => {});
+    return;
+  }
+
+  if (data === "dm:pic:all" || data === "dm:rekap") {
+    const fs = require("fs-extra");
+    let dm = {};
+    try { dm = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json"); } catch(e) {}
+    const pic = dm.pic_dapur || [];
+    let text = `👥 <b>SEMUA PIC DAPUR MANDIRI MBG</b>\n━━━━━━━━━━━━━━━━━━━━\n`;
+    pic.forEach((p, i) => {
+      text += `\n<b>${i+1}. ${p.nama}</b> (${p.dapur_label || p.kecamatan})\n📱 ${p.hp || "-"} | 📍 ${p.kelurahan}\n`;
+    });
+    await ctx.editMessageText(text, { parse_mode: "HTML", reply_markup: { inline_keyboard: [[{ text: "🔙 Kembali", callback_data: "dapur:mandiri" }]] } }).catch(() => {});
+    return;
+  }
+
+  const picDetailMatch = data.match(/^pic:detail:(\d+)$/);
+  if (picDetailMatch) {
+    const idx = parseInt(picDetailMatch[1]);
+    const fs = require("fs-extra");
+    let dm = {};
+    try { dm = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json"); } catch(e) {}
+    const pic = (dm.pic_dapur || [])[idx];
+    if (!pic) { await ctx.answerCbQuery("PIC tidak ditemukan").catch(() => {}); return; }
+    const waUrl = pic.hp ? `https://wa.me/62${pic.hp.replace(/^0/, "")}` : null;
+    const kecKey = pic.kecamatan.toLowerCase().replace(/\s+/g, "_");
+    const subf = dm.subfolder?.[kecKey] || {};
+    const driveUrl = subf.folder_id ? `https://drive.google.com/drive/folders/${subf.folder_id}` : null;
+    let text = `👤 <b>${pic.nama}</b>\n━━━━━━━━━━━━━━━━━━━━\n📍 Kecamatan: ${pic.kecamatan}\n🏘️ Kelurahan: ${pic.kelurahan}\n🏠 Alamat: ${pic.alamat}\n📱 HP: ${pic.hp || "-"}\n🏷️ Status tanah: ${pic.status_tanah || "-"}\n🍳 Dapur: ${pic.dapur_label || "-"}\n📊 Progress: -`;
+    const kb = [];
+    if (waUrl) kb.push([{ text: "💬 WA PIC", url: waUrl }]);
+    if (driveUrl) kb.push([{ text: "📁 Lihat Drive", url: driveUrl }]);
+    kb.push([{ text: "🔙 Kembali", callback_data: "dm:pic:all" }]);
+    await ctx.editMessageText(text, { parse_mode: "HTML", reply_markup: { inline_keyboard: kb } }).catch(() => {});
+    return;
+  }
+
   // ── PROJECT CALLBACKS ──────────────────────────────────
   if (data === "proj:all") {
     await ctx.sendChatAction("typing").catch(() => {});
@@ -2921,6 +3041,42 @@ bot.command("update_progress", async (ctx) => {
   } catch (err) {
     await ctx.reply(`❌ Gagal update: ${err.message}`);
   }
+});
+
+// ─── /proyek-dapur ─────────────────────────────────────────
+bot.command("proyek_dapur", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  await ctx.replyWithHTML(
+    `🍳 <b>PROYEK DAPUR TERNION</b>\n━━━━━━━━━━━━━━━━━━━━`,
+    {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "🏗️ Dapur 3T", callback_data: "dapur:3t" }, { text: "🍽️ Dapur Mandiri MBG", callback_data: "dapur:mandiri" }],
+          [{ text: "📊 Rekap Semua", callback_data: "dapur:rekap" }]
+        ]
+      }
+    }
+  );
+});
+
+// ─── /pic-dapur ────────────────────────────────────────────
+bot.command("pic_dapur", async (ctx) => {
+  if (!isAuthorized(ctx.chat.id)) return;
+  const fs = require("fs-extra");
+  let picData;
+  try {
+    const mandiri = await fs.readJson("/root/ai-system/memory/projects/dapur-mandiri.json");
+    picData = mandiri.pic_dapur || [];
+  } catch (e) { picData = []; }
+
+  let text = `📋 <b>DIREKTORI PIC DAPUR MANDIRI MBG</b>\n━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  const buttons = [];
+  picData.forEach((pic, i) => {
+    text += `\n<b>${i+1}. ${pic.nama}</b>\n   📱 ${pic.hp || "-"}\n   📍 ${pic.kecamatan} — ${pic.kelurahan}\n   🏠 ${pic.alamat}\n`;
+    buttons.push([{ text: `${i+1}. ${pic.nama}`, callback_data: `pic:detail:${i}` }]);
+  });
+  buttons.push([{ text: "🔙 Kembali", callback_data: "dapur:mandiri" }]);
+  await ctx.replyWithHTML(text, { reply_markup: { inline_keyboard: buttons } });
 });
 
 // ─── Callback handlers proyek ──────────────────────────────

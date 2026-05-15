@@ -279,9 +279,44 @@ function buildProgressDashboard(projectName, allProgress) {
   );
 }
 
+async function generateMBGReport(kecamatan, picNama, picHp, alamat, fotoCount = 0, progressItems = [], catatan = "", status = "Berjalan") {
+  const today = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
+  const timeStr = new Date().toLocaleString("id-ID", { timeZone: "Asia/Makassar", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
+  let rabItems = "";
+  if (progressItems.length > 0) {
+    rabItems = "\n<b>📊 PROGRESS REHAB:</b>\n";
+    progressItems.forEach((item, i) => {
+      const bar = progressBar(item.pct || 0, 8);
+      rabItems += `${i+1}. ${item.uraian}\n   ${bar} ${item.pct || 0}%\n`;
+    });
+  } else {
+    rabItems = "\n📊 <i>Belum ada data progress RAB rehab.</i>";
+  }
+
+  const statusIcon = status === "Selesai" ? "✅" : status === "Terlambat" ? "⚠️" : "🔵";
+
+  return (
+    `📋 <b>LAPORAN PROGRESS DAPUR MBG</b>\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `🍳 Program: Makan Bergizi Gratis\n` +
+    `📍 Kecamatan: <b>${kecamatan}</b>\n` +
+    `👤 PIC: <b>${picNama}</b> | 📱 ${picHp || "-"}\n` +
+    `🏠 Alamat: ${alamat}\n` +
+    `🤝 Yayasan: Gaharu Global Mandiri\n` +
+    `📅 Tanggal: ${today}\n` +
+    rabItems +
+    `\n📸 DOKUMENTASI: ${fotoCount} foto\n` +
+    `🕐 Terakhir update: ${timeStr} WITA\n` +
+    (catatan ? `\n⚠️ CATATAN: ${catatan}\n` : "") +
+    `\n${statusIcon} STATUS: ${status}`
+  );
+}
+
 module.exports = {
   generateDesaReport,
   generateMasterReport,
   buildProgressDashboard,
+  generateMBGReport,
   progressBar
 };

@@ -1,0 +1,36 @@
+{
+  "nama": "DAPUR 3T",
+  "nilai_rab": 629820594,
+  "status": "aktif",
+  "drive_folder": "1WkP0rtbSaEzulM9LpcfXevHxR5XsmmAu",
+  "rab_file": "1xe9dbqe-FBO8SDPMDXFJCzqyp36pCu_MEZVvrYWI8M0",
+  "rekap_file": "1qtCuznOEhFU0tGLjACeA3O4vq-CzRqKp",
+  "subfolder": {
+    "rab_dokumen": "16DVxbrdCMb23FJhwSadY7CIAbjGrboHg",
+    "progress_per_lokasi": "1DIiyCOntbeL3v79PvD1jiESmQ29weqJ9",
+    "laporan_konsolidasi": "18NMLKnaGpHs6ARXLqlg-yS9ZWhhjeuLV"
+  },
+  "kabupaten": [
+    {
+      "nama": "Kabupaten TTS",
+      "folder_id": "1rxSdB8Uw7IO9L7gWzqOtqUi8lv2c1Hgd",
+      "total_desa": 11,
+      "desa": ["Bonleu","Taneotob","Nunfutu","Noebesi","Tubmonas","Nunukhniti","Enoneontes","Fatukopa","Naukae","Nekemonifeto","Taebone"]
+    },
+    {
+      "nama": "Kabupaten Belu",
+      "folder_id": "1l9Mpb5IzPbEScCPFbyJ-0JZe8ThTLtIe",
+      "total_desa": 30,
+      "desa": ["Maumutin","Aitoun","Dirun","Faturika","Fatulotu","Dafala","Lakan Mau","Dualaus","Asumanu","Dualasi Rai Ulun","Duarato","Fatuketi","Fulur","Kabuna","Kewar","Lamaksenulu","Leuntolu","Lawalutolus","Takirin","Raifatus","Silawan","Maneikun","Mandeu Raimanus","Makir","Maudemu","Renrua","Umaklaran","Sadi","Tasin","Tulakadi"]
+    }
+  ],
+  "item_utama_rab": [
+    "Panel dinding",
+    "Struktur beton",
+    "Atap baja ringan",
+    "Finishing"
+  ],
+  "progress_total": 0,
+  "last_update": null,
+  "created_at": "2026-05-15"
+}

@@ -1,0 +1,103 @@
+{
+  "nama": "DAPUR MANDIRI - MBG",
+  "status": "aktif",
+  "program": "Makan Bergizi Gratis",
+  "presiden": "Prabowo Subianto",
+  "drive_folder": "1UC3-WpIJnrCbIFP8AmLS2YcTkjlpj3MV",
+  "yayasan": "Gaharu Global Mandiri",
+  "kecamatan": ["Alak", "Kelapa Lima", "Kota Raja", "Kota Oebobo"],
+  "total_lokasi": 6,
+  "subfolder": {
+    "rab_dokumen": "1a7DySKx5PybbVa7MUiWgzfx-4cyFPMOv",
+    "alak": {
+      "folder_id": "1VkjC8A4Cdy1yIhdM0JZpGoIceVBaqAjH",
+      "data_dapur": "1YYcFTF_Er1kPVu9RorIZdUvvveXLWl_j",
+      "dokumentasi_progress": "1_EumiW7e3f1z3jASigdtbqqcCn3Dmw-j",
+      "laporan": "1On4i-Rje03yi5vGu0ybaKxpnv1Ix5e2x"
+    },
+    "kelapa_lima": {
+      "folder_id": "1GxA8Ao-mqtOHD93xnB0_s5VALfWNVH-B",
+      "data_dapur": "1ak_GUtpPnTtsoOVbjUDHli4kIWPWu1dc",
+      "dokumentasi_progress": "19Z-6PFmS2weskghEwd1xC_dqOYV0Slqx",
+      "laporan": "1scJCN8fPRBdggmD5Da8i3LZ_qmHMyDMg"
+    },
+    "kota_raja": {
+      "folder_id": "1QK4K_JxG6s4luHBVQ3akXFKY--OkUSHF",
+      "data_dapur": "1GHrtulHgYSFMQtoMDry22fnT-3l4j1Ft",
+      "dokumentasi_progress": "1eAADGoQtgHATlH708FGVzO4BKzhHqTqS",
+      "laporan": "1aRyC0iC92dD3-A0jlkgw_Opcsk_hC_ww"
+    },
+    "kota_oebobo": {
+      "folder_id": "1udnYveMr1pww6pwJJ4m6GO5Cu-mj-2X2",
+      "data_dapur": "171opWYPfX9xXjz0qKpxilbK5LVpah5Oy",
+      "dokumentasi_progress": "1ZtcI8xYUZCtrVOc-sxna0WdEoWBEw6x7",
+      "laporan": "1v_8WgvB3QEroPyXfOryhqh7Q1bVsNlem"
+    },
+    "laporan_konsolidasi": "1RxPQrPATFxb51Un5MgE2y-g6wpK1oZ_d"
+  },
+  "pic_dapur": [
+    {
+      "nama": "Jhon Caine Pello",
+      "hp": "081110001290",
+      "kecamatan": "Kelapa Lima",
+      "kelurahan": "Oesapa Barat",
+      "alamat": "Jl. Samratulangi",
+      "status_tanah": "Milik",
+      "dapur_label": "KELAPA LIMA 1",
+      "keywords": ["jhon caine", "pello", "oesapa barat", "kelapa lima"]
+    },
+    {
+      "nama": "Laurensia Iana Yuwono",
+      "hp": "082147053333",
+      "kecamatan": "Kota Oebobo",
+      "kelurahan": "Oetete",
+      "alamat": "Jl. Pemuda",
+      "status_tanah": "Sewa",
+      "dapur_label": "OEBOBO 5",
+      "keywords": ["laurensia", "yuwono", "oetete", "oebobo"]
+    },
+    {
+      "nama": "Bintang Paschariella Sodai",
+      "hp": "08113819995",
+      "kecamatan": "Kota Raja",
+      "kelurahan": "Naikoten 1",
+      "alamat": "Jl. Nangka Jamal No.20",
+      "status_tanah": "Sewa",
+      "dapur_label": "KOTA RAJA 4",
+      "keywords": ["bintang", "paschariella", "sodai", "naikoten"]
+    },
+    {
+      "nama": "Hilda Azmi Karima",
+      "hp": "082229243345",
+      "kecamatan": "Kota Raja",
+      "kelurahan": "Batuplat",
+      "alamat": "Jl. Air Sagu",
+      "status_tanah": "Sewa",
+      "dapur_label": "KOTA RAJA 5",
+      "keywords": ["hilda", "azmi", "karima", "batuplat"]
+    },
+    {
+      "nama": "Imanuel Musa Atiballe",
+      "hp": "081234234012",
+      "kecamatan": "Alak",
+      "kelurahan": "Penkase Oeleta",
+      "alamat": "Mentari Blok B No.11",
+      "status_tanah": "Milik",
+      "dapur_label": "ALAK 2",
+      "keywords": ["imanuel", "atiballe", "penkase oeleta", "alak 2"]
+    },
+    {
+      "nama": "Sri Dariasih Kasman",
+      "hp": "",
+      "kecamatan": "Alak",
+      "kelurahan": "Alak",
+      "alamat": "Kel. Alak",
+      "status_tanah": "",
+      "dapur_label": "ALAK 1",
+      "keywords": ["sri dariasih", "kasman", "kel alak"]
+    }
+  ],
+  "progress_total": 0,
+  "last_update": null,
+  "created_at": "2026-05-15"
+}
