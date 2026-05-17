@@ -3,8 +3,6 @@ require("dotenv").config();
 const fs = require("fs-extra");
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const FOLLOWUP_FILE = "/root/ai-system/memory/follow-ups/list.json";
 
 const TRIGGER_KEYWORDS = [
@@ -122,11 +120,7 @@ async function alertBrianFollowUp(fu) {
     `/followup-cancel ${fu.id} — batalkan`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[FOLLOWUP] Gagal alert Brian:", err.message);
   }

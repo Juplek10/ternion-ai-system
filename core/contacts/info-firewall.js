@@ -2,8 +2,6 @@ require("dotenv").config();
 
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 
 const BLOCKED_INFO = [
   "margin keuntungan", "margin profit", "berapa margin",
@@ -94,11 +92,7 @@ async function alertBrianInfoSensitif(nama, kategori, pertanyaan) {
     `✅ Sudah diblok otomatis`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[FIREWALL] Gagal alert Brian:", err.message);
   }

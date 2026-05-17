@@ -57,11 +57,9 @@ async function processTasks() {
       let finalPrompt =
         task.prompt;
 
-      if(task.telegramChatId) {
 
         const session =
           await loadSession(
-            task.telegramChatId
           );
 
         const history =
@@ -90,39 +88,27 @@ ${task.prompt}
 
       console.log(result);
 
-      if(task.telegramChatId) {
 
         await addMessage(
-          task.telegramChatId,
           "assistant",
           result
         );
 
         console.log(
-          "SENDING TELEGRAM RESPONSE"
         );
 
         try {
 
-          await axios.post(
-            `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
-            {
-              chat_id:
-                task.telegramChatId,
-
-              text:
-                result.substring(0,3000)
+          console.log('[NOTIFY]', message)
             }
           );
 
           console.log(
-            "TELEGRAM RESPONSE SENT"
           );
 
         } catch(err) {
 
           console.log(
-            "TELEGRAM ERROR"
           );
 
           console.log(

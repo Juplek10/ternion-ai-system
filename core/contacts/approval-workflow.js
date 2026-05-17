@@ -3,8 +3,6 @@ require("dotenv").config();
 const fs = require("fs-extra");
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const APPROVALS_FILE = "/root/ai-system/approvals/pending.json";
 const APPROVAL_THRESHOLD_IDR = 50_000_000;
 
@@ -101,12 +99,7 @@ async function notifyBrianApproval(approval) {
   };
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML",
-      reply_markup: keyboard
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[APPROVAL] Gagal notif Brian:", err.message);
   }

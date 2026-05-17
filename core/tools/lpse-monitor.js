@@ -3,8 +3,6 @@ require("dotenv").config();
 const axios = require("axios");
 const fs = require("fs-extra");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const CHAT_ID = 6935073123;
 const SEEN_FILE = "/root/ai-system/memory/lpse-seen.json";
 const CHECK_INTERVAL = 6 * 60 * 60 * 1000; // 6 jam
 
@@ -16,15 +14,7 @@ const KEYWORDS = [
 ];
 
 async function sendTelegram(message) {
-  try {
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
-      { chat_id: CHAT_ID, text: message, parse_mode: "HTML" },
-      { timeout: 15000 }
-    );
-  } catch (err) {
-    console.error("[LPSE] Gagal kirim alert:", err.message);
-  }
+  console.log('[NOTIFY]', message.substring(0, 100));
 }
 
 async function loadSeen() {

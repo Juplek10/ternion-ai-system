@@ -1,10 +1,8 @@
 require("dotenv").config();
 
 const fs = require("fs-extra");
-const axios = require("axios");
 const { getSoul, loadSoul } = require("./core/identity/soul-guardian");
 
-// Global error guards — cegah crash dari unhandled rejection
 process.on("uncaughtException", (err) => {
   console.error("[HEARTBEAT] uncaughtException:", err.message);
 });
@@ -12,29 +10,37 @@ process.on("unhandledRejection", (reason) => {
   console.error("[HEARTBEAT] unhandledRejection:", reason instanceof Error ? reason.message : String(reason));
 });
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const CHAT_ID = 6935073123;
 const HEARTBEAT_LOG = "/root/ai-system/memory/heartbeat-log.json";
-const CHECK_INTERVAL = 5 * 60 * 1000;    // 5 menit
-const REPORT_INTERVAL = 60 * 60 * 1000;  // 1 jam
+const WA_QUEUE_PATH = "/root/ai-system/workspace/wa-queue.json";
+const BRIAN_NOMOR = "6282266130808";
+const CHECK_INTERVAL = 5 * 60 * 1000;
+const REPORT_INTERVAL = 60 * 60 * 1000;
 
 let conversationCountToday = 0;
 let lastReportHour = -1;
 
-// ─── Kirim Telegram ────────────────────────────────────
-async function sendTelegram(message) {
+// ─── Kirim notifikasi via WA queue ──────────────────────
+async function sendNotify(message) {
   try {
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
-      { chat_id: CHAT_ID, text: message, parse_mode: "HTML" },
-      { timeout: 15000 }
-    );
+    await fs.ensureFile(WA_QUEUE_PATH);
+    let queue = { items: [] };
+    try { queue = await fs.readJson(WA_QUEUE_PATH); } catch {}
+    if (!Array.isArray(queue.items)) queue.items = [];
+    queue.items.push({
+      id: Date.now(),
+      nomor: BRIAN_NOMOR,
+      pesan: message,
+      timestamp: new Date().toISOString(),
+      status: "pending"
+    });
+    await fs.writeJson(WA_QUEUE_PATH, queue, { spaces: 2 });
+    console.log("[HEARTBEAT] Notifikasi antri ke WA");
   } catch (err) {
-    console.error("[HEARTBEAT] Gagal kirim Telegram:", err.message);
+    console.error("[HEARTBEAT] Gagal queue WA:", err.message);
   }
 }
 
-// ─── Cek RAM ────────────────────────────────────────────
+// ─── Cek RAM ─────────────────────────────────────────────
 function getRamInfo() {
   try {
     const meminfo = fs.readFileSync("/proc/meminfo", "utf8");
@@ -50,11 +56,21 @@ function getRamInfo() {
   }
 }
 
-// ─── Cek PM2 proses ─────────────────────────────────────
+// ─── Cek Disk ────────────────────────────────────────────
+function getDiskInfo() {
+  try {
+    const { execSync } = require("child_process");
+    const out = execSync("df -h / | tail -1", { encoding: "utf8" });
+    const parts = out.trim().split(/\s+/);
+    return { used: parts[2], avail: parts[3], pct: parts[4] };
+  } catch {
+    return { used: "?", avail: "?", pct: "?" };
+  }
+}
+
+// ─── Cek PM2 proses ──────────────────────────────────────
 async function getPm2Status() {
   try {
-    const res = await axios.get("http://localhost:9615", { timeout: 5000 }).catch(() => null);
-    // PM2 API module tidak selalu aktif — pakai exec sebagai fallback
     const { execSync } = require("child_process");
     const out = execSync("pm2 jlist 2>/dev/null", { timeout: 5000 }).toString();
     const procs = JSON.parse(out);
@@ -67,39 +83,36 @@ async function getPm2Status() {
   }
 }
 
-// ─── Cek Claude CLI ──────────────────────────────────────
-async function checkOllama() {
+// ─── Cek Claude CLI ───────────────────────────────────────
+async function checkClaude() {
   try {
     const { execSync } = require("child_process");
     execSync("claude --version", { timeout: 5000 });
-    return { ok: true, model: "Ternion-AI ✅ (active)" };
-  } catch (err) {
-    return { ok: false, model: "AI Engine standby ⚠️" };
-  }
-}
-
-// ─── Cek Drive ──────────────────────────────────────────
-async function checkDrive() {
-  try {
-    const tokenPath = "/root/ai-system/tokens/google-token.json";
-    if (!fs.existsSync(tokenPath)) return { ok: false };
-    const { listFiles } = require("./core/integrations/drive");
-    await listFiles();
     return { ok: true };
-  } catch (err) {
+  } catch {
     return { ok: false };
   }
 }
 
-// ─── Simpan log ──────────────────────────────────────────
+// ─── Cek WA Connected ────────────────────────────────────
+function checkWAConnected() {
+  try {
+    const statePath = "/root/ai-system/.wwebjs_auth";
+    return fs.existsSync(statePath);
+  } catch {
+    return false;
+  }
+}
+
+// ─── Simpan log ───────────────────────────────────────────
 async function saveLog(entry) {
   try {
     await fs.ensureFile(HEARTBEAT_LOG);
     let log = [];
-    try { log = await fs.readJson(HEARTBEAT_LOG); } catch (e) {}
+    try { log = await fs.readJson(HEARTBEAT_LOG); } catch {}
     if (!Array.isArray(log)) log = [];
     log.push(entry);
-    if (log.length > 288) log = log.slice(-288); // 24 jam x 12 (per 5 menit)
+    if (log.length > 288) log = log.slice(-288);
     await fs.writeJson(HEARTBEAT_LOG, log, { spaces: 2 });
   } catch (err) {
     console.error("[HEARTBEAT] Gagal simpan log:", err.message);
@@ -115,75 +128,69 @@ async function runHeartbeat() {
   console.log("TERNION-AI HEARTBEAT |", timeStr);
 
   const ram = getRamInfo();
+  const disk = getDiskInfo();
   const pm2 = await getPm2Status();
-  const ollama = await checkOllama();
+  const claude = await checkClaude();
+  const waOk = checkWAConnected();
   const soul = getSoul();
   const soulOk = soul && soul.length > 100;
 
-  // Reload soul
   loadSoul();
 
   const entry = {
     time: now.toISOString(),
     ram: { pct: ram.pct, used: ram.usedGB, total: ram.totalGB },
+    disk,
     pm2: { online: pm2.online, total: pm2.total },
-    ollama: ollama.ok,
+    claude: claude.ok,
+    wa: waOk,
     soul: soulOk
   };
   await saveLog(entry);
 
   console.log(`RAM: ${ram.usedGB}GB / ${ram.totalGB}GB (${ram.pct}%)`);
+  console.log(`Disk: ${disk.used} dipakai, ${disk.avail} tersedia (${disk.pct})`);
   console.log(`PM2: ${pm2.online}/${pm2.total} online`);
-  console.log(`AI: ${ollama.model}`);
-  console.log(`Soul: ${soulOk ? "loaded" : "ERROR"}`);
+  console.log(`Claude: ${claude.ok ? "aktif" : "standby"}`);
+  console.log(`WA: ${waOk ? "terhubung" : "terputus"}`);
   console.log("════════════════════════════════");
 
   // Alert darurat
   if (!ram.ok) {
-    await sendTelegram(`⚠️ <b>ALERT RAM TINGGI</b>\nRAM usage: ${ram.pct}% (${ram.usedGB}GB / ${ram.totalGB}GB)\nSegera cek server!`);
+    await sendNotify(`⚠️ ALERT RAM TINGGI\nRAM: ${ram.pct}% (${ram.usedGB}GB / ${ram.totalGB}GB)\nSegera cek server!`);
   }
   if (pm2.crashed.length > 0) {
-    await sendTelegram(`⚠️ <b>ALERT PROSES CRASH</b>\nProses mati: ${pm2.crashed.join(", ")}\nSegera restart!`);
-  }
-  if (!soulOk) {
-    await sendTelegram(`⚠️ <b>ALERT SOUL FILE</b>\nSoul file hilang atau corrupt!\nSegera restore.`);
+    await sendNotify(`⚠️ ALERT PROSES CRASH\nMati: ${pm2.crashed.join(", ")}\nSegera restart!`);
   }
 
-  // Laporan per jam
-  const hour = now.getHours();
+  // Laporan per jam — pakai WITA (UTC+8)
+  const hour = (now.getUTCHours() + 8) % 24;
   if (hour !== lastReportHour) {
     lastReportHour = hour;
-    await sendHourlyReport(ram, pm2, ollama, soulOk, timeStr);
+    await sendHourlyReport(ram, disk, pm2, claude, waOk, soulOk, timeStr);
   }
 }
 
-// ─── Laporan 1 jam sekali ────────────────────────────────
-async function sendHourlyReport(ram, pm2, ollama, soulOk, timeStr) {
-  const driveStatus = await checkDrive();
-  const ramIcon = ram.ok ? "✅" : "🔴";
-  const pm2Icon = pm2.crashed.length === 0 ? "✅" : "❌";
-  const driveIcon = driveStatus.ok ? "✅" : "❌";
-  const soulIcon = soulOk ? "✅" : "❌";
+// ─── Laporan 1 jam sekali via WA ─────────────────────────
+async function sendHourlyReport(ram, disk, pm2, claude, waOk, soulOk, timeStr) {
+  const pm2OnlineCount = typeof pm2.online === "number" ? pm2.online : "?";
+  const pm2CrashedCount = pm2.crashed.length;
 
   const msg =
-`🫀 <b>TERNION-AI HEARTBEAT</b>
-─────────────────────
-⏰ ${timeStr}
-🤖 AI: ${ollama.model}
-💾 RAM: ${ram.usedGB} GB / ${ram.totalGB} GB (${ram.pct}%) ${ramIcon}
-⚡ Proses: ${pm2.online}/${pm2.total} online ${pm2Icon}
-📁 Drive: ${driveStatus.ok ? "terhubung ✅" : "tidak terhubung ❌"}
-💬 Percakapan hari ini: ${conversationCountToday}
-🔋 Soul: ${soulIcon}`;
+`🤖 TERNION HEARTBEAT
+⏰ ${timeStr} WITA
+━━━━━━━━━━━━━━━
+PM2: ✅${pm2OnlineCount} online${pm2CrashedCount > 0 ? " ❌" + pm2CrashedCount + " error" : ""}
+Claude: ${claude.ok ? "✅" : "⚠️"} | WA: ${waOk ? "✅" : "❌"}
+RAM: ${ram.usedGB}GB/${ram.totalGB}GB (${ram.pct}%)
+Disk: ${disk.used} dipakai | ${disk.avail} bebas
+━━━━━━━━━━━━━━━
+Status: ${pm2CrashedCount === 0 && ram.ok ? "🟢 NORMAL" : "🔴 PERHATIAN"}`;
 
-  await sendTelegram(msg);
+  await sendNotify(msg);
 }
 
-// Jalankan pertama kali langsung
 runHeartbeat();
-
-// Loop setiap 5 menit
 setInterval(runHeartbeat, CHECK_INTERVAL);
 
-// Export untuk modul lain
 module.exports = { incrementConversation: () => conversationCountToday++ };

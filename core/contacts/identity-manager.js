@@ -3,8 +3,6 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const { addContact } = require("./contact-manager");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const PENDING_FILE = "/root/ai-system/memory/contacts/pending-registration.json";
 
 // ─── Peta kategori ─────────────────────────────────────
@@ -89,11 +87,7 @@ async function startRegistration(nomor, firstMessage) {
     `<b>Simpan sebagai siapa?</b>`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML",
-      reply_markup: { inline_keyboard: buildCategoryKeyboard(clean) }
+    console.log('[NOTIFY]', message) }
     });
   } catch (err) {
     console.error("[IDENTITY] Gagal notif:", err.message);

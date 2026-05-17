@@ -3,8 +3,6 @@ require("dotenv").config();
 const fs = require("fs-extra");
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const STATE_FILE = "/root/ai-system/memory/system-state.json";
 
 const NEXUS_NUMBER = "6282266130808";
@@ -129,11 +127,7 @@ async function getStatus() {
 // ─── Notif Telegram ────────────────────────────────────────
 async function notifyTelegramSwitch(teks) {
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: teks,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[SWITCH] Gagal notif Telegram:", err.message);
   }
@@ -186,11 +180,7 @@ async function notifyBrianIncomingWhenOff(nama, nomor, teks) {
     `⏰ ${jamStr} WITA`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[SWITCH] Gagal notif pesan masuk:", err.message);
   }

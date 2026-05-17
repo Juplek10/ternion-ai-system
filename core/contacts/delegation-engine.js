@@ -3,8 +3,6 @@ require("dotenv").config();
 const fs = require("fs-extra");
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const DELEGASI_LOG = "/root/ai-system/memory/delegasi-log.json";
 const REGISTRY_FILE = "/root/ai-system/memory/contacts/registry.json";
 
@@ -121,11 +119,7 @@ async function notifyBrianDelegasi(nama, label, ringkasan) {
     `Gunakan: /delegasi [nomor] ${label.toLowerCase()}`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text: msg,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[DELEGASI] Gagal notif Brian:", err.message);
   }

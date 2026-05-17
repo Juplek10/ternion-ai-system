@@ -25,8 +25,6 @@ const { isNexus, isActive, isDarurat, deactivateAI, activateAI, pauseAI,
         getStatus, handleNexusSwitch, notifyBrianIncomingWhenOff,
         KEYWORDS_OFF, KEYWORDS_ON } = require("../contacts/master-switch");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const UPLOADS_DIR = "/root/ai-system/workspace/uploads";
 const SESSION_DIR = "/root/ai-system/.wwebjs_auth";
 
@@ -46,11 +44,7 @@ function timeNow() {
 
 async function notifyTelegram(text) {
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text,
-      parse_mode: "HTML"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[WA→TG] Gagal kirim:", err.message);
   }
@@ -64,7 +58,6 @@ async function sendQRToTelegram(qrString) {
     form.append("chat_id", BRIAN_CHAT_ID);
     form.append("photo", qrBuffer, { filename: "whatsapp-qr.png", contentType: "image/png" });
     form.append("caption", "📱 Scan QR ini untuk menghubungkan WhatsApp ke TERNION-AI\n\nBuka WhatsApp → Perangkat Tertaut → Scan QR ini");
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, form, { headers: form.getHeaders() });
     console.log("[WA] QR dikirim ke Telegram");
   } catch (err) {
     qrcodeTerminal.generate(qrString, { small: true });
@@ -74,11 +67,7 @@ async function sendQRToTelegram(qrString) {
 async function notifyOwner(text) {
   // Notifikasi sistem dialihkan ke Telegram. WA 6282266130808 tidak menerima forward/notif dari sistem.
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-      chat_id: BRIAN_CHAT_ID,
-      text,
-      parse_mode: "Markdown"
-    });
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[WA→TG] Gagal notif owner via Telegram:", err.message);
   }

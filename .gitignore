@@ -40,3 +40,13 @@ Thumbs.db
 
 # Claude Code local settings (may contain tokens)
 .claude/settings.local.json
+
+# WhatsApp browser cache
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Workspace temp files
+workspace/
+
+# Backup env files
+.env.backup.*

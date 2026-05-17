@@ -1,21 +1,11 @@
 require("dotenv").config();
 const axios = require("axios");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const CHAT_ID = 6935073123;
 
 const activeReminders = [];
 
 async function sendTelegram(message) {
-  try {
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
-      { chat_id: CHAT_ID, text: message, parse_mode: "HTML" },
-      { timeout: 15000 }
-    );
-  } catch (err) {
-    console.error("[REMINDER] Gagal kirim:", err.message);
-  }
+  console.log('[NOTIFY]', message.substring(0, 100));
 }
 
 function setReminder(minutes, message) {

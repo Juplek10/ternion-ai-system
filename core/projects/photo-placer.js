@@ -6,8 +6,6 @@ const axios = require("axios");
 const { google, oauth2Client } = require("../integrations/google");
 const { getAllDesa, getAllProjects, findDesaFolder } = require("./drive-scanner");
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const BRIAN_CHAT_ID = 6935073123;
 const UNPLACED_DIR = "/root/ai-system/workspace/uploads/unplaced";
 const PLACED_LOG = "/root/ai-system/memory/projects/placed-photos.json";
 
@@ -168,7 +166,7 @@ async function notifyTelegram(text, keyboard = null) {
   if (keyboard) payload.reply_markup = { inline_keyboard: keyboard };
 
   try {
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, payload);
+    console.log('[NOTIFY]', message);
   } catch (err) {
     console.error("[PHOTO-PLACER] Telegram notif gagal:", err.message);
   }

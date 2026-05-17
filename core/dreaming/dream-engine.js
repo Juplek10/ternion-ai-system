@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const fs = require("fs-extra");
 const path = require("path");
-const axios = require("axios");
 const { execFile } = require("child_process");
 const { promisify } = require("util");
 const askClaude = require("../providers/claude-pipe");
@@ -12,19 +11,27 @@ const execFileAsync = promisify(execFile);
 const SESSIONS_DIR = "/root/ai-system/sessions";
 const DREAMS_DIR = "/root/ai-system/memory/dreams";
 const LONG_TERM_MEMORY = "/root/ai-system/memory/long-term.json";
-const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || "8615852356:AAGzjiONLbkuSKBvXePPwhuKACkCZMC0QaY";
-const CHAT_ID = 6935073123;
+const WA_QUEUE_PATH = "/root/ai-system/workspace/wa-queue.json";
+const BRIAN_NOMOR = "6282266130808";
 
-// ─── Kirim Telegram ─────────────────────────────────────
+// ─── Kirim notifikasi via WA queue ──────────────────────
 async function sendTelegram(message) {
+  console.log("[DREAM] NOTIFY:", message.substring(0, 100));
   try {
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,
-      { chat_id: CHAT_ID, text: message, parse_mode: "HTML" },
-      { timeout: 15000 }
-    );
+    await fs.ensureFile(WA_QUEUE_PATH);
+    let queue = { items: [] };
+    try { queue = await fs.readJson(WA_QUEUE_PATH); } catch {}
+    if (!Array.isArray(queue.items)) queue.items = [];
+    queue.items.push({
+      id: Date.now(),
+      nomor: BRIAN_NOMOR,
+      pesan: message.replace(/<[^>]+>/g, ""),
+      timestamp: new Date().toISOString(),
+      status: "pending"
+    });
+    await fs.writeJson(WA_QUEUE_PATH, queue, { spaces: 2 });
   } catch (err) {
-    console.error("[DREAM] Gagal kirim Telegram:", err.message);
+    console.error("[DREAM] Gagal queue WA:", err.message);
   }
 }
 
@@ -159,7 +166,7 @@ Tulis dalam Bahasa Indonesia, padat dan informatif.`;
       const { stdout } = await execFileAsync(
         "claude",
         ["-p", summaryPrompt, "--output-format", "text"],
-        { timeout: 30000, maxBuffer: 1024 * 1024 }
+        { timeout: 30000, maxBuffer: 1024 * 1024, input: "" }
       );
       summary = stdout.trim();
     } catch {}
@@ -274,7 +281,7 @@ Jawab dalam Bahasa Indonesia.`;
     const { stdout } = await execFileAsync(
       "claude",
       ["-p", reviewPrompt, "--output-format", "text"],
-      { timeout: 90000, maxBuffer: 1024 * 1024 * 2 }
+      { timeout: 90000, maxBuffer: 1024 * 1024 * 2, input: "" }
     );
     claudeResult = stdout.trim();
     console.log("[DREAM] Teaching loop Claude selesai");
